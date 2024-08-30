@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2661400972708518534}
   - component: {fileID: 5726932989996754182}
   - component: {fileID: 7213086198297157121}
+  - component: {fileID: 8373816239347703288}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1272237613
+  GlobalObjectIdHash: 26464475
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -209,6 +210,27 @@ MonoBehaviour:
   gravity: -9.81
   mouseSensitivity: 0.2
   rotate: {fileID: 1397814148479679156}
+--- !u!114 &8373816239347703288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5472914112539880004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6ebf881c6b59b4091fda72f18ff9d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableGameObjectIfOwnedByLocal: []
+  enableBehaviourIfOwnedByLocal: []
+  disableGameObjectIfOwnedByLocal: []
+  disableBehaviourIfOwnedByLocal: []
+  enableGameObjectIfOwnedRemotePlayer: []
+  enableBehaviourIfOwnedRemotePlayer: []
+  disableGameObjectIfOwnedRemotePlayer: []
+  disableBehaviourIfOwnedRemotePlayer:
+  - {fileID: 7213086198297157121}
 --- !u!1 &6420869008885898408
 GameObject:
   m_ObjectHideFlags: 0
