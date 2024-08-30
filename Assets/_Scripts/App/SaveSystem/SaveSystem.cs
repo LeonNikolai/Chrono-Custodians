@@ -15,7 +15,7 @@ public static class SaveSystem
     static string _savePath;
     static string _saveSlotFolder;
 
-    public static string SaveRootPath => _saveSlot;
+    public static string SaveRootPath => _savePath;
     public static string SaveSlotFolderPath => _saveSlotFolder;
     public static string CurrentSlotSavePath => $"{SaveSlotFolderPath}/{_saveSlot}/";
 

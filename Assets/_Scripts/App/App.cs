@@ -19,13 +19,15 @@ public static class App
     {
         // First thing to do when the application starts 
         // before the splash screen
-        LoadAppdata();
-        LaunchCount++;
+    
+    
         IsRunning = true;
     }
 
     public static void OnApplicationStart()
     {
+        LoadAppdata();
+        LaunchCount++;
         // After the first scene is loaded
 
     }
