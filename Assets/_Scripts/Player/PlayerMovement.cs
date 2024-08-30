@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private InputSystem_Actions playerActions;
     private Vector3 velocity;
     private float xRotation;
+    private bool grounded;
 
     private void Start()
     {
@@ -31,18 +32,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        CheckGround();
         Movement();
         Look();
     }
+    
+    private void CheckGround()
+    {
+        Vector3 collision = new Vector3(characterController.bounds.center.x, characterController.bounds.min.y, characterController.bounds.center.z) 
+                              + Vector3.up * characterController.radius;
+        
+        if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height, 
+        characterController.radius, Vector3.down, out RaycastHit groundHit, 0.2f) && velocity.y < 0f)
+        {
+            grounded = true; 
+            velocity.y = 0f;
+        }
+        else 
+        {
+            velocity.y += gravity * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime);
+        }
+    }
+        
 
     private void Movement()
     {
         Vector2 input = playerActions.Player.Move.ReadValue<Vector2>();
         Vector3 move = transform.right * input.x + transform.forward * input.y;
         characterController.Move(moveSpeed * Time.deltaTime * move);
-
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
     }
 
     private void Look()
@@ -59,10 +77,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void InputJump()
     {
-        Debug.Log("heee");
-        if (characterController.isGrounded)
+        if (grounded)
         {
             velocity.y = Mathf.Sqrt(-jumpForce * gravity);
+            grounded = false;
         }
     }
 }
