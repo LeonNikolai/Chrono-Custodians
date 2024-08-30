@@ -228,7 +228,8 @@ MonoBehaviour:
   disableBehaviourIfOwnedByLocal: []
   enableGameObjectIfOwnedRemotePlayer: []
   enableBehaviourIfOwnedRemotePlayer: []
-  disableGameObjectIfOwnedRemotePlayer: []
+  disableGameObjectIfOwnedRemotePlayer:
+  - {fileID: 7145292218947091899}
   disableBehaviourIfOwnedRemotePlayer:
   - {fileID: 7213086198297157121}
 --- !u!1 &6420869008885898408
