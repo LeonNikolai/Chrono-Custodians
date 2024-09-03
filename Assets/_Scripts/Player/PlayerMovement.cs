@@ -1,6 +1,4 @@
 using TMPro;
-using Unity.Mathematics;
-using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour

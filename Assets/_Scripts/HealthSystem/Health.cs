@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.Events;
-using System;
 
 public class HealthSystem : NetworkBehaviour
 {
