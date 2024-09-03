@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 5726932989996754182}
   - component: {fileID: 7213086198297157121}
   - component: {fileID: 8373816239347703288}
+  - component: {fileID: 3314032790525755765}
+  - component: {fileID: 3030631977893564479}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -238,6 +240,34 @@ MonoBehaviour:
   - {fileID: 7145292218947091899}
   disableBehaviourIfOwnedRemotePlayer:
   - {fileID: 7213086198297157121}
+--- !u!114 &3314032790525755765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5472914112539880004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90f777d4a0d24f74f9a9063ba0bdbbe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localPlayerHead: {fileID: 7145292218947091899}
+  newVolumeMinusPlus50: 5
+--- !u!114 &3030631977893564479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5472914112539880004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385ab9c9c09863143aa8d6629f6a56c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiVoiceToggle: {fileID: 0}
+  thisPlayerHead: {fileID: 7145292218947091899}
 --- !u!1 &6420869008885898408
 GameObject:
   m_ObjectHideFlags: 0
