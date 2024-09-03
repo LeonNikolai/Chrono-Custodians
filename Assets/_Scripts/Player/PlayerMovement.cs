@@ -89,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, 0f, lerpFactor * 2);
     }
         
-        speedText.text = $"Speed: {moveSpeedCurrent:F2}";
+        //speedText.text = $"Speed: {moveSpeedCurrent:F2}";
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
 

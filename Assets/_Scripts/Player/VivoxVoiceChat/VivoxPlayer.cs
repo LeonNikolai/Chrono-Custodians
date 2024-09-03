@@ -1,16 +1,15 @@
-    using UnityEngine;
+using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Vivox;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
-using System;
 
 public class VivoxPlayer : NetworkBehaviour
 {
     [SerializeField] private GameObject localPlayerHead;
     private Vector3 lastPlayerHeadPos;
 
-    private string gameChannelName = "TestChannel";
+    private string gameChannelName = "hubbabubba";
     private bool isIn3DChannel = false;
     Channel3DProperties player3DProperties;
 
@@ -40,6 +39,7 @@ public class VivoxPlayer : NetworkBehaviour
     private void Instance_ChannelJoined(string obj)
     {
         Debug.Log("Vivox: " + clientID + " has joined channel " + obj);
+
     }
 
     private void Update()
@@ -85,7 +85,6 @@ public class VivoxPlayer : NetworkBehaviour
             
             LoginOptions options = new LoginOptions();
             options.DisplayName = "Client" + clientID;
-            options.EnableTTS = true;
             await VivoxService.Instance.LoginAsync(options);
 
             join3DChannelAsync();
