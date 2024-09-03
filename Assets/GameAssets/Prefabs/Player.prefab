@@ -205,11 +205,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cd4dc96a896439682cf4c7f7b96521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 2.5
-  gravity: -9.81
+  stamina: 0
+  moveSpeedNormal: 2.5
+  moveSpeedSprint: 4.5
+  jumpForce: 2
+  gravity: -20
   mouseSensitivity: 0.2
+  staminaUseAmount: 10
+  staminaRegainAmount: 7.5
   rotate: {fileID: 1397814148479679156}
+  staminaText: {fileID: 0}
+  speedText: {fileID: 0}
 --- !u!114 &8373816239347703288
 MonoBehaviour:
   m_ObjectHideFlags: 0
