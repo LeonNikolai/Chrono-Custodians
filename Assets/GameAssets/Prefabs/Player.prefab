@@ -113,9 +113,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!143 &6880905970790039328
 CharacterController:
   m_ObjectHideFlags: 0
@@ -206,8 +206,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stamina: 0
-  moveSpeedNormal: 2.5
-  moveSpeedSprint: 4.5
+  moveSpeed: 2.25
+  sprintModifier: 0
   jumpForce: 2
   gravity: -20
   mouseSensitivity: 0.2
