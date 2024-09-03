@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: MainMenu Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: MainMenu
+  m_TableCollectionNameGuidString: c40db597acbfcca4f942fc3d7a766073
+  m_Entries:
+  - m_Id: 18238472192
+    m_Key: Play / Host
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120550129664
+    m_Key: Join
+    m_Metadata:
+      m_Items: []
+  - m_Id: 228142415872
+    m_Key: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 311994941440
+    m_Key: Offline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 418823864320
+    m_Key: Online
+    m_Metadata:
+      m_Items: []
+  - m_Id: 474918486016
+    m_Key: Local Lan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 977123475456
+    m_Key: Quit Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17863156498432
+    m_Key: Setting_Language
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 4968915214466548004
+  references:
+    version: 2
+    RefIds:
+    - rid: 4968915214466548004
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1725323550556
