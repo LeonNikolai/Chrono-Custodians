@@ -4,7 +4,7 @@ using UnityEngine;
 public partial class PlayerMovement : MonoBehaviour
 {
     public float stamina;
-    [SerializeField] private float moveSpeed, sprintModifier, jumpForce, gravity, mouseSensitivity;
+    [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
     [SerializeField] private float staminaUseAmount, staminaRegainAmount;
     [SerializeField] private Transform rotate;
     [SerializeField] private TMP_Text staminaText, speedText;
