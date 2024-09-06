@@ -16,5 +16,6 @@ public enum MovementState
 {
     Walking,
     Crouching,
-    Climbing
+    Climbing,
+    Jetpack
 }

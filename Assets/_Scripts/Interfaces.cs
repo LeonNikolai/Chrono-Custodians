@@ -1,7 +1,9 @@
 public interface IHighlightable
 {
     void HightlightEnter();
+    
     void HightlightUpdate();
+    
     void HightlightExit();
 }
 
