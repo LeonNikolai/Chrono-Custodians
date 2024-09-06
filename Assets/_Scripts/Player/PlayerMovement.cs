@@ -1,10 +1,10 @@
 using TMPro;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public partial class PlayerMovement : MonoBehaviour
 {
     public float stamina;
-    [SerializeField] private float moveSpeedNormal, moveSpeedSprint, jumpForce, gravity, mouseSensitivity;
+    [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
     [SerializeField] private float staminaUseAmount, staminaRegainAmount;
     [SerializeField] private Transform rotate;
     [SerializeField] private TMP_Text staminaText, speedText;
@@ -14,7 +14,8 @@ public class PlayerMovement : MonoBehaviour
     private float xRotation, moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
-    
+    //private MovementState currentState = MovementState.Walking;
+    private MovementModifierManager currentModifier = new();
 
     private void Start()
     {
@@ -28,18 +29,22 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions = new InputSystem_Actions();
         playerActions.Player.Jump.performed += ctx => InputJump();
+        playerActions.Player.Crouch.performed += ctx => InputCrouch();
         playerActions.Player.Enable();
     }
 
     private void OnDisable()
     {
         playerActions.Player.Jump.performed -= ctx => InputJump();
+        playerActions.Player.Crouch.performed -= ctx => InputCrouch();
         playerActions.Player.Disable();
     }
 
     private void Update()
     {
         CheckGround();
+        //CheckMovementState();
+        CheckIfSprinting();
         Movement();
         Look();
         Stamina();
@@ -62,7 +67,25 @@ public class PlayerMovement : MonoBehaviour
             characterController.Move(velocity * Time.deltaTime);
         }
     }
-        
+    
+    /*private void CheckMovementState() 
+    {
+
+    }*/
+    
+    private void CheckIfSprinting()
+    {
+        if (playerActions.Player.Sprint.IsPressed())
+        {
+            currentModifier.ActivateModifier(MovementModifier.Sprinting);
+            stamina -= staminaUseAmount * Time.deltaTime;
+            staminaRegainTimer = 2f;
+        }
+        else
+        {
+            currentModifier.DeactivateModifier(MovementModifier.Sprinting);
+        }
+    }
 
     private void Movement()
     {
@@ -72,22 +95,17 @@ public class PlayerMovement : MonoBehaviour
             moveDirection = transform.right * input.x + transform.forward * input.y;
         }
         
-    float lerpFactor = 1 - Mathf.Exp(-7.5f * Time.deltaTime);
-
-    if (playerActions.Player.Sprint.IsPressed() && stamina > 0f)
-    {
-        moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeedSprint, lerpFactor);
-        stamina -= staminaUseAmount * Time.deltaTime;
-        staminaRegainTimer = 2f;
-    }
-    else if (input != Vector2.zero)
-    {
-        moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeedNormal, lerpFactor);
-    }
-    else
-    {
-        moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, 0f, lerpFactor * 2);
-    }
+        float lerpFactor = 1 - Mathf.Exp(-7.5f * Time.deltaTime);
+        float movementMultiplier = currentModifier.CalculateMovementMultiplier();
+        
+        if (input != Vector2.zero)
+        {
+            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeed * movementMultiplier, lerpFactor);
+        }
+        else
+        {
+            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, 0f, lerpFactor * 2);
+        }
         
         //speedText.text = $"Speed: {moveSpeedCurrent:F2}";
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
@@ -122,6 +140,26 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(-jumpForce * gravity);
             grounded = false;
+        }
+    }
+    
+    private void InputCrouch()
+    {
+        if (grounded)
+        {
+            //currentState = MovementState.Crouching;
+        }
+    }
+    
+    public void ChangeModifier(MovementModifier modifier, bool enable) 
+    {
+        if (enable) 
+        {
+            currentModifier.ActivateModifier(modifier);
+        }
+        else 
+        {
+            currentModifier.DeactivateModifier(modifier);
         }
     }
 }
