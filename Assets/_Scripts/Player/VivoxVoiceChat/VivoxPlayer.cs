@@ -9,7 +9,7 @@ public class VivoxPlayer : NetworkBehaviour
     [SerializeField] private GameObject localPlayerHead;
     private Vector3 lastPlayerHeadPos;
 
-    private string gameChannelName = "hubbabubba";
+    private const string gameChannelName = "ProximityVoice";
     private bool isIn3DChannel = false;
     Channel3DProperties player3DProperties;
 
@@ -28,12 +28,17 @@ public class VivoxPlayer : NetworkBehaviour
             VivoxService.Instance.LoggedOut += onLoggedOut;
             VivoxService.Instance.ChannelJoined += Instance_ChannelJoined;
             VivoxService.Instance.ChannelLeft += Instance_ChannelLeft;
+            LoginToVivoxAsync();
         }
     }
 
     private void Instance_ChannelLeft(string obj)
     {
         Debug.Log("Vivox: " + clientID + " has left channel " + obj);
+        if (gameChannelName == obj)
+        {
+            isIn3DChannel = false;
+        }
     }
 
     private void Instance_ChannelJoined(string obj)
@@ -58,7 +63,6 @@ public class VivoxPlayer : NetworkBehaviour
     private void updatePlayer3DPos()
     {
         VivoxService.Instance.Set3DPosition(localPlayerHead, gameChannelName);
-        Debug.Log(VivoxService.Instance.ActiveChannels.Count);
         if (localPlayerHead.transform.position != lastPlayerHeadPos)
         {
             lastPlayerHeadPos = localPlayerHead.transform.position;
@@ -84,7 +88,9 @@ public class VivoxPlayer : NetworkBehaviour
             clientID = (int)NetworkManager.Singleton.LocalClientId;
             
             LoginOptions options = new LoginOptions();
-            options.DisplayName = "Client" + clientID;
+            options.DisplayName = "Client " + clientID;
+            options.ParticipantUpdateFrequency = ParticipantPropertyUpdateFrequency.FivePerSecond;
+            await VivoxVoiceManager.Instance.InitializeAsync(options.DisplayName);
             await VivoxService.Instance.LoginAsync(options);
 
             join3DChannelAsync();
@@ -93,7 +99,7 @@ public class VivoxPlayer : NetworkBehaviour
 
     public async void join3DChannelAsync()
     {
-        await VivoxService.Instance.JoinPositionalChannelAsync(gameChannelName, ChatCapability.AudioOnly, player3DProperties);
+        await VivoxService.Instance.JoinPositionalChannelAsync(gameChannelName, ChatCapability.TextAndAudio, player3DProperties);
         
         isIn3DChannel = true;
         Debug.Log("Vivox: Successfully joined 3D Voice Channel");
@@ -113,8 +119,8 @@ public class VivoxPlayer : NetworkBehaviour
 
     private void onLoggedOut()
     {
-        VivoxService.Instance.LeaveAllChannelsAsync();
-        VivoxService.Instance.LogoutAsync();
+        //VivoxService.Instance.LeaveAllChannelsAsync();
+        //VivoxService.Instance.LogoutAsync();
         Debug.Log("Vivox: " + clientID + " logged out");
     }
 
