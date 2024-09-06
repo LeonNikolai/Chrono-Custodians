@@ -1,7 +1,8 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
-public partial class PlayerMovement : MonoBehaviour
+public partial class PlayerMovement : NetworkBehaviour
 {
     public float stamina;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -16,9 +17,10 @@ public partial class PlayerMovement : MonoBehaviour
     
     //private MovementState currentState = MovementState.Walking;
     private MovementModifierManager currentModifier = new();
-
+    private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private void Start()
     {
+        if(!IsOwner) return;
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -27,6 +29,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
+        if(!IsOwner) return;
         playerActions = new InputSystem_Actions();
         playerActions.Player.Jump.performed += ctx => InputJump();
         playerActions.Player.Crouch.performed += ctx => InputCrouch();
@@ -35,6 +38,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
+        if(!IsOwner) return;
         playerActions.Player.Jump.performed -= ctx => InputJump();
         playerActions.Player.Crouch.performed -= ctx => InputCrouch();
         playerActions.Player.Disable();
@@ -42,6 +46,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if(!IsOwner) {return;}
         CheckGround();
         //CheckMovementState();
         CheckIfSprinting();
@@ -107,7 +112,7 @@ public partial class PlayerMovement : MonoBehaviour
             moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, 0f, lerpFactor * 2);
         }
         
-        speedText.text = $"Speed: {moveSpeedCurrent:F2}";
+        if(speedText) speedText.text = $"Speed: {moveSpeedCurrent:F2}";
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
 
@@ -131,7 +136,7 @@ public partial class PlayerMovement : MonoBehaviour
             staminaRegainTimer = 0f;
             stamina += staminaRegainAmount * Time.deltaTime;
         }
-        staminaText.text = $"Stamina: {stamina:F0} / 100";
+        if(staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
     }
 
     private void InputJump()
