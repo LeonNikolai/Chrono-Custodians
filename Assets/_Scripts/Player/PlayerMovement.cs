@@ -15,7 +15,7 @@ public class PlayerMovement : NetworkBehaviour
     private float xRotation, moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
-    private MovementStateManager movementState = new();
+    public MovementStateManager movementState = new();
     private MovementModifierManager movementModifier = new();
     
     //private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -210,7 +210,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (currentHighlightable != null && currentHighlightable is IInteractable interactable ) 
         {
-            interactable.Interact();
+            interactable.Interact(this);
         }
         //ChangeState(MovementState.Jetpack, 1f);
     }

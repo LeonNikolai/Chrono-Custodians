@@ -2,16 +2,7 @@ using UnityEngine;
 
 public class Ladder : MonoBehaviour, IHighlightable, IInteractable
 {
-    [SerializeField] private Collider[] endPoint;
-    
-    private void OnTriggerEnter(Collider hit)
-    {
-        if (hit.gameObject.CompareTag("Player")) 
-        {
-            hit.gameObject.GetComponent<PlayerMovement>().ChangeState(MovementState.Climbing, 0f);
-            Debug.Log("a");
-        }
-    }
+    [SerializeField] private Vector3 startClimbPoint;
     
     public void HightlightEnter() 
     {
@@ -28,8 +19,12 @@ public class Ladder : MonoBehaviour, IHighlightable, IInteractable
         Debug.Log("HighLight Exit");
     }
     
-    public void Interact() 
+    public void Interact(PlayerMovement player) 
     {
-        Debug.Log("Interact");
+        if (player.movementState.currentState != MovementState.Climbing) 
+        {
+            player.ChangeState(MovementState.Climbing, 0f);
+            player.transform.position = startClimbPoint;
+        }
     }
 }
