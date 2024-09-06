@@ -9,4 +9,10 @@ public class LevelScene : ScriptableObject
     public Sprite PreviewImage => _previewImage;
     public string SceneName => _sceneName;
     public string LevelName => _levelName;
+
+
+    public void LoadScene()
+    {
+        LevelManager.LoadLevelScene(this);
+    }
 }

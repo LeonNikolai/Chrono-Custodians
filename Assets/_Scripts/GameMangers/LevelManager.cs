@@ -1,14 +1,16 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-
+[DefaultExecutionOrder(-50)]
 public class LevelManager : NetworkBehaviour {
     [SerializeField] LevelScene[] _levelScene;
     static LevelScene autoEnterScene = null;
     [SerializeField] LevelScene _autoEnterScene = null;
-    LevelScene _loadedScene = null;
-    public LevelScene LoadedScene {
+    
+    static LevelScene _loadedScene = null;
+    public static LevelScene LoadedScene {
         get => _loadedScene;
         private set {
             if(_loadedScene == value) return;
@@ -25,15 +27,19 @@ public class LevelManager : NetworkBehaviour {
             }
         }
     }
+
+    public static void LoadLevelScene(LevelScene scene) {
+        LoadedScene = scene;
+    }
     private void Awake() {
         _loadedScene = null;
         if(autoEnterScene == null) autoEnterScene = _autoEnterScene;
     }
-    private void LoadScene(string sceneName)
+    static void LoadScene(string sceneName)
     {
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
     }
-    private void UnloadScene(string sceneName)
+    static void UnloadScene(string sceneName)
     {
         var scene = SceneManager.GetSceneByName(sceneName);
         if (scene.IsValid() && scene.isLoaded)
