@@ -1,8 +1,9 @@
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
-public partial class PlayerMovement : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public float stamina;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -10,38 +11,37 @@ public partial class PlayerMovement : NetworkBehaviour
     [SerializeField] private Transform rotate;
     [SerializeField] private TMP_Text staminaText, speedText;
     private CharacterController characterController;
-    private InputSystem_Actions playerActions;
     private Vector3 velocity, moveDirection;
     private float xRotation, moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
-    //private MovementState currentState = MovementState.Walking;
-    private MovementModifierManager currentModifier = new();
-    private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private MovementStateManager movementState = new();
+    private MovementModifierManager movementModifier = new();
+    
+    //private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    
     private void Start()
     {
         if(!IsOwner) return;
         characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        movementState.GetMovementData(MovementState.Walking);
         stamina = 100f;
     }
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn(); 
         if(!IsOwner) return;
-        playerActions = new InputSystem_Actions();
-        playerActions.Player.Jump.performed += ctx => InputJump();
-        playerActions.Player.Crouch.performed += ctx => InputCrouch();
-        playerActions.Player.Enable();
+        Player.Input.Player.Jump.performed += ctx => InputJump();
+        Player.Input.Player.Crouch.performed += ctx => InputCrouch();
     }
 
-    private void OnDisable()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         if(!IsOwner) return;
-        playerActions.Player.Jump.performed -= ctx => InputJump();
-        playerActions.Player.Crouch.performed -= ctx => InputCrouch();
-        playerActions.Player.Disable();
+        Player.Input.Player.Jump.performed -= ctx => InputJump();
+        Player.Input.Player.Crouch.performed -= ctx => InputCrouch();
     }
 
     private void Update()
@@ -49,10 +49,11 @@ public partial class PlayerMovement : NetworkBehaviour
         if(!IsOwner) {return;}
         CheckGround();
         //CheckMovementState();
-        CheckIfSprinting();
-        Movement();
-        Look();
-        Stamina();
+        CheckSprint();
+        PlayerStamina();
+        PlayerMove();
+        PlayerCamera();
+        
     }
     
     private void CheckGround()
@@ -78,34 +79,48 @@ public partial class PlayerMovement : NetworkBehaviour
 
     }*/
     
-    private void CheckIfSprinting()
+    private void CheckSprint()
     {
-        if (playerActions.Player.Sprint.IsPressed())
+        if (Player.Input.Player.Sprint.IsPressed())
         {
-            currentModifier.ActivateModifier(MovementModifier.Sprinting);
+            movementModifier.ActivateModifier(MovementModifier.Sprinting);
             stamina -= staminaUseAmount * Time.deltaTime;
             staminaRegainTimer = 2f;
         }
         else
         {
-            currentModifier.DeactivateModifier(MovementModifier.Sprinting);
+            movementModifier.DeactivateModifier(MovementModifier.Sprinting);
         }
     }
-
-    private void Movement()
+    
+    private void PlayerStamina() 
     {
-        Vector2 input = playerActions.Player.Move.ReadValue<Vector2>();
-        if (input != Vector2.zero) 
+        staminaRegainTimer -= Time.deltaTime;
+        if (staminaRegainTimer <= 0f && stamina < 100f) 
         {
-            moveDirection = transform.right * input.x + transform.forward * input.y;
+            staminaRegainTimer = 0f;
+            stamina += staminaRegainAmount * Time.deltaTime;
         }
-        
-        float lerpFactor = 1 - Mathf.Exp(-7.5f * Time.deltaTime);
-        float movementMultiplier = currentModifier.CalculateMovementMultiplier();
+        if(staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
+    }
+
+    private void PlayerMove()
+    {
+        Vector2 input = Player.Input.Player.Move.ReadValue<Vector2>();
         
         if (input != Vector2.zero)
         {
-            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeed * movementMultiplier, lerpFactor);
+            moveDirection = 
+                transform.right * input.x * movementState.data.direction.X + 
+                transform.up * input.y * movementState.data.direction.Y + 
+                transform.forward * input.y * movementState.data.direction.Z;
+        }
+        
+        float lerpFactor = 1 - Mathf.Exp(-7.5f * Time.deltaTime);
+        
+        if (input != Vector2.zero)
+        {
+            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeed * movementModifier.movementMultiplier, lerpFactor);
         }
         else
         {
@@ -116,10 +131,10 @@ public partial class PlayerMovement : NetworkBehaviour
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
 
-    private void Look()
+    private void PlayerCamera()
     {
-        float mouseX = playerActions.Player.Look.ReadValue<Vector2>().x * mouseSensitivity;
-        float mouseY = playerActions.Player.Look.ReadValue<Vector2>().y * mouseSensitivity;
+        float mouseX = Player.Input.Player.Look.ReadValue<Vector2>().x * mouseSensitivity;
+        float mouseY = Player.Input.Player.Look.ReadValue<Vector2>().y * mouseSensitivity;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -128,16 +143,7 @@ public partial class PlayerMovement : NetworkBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
     
-    private void Stamina() 
-    {
-        staminaRegainTimer -= Time.deltaTime;
-        if (staminaRegainTimer <= 0f && stamina < 100f) 
-        {
-            staminaRegainTimer = 0f;
-            stamina += staminaRegainAmount * Time.deltaTime;
-        }
-        if(staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
-    }
+
 
     private void InputJump()
     {
@@ -160,11 +166,16 @@ public partial class PlayerMovement : NetworkBehaviour
     {
         if (enable) 
         {
-            currentModifier.ActivateModifier(modifier);
+            movementModifier.ActivateModifier(modifier);
         }
         else 
         {
-            currentModifier.DeactivateModifier(modifier);
+            movementModifier.DeactivateModifier(modifier);
         }
+    }
+    
+    public void ChangeState(MovementState state) 
+    {
+        movementState.GetMovementData(state);
     }
 }
