@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stamina: 0
+  rotate: {fileID: 1397814148479679156}
   moveSpeed: 3
   jumpForce: 2
   gravity: -20
@@ -342,7 +343,6 @@ MonoBehaviour:
   staminaUseAmount: 10
   staminaRegainAmount: 7.5
   interactRadius: 3
-  rotate: {fileID: 1397814148479679156}
   staminaText: {fileID: 987605723246688060}
   speedText: {fileID: 2845077534474642553}
 --- !u!114 &8373816239347703288

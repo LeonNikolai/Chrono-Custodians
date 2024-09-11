@@ -5,14 +5,15 @@ using UnityEngine;
 public class PlayerMovement : NetworkBehaviour
 {
     public float stamina;
+    public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
     [SerializeField] private float staminaUseAmount, staminaRegainAmount, interactRadius;
-    [SerializeField] private Transform rotate;
     [SerializeField] private TMP_Text staminaText, speedText;
+    [SerializeField] private Transform rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
     private Vector3 velocity, moveDirection;
-    private float xRotation, moveSpeedCurrent, staminaRegainTimer;
+    private float moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
     public MovementStateManager movementState = new();
@@ -24,9 +25,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if(!IsOwner) return;
         characterController = GetComponent<CharacterController>();
-        characterController.enabled = false;
-        transform.position = new Vector3(50f, 12.5f, 50f);
-        characterController.enabled = true;
+        ChangePosition(new Vector3(50f, 12.5f, 50f));
         Walk();
         stamina = 100f;
     }
@@ -208,7 +207,7 @@ public class PlayerMovement : NetworkBehaviour
     
     private void InputInteract()
     {
-        if (currentHighlightable != null && currentHighlightable is IInteractable interactable ) 
+        if (currentHighlightable is IInteractable interactable) 
         {
             interactable.Interact(this);
         }
@@ -232,5 +231,12 @@ public class PlayerMovement : NetworkBehaviour
         gravity = -20f;
         movementState.GetMovementData(state);
         gravity *= gravityModifier;
+    }
+    
+    public void ChangePosition(Vector3 position) 
+    {
+        characterController.enabled = false;
+        transform.position = position;
+        characterController.enabled = true;
     }
 }
