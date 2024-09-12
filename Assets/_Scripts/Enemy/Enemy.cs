@@ -21,8 +21,8 @@ public abstract class Enemy : NetworkBehaviour
     public bool DrawWaypointGizmos = false;
 
     // AI Pathfinding Behavior Variables
-    private NavMeshAgent agent;
-    [SerializeField] protected bool roaming = true;
+    protected NavMeshAgent agent;
+    [SerializeField] protected bool isRoaming = true;
     [SerializeField] private Transform targetWaypoint;
     [SerializeField] private float CheckoffRadius = 5f;
     [SerializeField] private float waypointIgnoreRadius = 15f;
@@ -41,6 +41,7 @@ public abstract class Enemy : NetworkBehaviour
         {
             currentHealth.Value = maxHealth;
             agent = GetComponent<NavMeshAgent>();
+            if (!isRoaming) return;
             GetWaypoints();
             SelectNewWaypoint();
         }
@@ -50,11 +51,10 @@ public abstract class Enemy : NetworkBehaviour
     {
         if (!IsServer) return;
 
-
+        if (!isRoaming) return;
         // Checks if the enemy is roaming and the distance between it and the target waypoint is within the checkoff radius
-        float distance = Vector3.Distance(transform.position, targetWaypoint.position);
-        Debug.Log(distance);
-        if (roaming && distance < CheckoffRadius) WaypointReached();
+        float sqrDistance = Vector3.SqrMagnitude(transform.position - targetWaypoint.position);
+        if (sqrDistance < CheckoffRadius * CheckoffRadius) WaypointReached();
     }
 
     private void GetWaypoints()
@@ -87,7 +87,7 @@ public abstract class Enemy : NetworkBehaviour
         do
         {
             newTarget = waypoints[Random.Range(0, waypoints.Count)];
-        } while (Vector3.Distance(transform.position, newTarget.position) < waypointIgnoreRadius);
+        } while (Vector3.SqrMagnitude(transform.position - newTarget.position) < waypointIgnoreRadius * waypointIgnoreRadius);
 
         if (visitedWaypoints.Count > 10)
         {
@@ -107,6 +107,18 @@ public abstract class Enemy : NetworkBehaviour
 
 
     public abstract void Attack();
+
+    public virtual void StopRoaming()
+    {
+        isRoaming = false;
+        agent.isStopped = true;
+    }
+
+    public virtual void StartRoaming()
+    {
+        isRoaming = true;
+        agent.isStopped = false;
+    }
 
     private void OnDrawGizmos()
     {
