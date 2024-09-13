@@ -4,7 +4,8 @@ using UnityEngine.Events;
 
 public class HealthSystem : NetworkBehaviour
 {
-    public NetworkVariable<int> HealthValue = new NetworkVariable<int>(100);
+    public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100);
+    public NetworkVariable<int> currentHealth;
 
     [SerializeField] private UnityEvent onDeath;
 
@@ -15,7 +16,7 @@ public class HealthSystem : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsClient)
         {
-            HealthValue.OnValueChanged += OnHealthChanged;
+            currentHealth.OnValueChanged += OnHealthChanged;
         }
     }
 
@@ -23,7 +24,7 @@ public class HealthSystem : NetworkBehaviour
     {
         if (IsClient)
         {
-            HealthValue.OnValueChanged -= OnHealthChanged;
+            currentHealth.OnValueChanged -= OnHealthChanged;
         }
         base.OnNetworkDespawn();
     }
@@ -32,9 +33,9 @@ public class HealthSystem : NetworkBehaviour
     public void TakeDamageServerRpc(int damage)
     {
         if (!IsServer) return;
-        HealthValue.Value = Mathf.Max(HealthValue.Value-damage, 0);
+        currentHealth.Value = Mathf.Max(currentHealth.Value-damage, 0);
 
-        if (HealthValue.Value <= 0)
+        if (currentHealth.Value <= 0)
         {
             Die();
         }

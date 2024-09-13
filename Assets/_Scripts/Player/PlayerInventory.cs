@@ -11,7 +11,7 @@ public class PlayerInventory : NetworkBehaviour
     public Transform Hand => _playerHand ? _playerHand : _player.transform;
 
     // Inventory
-    public NetworkList<NetworkObjectReference> Inventory = new NetworkList<NetworkObjectReference>(new List<NetworkObjectReference>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkList<NetworkObjectReference> Inventory;
 
     // Equipped Item
     public NetworkVariable<NetworkObjectReference> EquippedNetworkItem = new NetworkVariable<NetworkObjectReference>(new NetworkObjectReference(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -27,7 +27,10 @@ public class PlayerInventory : NetworkBehaviour
             _equippedItemLocalRefference?.OnEquip(this);
         }
     }
-
+    private void Awake()
+    {
+        Inventory = new NetworkList<NetworkObjectReference>(new List<NetworkObjectReference>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -54,6 +57,8 @@ public class PlayerInventory : NetworkBehaviour
     }
     public override void OnDestroy()
     {
+        Inventory.Dispose();
+        EquippedNetworkItem.Dispose();
         base.OnDestroy();
     }
 
