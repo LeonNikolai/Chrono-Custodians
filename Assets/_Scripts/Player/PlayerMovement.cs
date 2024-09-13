@@ -36,6 +36,7 @@ public class PlayerMovement : NetworkBehaviour
         //ChangePosition(new Vector3(0f, 1f, 0f));
         Walk();
         stamina = 100f;
+        Hud.Stamina = stamina / 100f;  
     }
 
     public override void OnNetworkSpawn()
@@ -127,6 +128,7 @@ public class PlayerMovement : NetworkBehaviour
             movementModifier.ActivateModifier(MovementModifier.Sprinting);
             stamina -= staminaUseAmount * Time.deltaTime;
             staminaRegainTimer = 2f;
+            Hud.Stamina = stamina / 100f;
         }
         else
         {
@@ -141,6 +143,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             staminaRegainTimer = 0f;
             stamina += staminaRegainAmount * Time.deltaTime;
+            Hud.Stamina = stamina / 100f;        
         }
         if(staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
     }
