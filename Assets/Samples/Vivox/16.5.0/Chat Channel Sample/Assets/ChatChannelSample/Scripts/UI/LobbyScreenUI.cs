@@ -19,6 +19,9 @@ public class LobbyScreenUI : MonoBehaviour
     Image m_ConnectionIndicatorDotImage;
     Text m_ConnectionIndicatorDotText;
 
+    [SerializeField] Channel3DProperties player3DProperties;
+    [SerializeField] private GameObject voice;
+
     void Start()
     {
         StartCoroutine(Setup());
@@ -71,7 +74,7 @@ public class LobbyScreenUI : MonoBehaviour
 
     Task JoinLobbyChannel()
     {
-        return VivoxService.Instance.JoinGroupChannelAsync(VivoxVoiceManager.LobbyChannelName, ChatCapability.TextAndAudio);
+        return VivoxService.Instance.JoinPositionalChannelAsync(VivoxVoiceManager.LobbyChannelName, ChatCapability.AudioOnly, player3DProperties);
     }
 
     async void LogoutOfVivoxServiceAsync()
@@ -90,6 +93,7 @@ public class LobbyScreenUI : MonoBehaviour
         await JoinLobbyChannel();
         LogoutButton.interactable = true;
         m_EventSystem.SetSelectedGameObject(LogoutButton.gameObject, null);
+        VivoxService.Instance.Set3DPosition(voice, VivoxVoiceManager.LobbyChannelName);
     }
 
     void OnUserLoggedOut()
