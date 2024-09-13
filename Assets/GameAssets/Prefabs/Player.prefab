@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 6880905970790039328}
   - component: {fileID: 5726932989996754182}
   - component: {fileID: 3662181299126535597}
+  - component: {fileID: 2648385201836132714}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -84,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4041252940
+  GlobalObjectIdHash: 26464475
   InScenePlacedSourceGlobalObjectIdHash: 4041252940
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -250,6 +251,27 @@ MonoBehaviour:
   _dropIgnoreLayers:
     serializedVersion: 2
     m_Bits: 55
+--- !u!114 &2648385201836132714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5472914112539880004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: febfbd823d85cb143a3277fe5a4c1e8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth:
+    m_InternalValue: 100
+  currentHealth:
+    m_InternalValue: 0
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  alive: {fileID: 0}
+  dead: {fileID: 0}
 --- !u!1 &6420869008885898408
 GameObject:
   m_ObjectHideFlags: 0

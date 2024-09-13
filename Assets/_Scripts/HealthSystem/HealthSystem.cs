@@ -5,15 +5,16 @@ using UnityEngine.Events;
 public class HealthSystem : NetworkBehaviour
 {
     public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100);
-    public NetworkVariable<int> currentHealth;
+    public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100);
 
-    [SerializeField] private UnityEvent onDeath;
+    public UnityEvent onDeath;
 
     [SerializeField] private Material alive, dead;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        currentHealth.Value = maxHealth.Value;
         if (IsClient)
         {
             currentHealth.OnValueChanged += OnHealthChanged;
@@ -49,18 +50,5 @@ public class HealthSystem : NetworkBehaviour
     private void Die()
     {
         onDeath.Invoke();
-    }
-
-    public void testMethod()
-    {
-        GetComponent<MeshRenderer>().material = dead;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            TakeDamageServerRpc(100);
-        }
     }
 }
