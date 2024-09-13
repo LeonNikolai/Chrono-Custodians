@@ -41,10 +41,10 @@ public class PlayerSpawner : NetworkBehaviour
 
     override public void OnDestroy()
     {
-        // Unsubscribe to prevent memory leaks
+ 
         if (IsServer)
         {
-            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            if(NetworkManager.Singleton) NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
         }
     }
 }
