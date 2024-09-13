@@ -33,6 +33,7 @@ public class PlayerSpawner : NetworkBehaviour
             Debug.LogError("Player prefab is not assigned in PlayerSpawner.");
             return;
         }
+        if (Player.Players.ContainsKey(clientId)) return;
         Transform spawnPoint = spawnPoints.Length == 0 ? transform : spawnPoints[Random.Range(0, spawnPoints.Length)];
         GameObject playerInstance = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);

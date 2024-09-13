@@ -33,7 +33,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InitalizeMovement()
     {
-        ChangePosition(new Vector3(0f, 1f, 0f));
+        //ChangePosition(new Vector3(0f, 1f, 0f));
         Walk();
         stamina = 100f;
     }
