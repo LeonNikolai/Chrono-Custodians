@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FieldOfView : NetworkBehaviour
 {
@@ -14,6 +15,7 @@ public class FieldOfView : NetworkBehaviour
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask obstructionMask;
 
+    [SerializeField] private UnityEvent OnPlayerSeen;
     public bool canSeePlayer;
 
     public override void OnNetworkSpawn()
@@ -52,7 +54,6 @@ public class FieldOfView : NetworkBehaviour
                 {
                     closestDistance = newDistance;
                     player = rangeChecks[i].gameObject;
-                    canSeePlayer = true;
                 }
             }
 
@@ -66,6 +67,7 @@ public class FieldOfView : NetworkBehaviour
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
                     canSeePlayer = true;
+                    OnPlayerSeen.Invoke();
                 }
                 else
                 {

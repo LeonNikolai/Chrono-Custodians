@@ -11,7 +11,7 @@ public abstract class Enemy : NetworkBehaviour
     public bool DrawAttackGizmos = false;
     [SerializeField] protected int maxHealth;
     [SerializeField] protected float attackRange;
-    [SerializeField] protected float attackDamage;
+    [SerializeField] protected int attackDamage;
     [SerializeField] protected float attackCooldown;
     [SerializeField] protected float moveSpeed;
 
@@ -41,6 +41,7 @@ public abstract class Enemy : NetworkBehaviour
         {
             currentHealth.Value = maxHealth;
             agent = GetComponent<NavMeshAgent>();
+            agent.speed = moveSpeed;
             if (!isRoaming) return;
             GetWaypoints();
             SelectNewWaypoint();
@@ -111,13 +112,13 @@ public abstract class Enemy : NetworkBehaviour
     public virtual void StopRoaming()
     {
         isRoaming = false;
-        agent.isStopped = true;
+        agent.SetDestination(transform.position);
     }
 
     public virtual void StartRoaming()
     {
         isRoaming = true;
-        agent.isStopped = false;
+        SelectNewWaypoint();
     }
 
     private void OnDrawGizmos()
