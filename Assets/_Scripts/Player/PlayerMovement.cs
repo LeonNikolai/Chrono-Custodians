@@ -10,9 +10,11 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float staminaUseAmount, staminaRegainAmount, interactRadius;
     [SerializeField] private TMP_Text staminaText, speedText;
     [SerializeField] private Transform rotate;
+    public Transform CameraTransform => rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
-    private Vector3 velocity, moveDirection;
+    private Vector3 velocity = Vector3.zero;
+    private Vector3 moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
@@ -20,12 +22,18 @@ public class PlayerMovement : NetworkBehaviour
     private MovementModifierManager movementModifier = new();
     
     //private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    
+    private void Awake() {
+        if (characterController == null) characterController = GetComponent<CharacterController>();
+    }
     private void Start()
     {
-        if(!IsOwner) return;
-        characterController = GetComponent<CharacterController>();
-        ChangePosition(new Vector3(50f, 12.5f, 50f));
+        if (!IsOwner) return;
+        InitalizeMovement();
+    }
+
+    private void InitalizeMovement()
+    {
+        ChangePosition(new Vector3(0f, 1f, 0f));
         Walk();
         stamina = 100f;
     }
@@ -34,6 +42,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         base.OnNetworkSpawn(); 
         if(!IsOwner) return;
+        Debug.Log("PlayerMovement OnNetworkSpawn : " + transform.position);
+        InitalizeMovement();
         Player.Input.Player.Jump.performed += ctx => InputJump();
         Player.Input.Player.Crouch.performed += ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled += ctx => Walk();

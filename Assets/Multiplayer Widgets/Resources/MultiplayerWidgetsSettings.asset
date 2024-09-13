@@ -9,14 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cd2d0a1f50a4bfb8457be4b41099277, type: 3}
-  m_Name: DefaultWidgetConfiguration
+  m_Script: {fileID: 11500000, guid: 8dedd8068bb3463f97d10eaff64ed5f3, type: 3}
+  m_Name: MultiplayerWidgetsSettings
   m_EditorClassIdentifier: 
-  Name: Session
-  connectionType: 2
-  connectionMode: 0
-  ListenIpAddress: 127.0.0.1
-  PublishIpAddress: 127.0.0.1
-  Port: 0
-  MaxPlayers: 4
-  EnableVoiceChat: 0
+  m_UseCustomServiceInitialization: 0
