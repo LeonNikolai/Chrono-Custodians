@@ -18,8 +18,9 @@ public class VivoxPlayer : NetworkBehaviour
 
     private float _nextPosUpdate;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         if (IsLocalPlayer)
         {
             InitializeAsync();
@@ -71,7 +72,8 @@ public class VivoxPlayer : NetworkBehaviour
 
     async void InitializeAsync()
     {
-        await UnityServices.InitializeAsync();
+        if (UnityServices.Instance.State != ServicesInitializationState.Initialized)
+            await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn)
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
