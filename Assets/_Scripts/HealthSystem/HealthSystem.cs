@@ -15,6 +15,7 @@ public class HealthSystem : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         currentHealth.Value = maxHealth.Value;
+        Hud.Health = (float)currentHealth.Value / (float)maxHealth.Value;
         if (IsClient)
         {
             currentHealth.OnValueChanged += OnHealthChanged;
@@ -44,7 +45,10 @@ public class HealthSystem : NetworkBehaviour
 
     private void OnHealthChanged(int previousValue, int newValue)
     {
-
+        if (IsOwner) 
+        {
+            Hud.Health = (float)currentHealth.Value / (float)maxHealth.Value;  
+        }
     }
 
     private void Die()
