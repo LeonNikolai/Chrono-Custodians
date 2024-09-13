@@ -48,7 +48,6 @@ public static class AppBootstraper
             return;
         }
         PlayerLoop.SetPlayerLoop(playerLoop);
-        PlayerLoopUtils.PrintPlayerLoop(playerLoop);
 
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
