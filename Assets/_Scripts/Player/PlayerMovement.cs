@@ -5,28 +5,35 @@ using UnityEngine;
 public class PlayerMovement : NetworkBehaviour
 {
     public float stamina;
+    public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
     [SerializeField] private float staminaUseAmount, staminaRegainAmount, interactRadius;
-    [SerializeField] private Transform rotate;
     [SerializeField] private TMP_Text staminaText, speedText;
+    [SerializeField] private Transform rotate;
+    public Transform CameraTransform => rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
-    private Vector3 velocity, moveDirection;
-    private float xRotation, moveSpeedCurrent, staminaRegainTimer;
+    private Vector3 velocity = Vector3.zero;
+    private Vector3 moveDirection = Vector3.zero;
+    private float moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
     
     public MovementStateManager movementState = new();
     private MovementModifierManager movementModifier = new();
     
     //private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    
+    private void Awake() {
+        if (characterController == null) characterController = GetComponent<CharacterController>();
+    }
     private void Start()
     {
-        if(!IsOwner) return;
-        characterController = GetComponent<CharacterController>();
-        characterController.enabled = false;
-        transform.position = new Vector3(50f, 12.5f, 50f);
-        characterController.enabled = true;
+        if (!IsOwner) return;
+        InitalizeMovement();
+    }
+
+    private void InitalizeMovement()
+    {
+        ChangePosition(new Vector3(0f, 1f, 0f));
         Walk();
         stamina = 100f;
     }
@@ -35,6 +42,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         base.OnNetworkSpawn(); 
         if(!IsOwner) return;
+        Debug.Log("PlayerMovement OnNetworkSpawn : " + transform.position);
+        InitalizeMovement();
         Player.Input.Player.Jump.performed += ctx => InputJump();
         Player.Input.Player.Crouch.performed += ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled += ctx => Walk();
@@ -208,7 +217,7 @@ public class PlayerMovement : NetworkBehaviour
     
     private void InputInteract()
     {
-        if (currentHighlightable != null && currentHighlightable is IInteractable interactable ) 
+        if (currentHighlightable is IInteractable interactable) 
         {
             interactable.Interact(this);
         }
@@ -232,5 +241,12 @@ public class PlayerMovement : NetworkBehaviour
         gravity = -20f;
         movementState.GetMovementData(state);
         gravity *= gravityModifier;
+    }
+    
+    public void ChangePosition(Vector3 position) 
+    {
+        characterController.enabled = false;
+        transform.position = position;
+        characterController.enabled = true;
     }
 }

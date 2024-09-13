@@ -8,6 +8,7 @@ public class LevelManager : NetworkBehaviour {
     [SerializeField] LevelScene[] _levelScene;
     static LevelScene autoEnterScene = null;
     [SerializeField] LevelScene _autoEnterScene = null;
+
     
     static LevelScene _loadedScene = null;
     public static LevelScene LoadedScene {

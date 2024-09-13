@@ -13,5 +13,17 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   _sceneName: 1_Greece
-  _levelName: Greece
+  _levelName:
+    m_TableReference:
+      m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
+    m_TableEntryReference:
+      m_KeyId: 18389467136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   _previewImage: {fileID: 0}
+  _astronomicalYear: 1
+  references:
+    version: 2
+    RefIds: []
