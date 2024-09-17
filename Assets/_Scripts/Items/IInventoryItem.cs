@@ -1,5 +1,6 @@
 public interface IInventoryItem
 {
-    void OnEnterInventory(object playerCharacter);
-    void OnExitInventory(object playerCharacter);
+    ItemData ItemData { get; }
+    void OnEnterInventory(object playerCharacter, ItemSlotType slotType);
+    void OnExitInventory(object playerCharacter, ItemSlotType slotType);
 }

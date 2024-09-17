@@ -145,7 +145,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 047e19cd166c28d49aee6b9ce78b01e2, type: 2}
-  _collider: {fileID: 8292361624348565585}
+  _meshRenderers:
+  - {fileID: 4023631155484141248}
+  _collider:
+  - {fileID: 8292361624348565585}
 --- !u!114 &1357783130080461859
 MonoBehaviour:
   m_ObjectHideFlags: 0

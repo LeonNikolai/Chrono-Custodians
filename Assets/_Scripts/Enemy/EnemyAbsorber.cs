@@ -2,6 +2,7 @@ using System.Collections;
 using System.IO;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem.Android;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering.UI;
@@ -92,7 +93,16 @@ public class EnemyAbsorber : Enemy
                 agent.speed = normalSpeed;
                 if (agent.destination != player.transform.position)
                 {
-                    agent.SetDestination(player.transform.position);
+if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas)) {
+    agent.SetDestination(hit.position);
+} else if(  NavMesh.FindClosestEdge(player.transform.position, out hit, NavMesh.AllAreas))
+{
+    agent.SetDestination(hit.position);
+
+} else {
+    agent.SetDestination(player.transform.position);
+
+}
                 }
             }
 
