@@ -1,18 +1,30 @@
+
 using System;
 using Unity.Netcode;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IHighlightable
 {
+
     bool hasItemPhysics = false;
     [SerializeField] ItemData _itemData;
     private Transform _transformTarget = null;
-    [SerializeField] Collider _collider;
-    public Collider Collider => _collider;
 
-    // Optional Rigidbody for dropping
-    Rigidbody _rigidbody;
+    [Header("Item Refferences")]
+    [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
+    [SerializeField] Collider[] _collider = new Collider[0];
+    public Collider[] Collider => _collider;
+
+    NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public bool InInventory
+    {
+        get
+        {
+            return !IsOwnedByServer;
+        }
+    }
+
+    public ItemData ItemData => _itemData;
 
     public void Interact(PlayerMovement player)
     {
@@ -26,24 +38,39 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         {
             clientTransform.InLocalSpace = true;
         }
-        if (_rigidbody == null && TryGetComponent(out Rigidbody rigidbody))
-        {
-            _rigidbody = rigidbody;
-        }
     }
+    public override void OnNetworkSpawn()
+    {
+        currentSlot.OnValueChanged += OnSlotChanged;
+        base.OnNetworkSpawn();
+    }
+
+
     public override void OnGainedOwnership()
     {
-        if(_rigidbody) _rigidbody.isKinematic = true;
-        Collider.enabled = false;
         _transformTarget = Player.LocalPlayer.Inventory.Hand;
         base.OnGainedOwnership();
     }
+
     public override void OnLostOwnership()
     {
-        if(_rigidbody) _rigidbody.isKinematic = !hasItemPhysics;
-        Collider.enabled = true;
         _transformTarget = null;
         base.OnLostOwnership();
+    }
+
+    public void EnableColliders(bool enable = true)
+    {
+        foreach (var collider in _collider)
+        {
+            collider.enabled = enable;
+        }
+    }
+    public void EnableVisuals(bool enable = true)
+    {
+        foreach (var collider in _meshRenderers)
+        {
+            collider.enabled = enable;
+        }
     }
 
     protected override void OnOwnershipChanged(ulong previous, ulong current)
@@ -61,25 +88,26 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             Debug.Log("Server picked up item");
             if (Player.Players.TryGetValue(clientId, out Player Character))
             {
-                NetworkObject.ChangeOwnership(clientId);
-                if (NetworkObject.TrySetParent(Character.transform, false))
-                {
-                    transform.localEulerAngles = Vector3.zero;
-                    _collider.enabled = false;
-                    _transformTarget = Character.Inventory.Hand;
+                if(Character.Inventory.TryAddItem(NetworkObject)) {
+                    NetworkObject.ChangeOwnership(clientId);
+                    currentSlot.Value = ItemSlotType.PlayerInventory;
+                    if (NetworkObject.TrySetParent(Character.transform, false))
+                    {
+                        transform.localEulerAngles = Vector3.zero;
+                    }
+                    else
+                    {
+                        Debug.Log("Didnt reparrent");
+                    }
                 }
-                else
-                {
-                    Debug.Log("Didnt reparrent");
-                }
-                Character.Inventory.EquippedNetworkItem.Value = new NetworkObjectReference(NetworkObject);
             }
         }
     }
     public void Drop()
     {
-        if(IsOwner) DropServerRpc();
+        if (IsOwner) DropServerRpc();
     }
+
     [Rpc(SendTo.Server, RequireOwnership = true)]
     public void DropServerRpc(RpcParams rpcParams = default)
     {
@@ -88,19 +116,18 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         {
             if (Player.Players.TryGetValue(clientId, out Player player))
             {
-                NetworkObject.RemoveOwnership();
-                if (NetworkObject.TryRemoveParent(true))
-                {
-                    player.Inventory.DropPlacement(transform);
-                    if(_rigidbody) _rigidbody.isKinematic = !hasItemPhysics;
-                    _collider.enabled = true;
-                    _transformTarget = null;
+                if(player.Inventory.TryRemoveItem(NetworkObject)) {
+                    NetworkObject.RemoveOwnership();
+                    if (NetworkObject.TryRemoveParent(true))
+                    {
+                        currentSlot.Value = ItemSlotType.None;
+                        player.Inventory.DropPlacement(transform);
+                    }
+                    else
+                    {
+                        Debug.Log("Didnt reparrent");
+                    }
                 }
-                else
-                {
-                    Debug.Log("Didnt reparrent");
-                }
-                player.Inventory.EquippedNetworkItem.Value = new NetworkObjectReference();
             }
         }
     }
@@ -108,7 +135,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     public virtual void OnEquip(object playerCharacter)
     {
-
+        EnableColliders(false);
+        EnableVisuals(true);
     }
 
     public virtual void OnEquipUpdate(object playerCharacter)
@@ -128,15 +156,31 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     public virtual void OnUnequip(object playerCharacter)
     {
-
+        OnSlotChanged(currentSlot.Value, currentSlot.Value);
     }
 
-    public void OnEnterInventory(object playerCharacter)
+    public void OnEnterInventory(object playerCharacter, ItemSlotType slotType)
     {
-
+        if (!IsOwner) return;
+        currentSlot.Value = slotType;
+    }
+    private void OnSlotChanged(ItemSlotType previousValue, ItemSlotType newValue)
+    {
+        switch (newValue)
+        {
+            case ItemSlotType.PlayerInventory:
+                EnableColliders(false);
+                EnableVisuals(false);
+                break;
+            case ItemSlotType.None:
+            default:
+                EnableColliders(true);
+                EnableVisuals(true);
+                break;
+        }
     }
 
-    public void OnExitInventory(object playerCharacter)
+    public void OnExitInventory(object playerCharacter, ItemSlotType slotType)
     {
 
     }
@@ -155,6 +199,4 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
 
     }
-
-
 }

@@ -9,11 +9,13 @@ public class MainMenu : MonoBehaviour
 
     public void StartClientGame()
     {
+        if(NetworkManager.Singleton.IsListening) return;
         NetworkManager.Singleton.StartClient();
     }
 
     static public void StartHostGame()
     {
+        if(NetworkManager.Singleton.IsListening) return;
         NetworkManager.Singleton.StartHost();
     }
     public void StartGame()

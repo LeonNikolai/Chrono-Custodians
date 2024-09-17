@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using UnityEngine;
 /// <summary>
@@ -10,6 +11,7 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _staminaBar;
     [SerializeField] UiBar _shieldBar;
     [SerializeField] CanvasGroup _hudRoot;
+    [SerializeField] HudItemIcon[] _inventoryIcons;
 
     public static float Opacity
     {
@@ -23,6 +25,15 @@ public class Hud : MonoBehaviour
     public static float Stamina
     {
         set => instance._staminaBar.Progress = value;
+    }
+
+    public static void SetInventoryIcon(ItemData itemdata, int index, bool selected)
+    {
+        if(index < instance._inventoryIcons.Length)
+        {
+            instance._inventoryIcons[index].SetIcon(itemdata, selected);
+            return;
+        }
     }
 
     public static Hud instance = null;
