@@ -1,5 +1,4 @@
-using System;
-using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 /// <summary>
 /// This class is responsible for the HUD of the game.
@@ -10,6 +9,7 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _healthBar;
     [SerializeField] UiBar _staminaBar;
     [SerializeField] UiBar _shieldBar;
+    [SerializeField] TMP_Text _crosshairTooltip;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
 
@@ -26,10 +26,23 @@ public class Hud : MonoBehaviour
     {
         set => instance._staminaBar.Progress = value;
     }
+    public static string CrosshairTooltip
+    {
+        set
+        {
+            instance._crosshairTooltip.text = value;
+            if(value == "") instance._crosshairTooltip.gameObject.SetActive(false);
+            else instance._crosshairTooltip.gameObject.SetActive(true);
+        }
+        get
+        {
+            return instance?._crosshairTooltip?.text ?? "";
+        }
+    }
 
     public static void SetInventoryIcon(ItemData itemdata, int index, bool selected)
     {
-        if(index < instance._inventoryIcons.Length)
+        if (index < instance._inventoryIcons.Length)
         {
             instance._inventoryIcons[index].SetIcon(itemdata, selected);
             return;

@@ -1,13 +1,38 @@
+using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelSelection : MonoBehaviour
 {
-    [SerializeField] private Button _button;
+    [Header("Logic References")]
     [SerializeField] private LevelScene _levelScene;
-    public void LoadLevel() =>_levelScene.LoadScene();
+    [SerializeField] private Button _button;
+    [Header("Visual References")]
+    [SerializeField] private TMP_Text _Name;
+    [SerializeField] private TMP_Text _Year;
+    public void LoadLevel() {
+        _levelScene.LoadScene();
+    }
     void Start()
     {
-        if(_button) _button.onClick.AddListener(LoadLevel);
+        if(NetworkManager.Singleton.IsHost) {
+            if (_button) _button.onClick.AddListener(LoadLevel);
+
+        }
+        if (_Name) _Name.text = _levelScene.LevelName;
+        if (_Year) _Year.text = _levelScene.CommonYear(_levelScene.AstronomicalYear);
+    }
+
+    public void SetLevelForSelection(LevelScene levelScene)
+    {
+        _levelScene = levelScene;
+        UpdateVisuals();
+    }
+
+    private void UpdateVisuals()
+    {
+        if (_Name) _Name.text = _levelScene.LevelName;
+        if (_Year) _Year.text = _levelScene.CommonYear(_levelScene.AstronomicalYear);
     }
 }

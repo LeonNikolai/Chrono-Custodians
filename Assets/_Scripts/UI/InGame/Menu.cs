@@ -1,7 +1,7 @@
-using System;
-using UnityEditor.Rendering;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// This class is responsible for the Menu of the game.
 /// </summary>
@@ -67,6 +67,10 @@ public class Menu : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
+
+        RefreshMenu();
+
+
     }
 
     private void OnDestroy()
@@ -86,5 +90,16 @@ public class Menu : MonoBehaviour
                 ActiveMenu = MenuType.Closed;
             }
         }
+    }
+
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    public void GoToMainMenu()
+    {
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene("MainMenu");
     }
 }

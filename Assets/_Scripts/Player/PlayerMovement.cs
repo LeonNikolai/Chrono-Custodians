@@ -17,12 +17,13 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
-    
+
     public MovementStateManager movementState = new();
     private MovementModifierManager movementModifier = new();
-    
+
     //private NetworkVariable<int> _currentModifier = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    private void Awake() {
+    private void Awake()
+    {
         if (characterController == null) characterController = GetComponent<CharacterController>();
     }
     private void Start()
@@ -36,13 +37,13 @@ public class PlayerMovement : NetworkBehaviour
         //ChangePosition(new Vector3(0f, 1f, 0f));
         Walk();
         stamina = 100f;
-        Hud.Stamina = stamina / 100f;  
+        Hud.Stamina = stamina / 100f;
     }
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn(); 
-        if(!IsOwner) return;
+        base.OnNetworkSpawn();
+        if (!IsOwner) return;
         Debug.Log("PlayerMovement OnNetworkSpawn : " + transform.position);
         InitalizeMovement();
         Player.Input.Player.Jump.performed += ctx => InputJump();
@@ -54,7 +55,7 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnDestroy()
     {
         base.OnDestroy();
-        if(!IsOwner) return;
+        if (!IsOwner) return;
         Player.Input.Player.Jump.performed -= ctx => InputJump();
         Player.Input.Player.Crouch.performed -= ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled -= ctx => Walk();
@@ -63,52 +64,65 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
-        if(!IsOwner) {return;}
+        if (!IsOwner) { return; }
         CheckGround();
         CheckRaycast();
         CheckSprint();
         PlayerStamina();
         PlayerMove();
         PlayerCamera();
+        if(transform.position.y < -20f)
+        {
+            ChangePosition(new Vector3(0f, 1f, 0f));
+        }
     }
-    
-    private void Walk() 
+
+    private void Walk()
     {
         ChangeState(MovementState.Walking, 1f);
     }
-    
+
     private void CheckGround()
     {
-        Vector3 collision = new Vector3(characterController.bounds.center.x, characterController.bounds.min.y, characterController.bounds.center.z) 
+        Vector3 collision = new Vector3(characterController.bounds.center.x, characterController.bounds.min.y, characterController.bounds.center.z)
                               + Vector3.up * characterController.radius;
-        
-        if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height, 
+
+        if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
         characterController.radius, Vector3.down, out RaycastHit groundHit, 0.2f) && velocity.y < 0f)
         {
-            grounded = true; 
+            grounded = true;
             velocity.y = 0f;
         }
-        else 
+        else
         {
             velocity.y += gravity * Time.deltaTime;
             characterController.Move(velocity * Time.deltaTime);
         }
     }
-    
-    IHighlightable CurrentHighlightable 
+
+    IHighlightable CurrentHighlightable
     {
-        set {
-            if(currentHighlightable == value) return;
-            currentHighlightable?.HightlightExit(); 
+        set
+        {
+            if (currentHighlightable == value) return;
+            currentHighlightable?.HightlightExit();
             currentHighlightable = value;
             currentHighlightable?.HightlightEnter();
+            if (currentHighlightable is IInteractable interactable)
+            {
+                Hud.CrosshairTooltip = "Press E to interact";
             }
+            else
+            {
+                Hud.CrosshairTooltip = "";
+            }
+        }
     }
-    
+
     private void CheckRaycast()
     {
         Ray ray = new(rotate.transform.position, rotate.transform.forward);
-        
+
         if (Physics.Raycast(ray, out RaycastHit hit, interactRadius))
         {
             if (hit.collider.TryGetComponent<IHighlightable>(out var highlightable))
@@ -117,10 +131,10 @@ public class PlayerMovement : NetworkBehaviour
                 return;
             }
         }
-        
+
         CurrentHighlightable = null;
     }
-    
+
     private void CheckSprint()
     {
         if (Player.Input.Player.Sprint.IsPressed() && movementState.currentState != MovementState.Jetpack && stamina > 0f)
@@ -135,49 +149,49 @@ public class PlayerMovement : NetworkBehaviour
             movementModifier.DeactivateModifier(MovementModifier.Sprinting);
         }
     }
-    
-    private void PlayerStamina() 
+
+    private void PlayerStamina()
     {
         staminaRegainTimer -= Time.deltaTime;
-        if (staminaRegainTimer <= 0f && stamina < 100f) 
+        if (staminaRegainTimer <= 0f && stamina < 100f)
         {
             staminaRegainTimer = 0f;
             stamina += staminaRegainAmount * Time.deltaTime;
-            Hud.Stamina = stamina / 100f;        
+            Hud.Stamina = stamina / 100f;
         }
-        if(staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
+        if (staminaText) staminaText.text = $"Stamina: {stamina:F0} / 100";
     }
 
     private void PlayerMove()
     {
-        if (movementState.currentState == MovementState.Jetpack && Player.Input.Player.Jump.IsPressed()) 
+        if (movementState.currentState == MovementState.Jetpack && Player.Input.Player.Jump.IsPressed())
         {
             InputJump();
         }
-        
+
         Vector2 input = Player.Input.Player.Move.ReadValue<Vector2>();
-        
+
         if (input != Vector2.zero)
         {
-            moveDirection = 
-                input.x * movementState.data.direction.X * transform.right + 
-                input.y * movementState.data.direction.Y * transform.up + 
+            moveDirection =
+                input.x * movementState.data.direction.X * transform.right +
+                input.y * movementState.data.direction.Y * transform.up +
                 input.y * movementState.data.direction.Z * transform.forward;
         }
-        
+
         float lerpFactor = 1 - Mathf.Exp(-7.5f * Time.deltaTime);
-        
+
         if (input != Vector2.zero)
         {
-            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeed 
-                                        * movementState.data.speed 
+            moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, moveSpeed
+                                        * movementState.data.speed
                                         * movementModifier.movementMultiplier, lerpFactor);
         }
         else
         {
             moveSpeedCurrent = Mathf.Lerp(moveSpeedCurrent, 0f, lerpFactor * 2);
         }
-        
+
         if (speedText) speedText.text = $"Speed: {moveSpeedCurrent:F2}";
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
@@ -193,7 +207,7 @@ public class PlayerMovement : NetworkBehaviour
         rotate.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
-    
+
     private void InputJump()
     {
         if (grounded)
@@ -201,15 +215,15 @@ public class PlayerMovement : NetworkBehaviour
             velocity.y = Mathf.Sqrt(-jumpForce * gravity);
             grounded = false;
         }
-        
-        else if (movementState.currentState == MovementState.Jetpack && stamina > 0f) 
+
+        else if (movementState.currentState == MovementState.Jetpack && stamina > 0f)
         {
             velocity.y = Mathf.Sqrt(-jumpForce * gravity * 0.1f);
             stamina -= staminaUseAmount * Time.deltaTime;
             staminaRegainTimer = 2f;
         }
     }
-    
+
     private void InputCrouch()
     {
         if (grounded)
@@ -217,36 +231,36 @@ public class PlayerMovement : NetworkBehaviour
             ChangeState(MovementState.Crouching, 1f);
         }
     }
-    
+
     private void InputInteract()
     {
-        if (currentHighlightable is IInteractable interactable) 
+        if (currentHighlightable is IInteractable interactable)
         {
             interactable.Interact(this);
         }
         //ChangeState(MovementState.Jetpack, 1f);
     }
-    
-    public void ChangeModifier(MovementModifier modifier, bool enable) 
+
+    public void ChangeModifier(MovementModifier modifier, bool enable)
     {
-        if (enable) 
+        if (enable)
         {
             movementModifier.ActivateModifier(modifier);
         }
-        else 
+        else
         {
             movementModifier.DeactivateModifier(modifier);
         }
     }
-    
-    public void ChangeState(MovementState state, float gravityModifier) 
+
+    public void ChangeState(MovementState state, float gravityModifier)
     {
         gravity = -20f;
         movementState.GetMovementData(state);
         gravity *= gravityModifier;
     }
-    
-    public void ChangePosition(Vector3 position) 
+
+    public void ChangePosition(Vector3 position)
     {
         characterController.enabled = false;
         transform.position = position;

@@ -1,5 +1,8 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+
+// Editor
 
 [CustomEditor(typeof(LevelScene))]
 public class LevelSceneEditor : Editor
@@ -50,3 +53,5 @@ public class LevelSceneEditor : Editor
         EditorGUILayout.EndHorizontal();
     }
 }
+
+#endif

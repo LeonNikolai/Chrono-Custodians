@@ -1,11 +1,6 @@
 using System.Collections;
-using System.IO;
-using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.Android;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Rendering.UI;
 
 enum AbsorberState
 {
@@ -133,7 +128,9 @@ if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavM
             {
                 if (curAttackCooldown <= 0)
                 {
-                    playerHealth.TakeDamageServerRpc(attackDamage);
+                    if(IsServer) {
+                        playerHealth.TakeDamageServerRpc(attackDamage);
+                    }
                     curAttackCooldown = attackCooldown;
                 }
             }

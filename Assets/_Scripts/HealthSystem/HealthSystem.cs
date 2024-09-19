@@ -14,7 +14,10 @@ public class HealthSystem : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        currentHealth.Value = maxHealth.Value;
+        if(IsServer)
+        {
+            currentHealth.Value = maxHealth.Value;
+        }
         Hud.Health = (float)currentHealth.Value / (float)maxHealth.Value;
         if (IsClient)
         {

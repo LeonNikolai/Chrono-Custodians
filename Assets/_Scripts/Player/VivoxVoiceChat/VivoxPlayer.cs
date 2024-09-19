@@ -90,7 +90,7 @@ public class VivoxPlayer : NetworkBehaviour
             LoginOptions options = new LoginOptions();
             options.DisplayName = "Client " + clientID;
             options.ParticipantUpdateFrequency = ParticipantPropertyUpdateFrequency.FivePerSecond;
-            await VivoxVoiceManager.Instance.InitializeAsync(options.DisplayName);
+            // await VivoxVoiceManager.Instance.InitializeAsync(options.DisplayName);
             await VivoxService.Instance.LoginAsync(options);
 
             join3DChannelAsync();
