@@ -207,6 +207,7 @@ public class PlayerInventory : NetworkBehaviour
 
     private void UpdateHud()
     {
+        if (!IsOwner) return;
         for (int i = 0; i < InventorySize; i++)
         {
             if (Inventory[i].TryGet(out NetworkObject item))

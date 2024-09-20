@@ -16,7 +16,8 @@ public class Menu : MonoBehaviour
     {
         Closed,
         PauseMenu,
-        LevelSelection
+        LevelSelection,
+        Custom
     }
 
     public static MenuType currentMenu = MenuType.Closed;

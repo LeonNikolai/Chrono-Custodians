@@ -129,7 +129,7 @@ if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavM
                 if (curAttackCooldown <= 0)
                 {
                     if(IsServer) {
-                        playerHealth.TakeDamageServerRpc(attackDamage);
+                        playerHealth.TakeDamageServer(attackDamage);
                     }
                     curAttackCooldown = attackCooldown;
                 }

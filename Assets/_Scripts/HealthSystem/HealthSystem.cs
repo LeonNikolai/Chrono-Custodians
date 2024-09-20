@@ -4,8 +4,8 @@ using UnityEngine.Events;
 
 public class HealthSystem : NetworkBehaviour
 {
-    public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100);
-    public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100);
+    public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public UnityEvent onDeath;
 
@@ -34,8 +34,7 @@ public class HealthSystem : NetworkBehaviour
         base.OnNetworkDespawn();
     }
 
-    [ServerRpc]
-    public void TakeDamageServerRpc(int damage)
+    public void TakeDamageServer(int damage)
     {
         if (!IsServer) return;
         currentHealth.Value = Mathf.Max(currentHealth.Value-damage, 0);
