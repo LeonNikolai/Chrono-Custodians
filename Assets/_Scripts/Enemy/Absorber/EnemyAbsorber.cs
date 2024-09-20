@@ -28,7 +28,7 @@ public class EnemyAbsorber : Enemy
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
-        normalSpeed = agent.speed;
+        normalSpeed = moveSpeed;
 
     }
 
@@ -52,10 +52,6 @@ public class EnemyAbsorber : Enemy
                 StartCoroutine(Chasing());
                 break;
         }
-    }
-    
-    public override void Attack()
-    {
     }
 
     public void PlayerSpotted()

@@ -106,9 +106,6 @@ public abstract class Enemy : NetworkBehaviour
         agent.SetDestination(targetWaypoint.position);
     }
 
-
-    public abstract void Attack();
-
     public virtual void StopRoaming()
     {
         isRoaming = false;
