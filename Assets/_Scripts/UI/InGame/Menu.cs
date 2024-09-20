@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 /// <summary>
@@ -11,7 +12,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject _menuRoot;
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _levelSelection;
-
+    public static UnityEvent CustomMenuCloseAttempt;
     public enum MenuType
     {
         Closed,
@@ -52,6 +53,8 @@ public class Menu : MonoBehaviour
             case MenuType.LevelSelection:
                 _levelSelection?.SetActive(true);
                 break;
+            case MenuType.Custom:
+                break;
         }
     }
 
@@ -66,12 +69,10 @@ public class Menu : MonoBehaviour
 
     private void Awake()
     {
+        if(CustomMenuCloseAttempt == null) CustomMenuCloseAttempt = new UnityEvent();
         if (instance == null) instance = this;
         else Destroy(gameObject);
-
         RefreshMenu();
-
-
     }
 
     private void OnDestroy()
@@ -85,11 +86,16 @@ public class Menu : MonoBehaviour
             if (currentMenu == MenuType.Closed)
             {
                 ActiveMenu = MenuType.PauseMenu;
+                return;
             }
-            else
+            if (currentMenu == MenuType.Custom)
             {
-                ActiveMenu = MenuType.Closed;
+                CustomMenuCloseAttempt.Invoke();
+                return;
             }
+
+            ActiveMenu = MenuType.Closed;
+
         }
     }
 
