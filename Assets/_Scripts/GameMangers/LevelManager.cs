@@ -10,7 +10,6 @@ public class LevelManager : NetworkBehaviour
     static LevelScene autoEnterScene = null;
     [SerializeField] LevelScene _autoEnterScene = null;
 
-
     static LevelScene _loadedScene = null;
     public UnityEvent<bool> LevelLoaded;
     public UnityEvent<bool> LevelLoadedInverted;
@@ -78,5 +77,4 @@ public class LevelManager : NetworkBehaviour
     private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode, AsyncOperation asyncOperation)
     {
     }
-
 }

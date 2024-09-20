@@ -13,7 +13,8 @@ public class PlayerInventory : NetworkBehaviour
     const int InventorySize = 10;
     // Inventory
     public NetworkList<NetworkObjectReference> Inventory;
-
+    
+    public NetworkObjectReference CurrentEquippedNetworkObject => Inventory[EquippedNetworkItemIndex.Value];
     public bool TryAddItem(NetworkObject item)
     {
         if (item == null) return false;

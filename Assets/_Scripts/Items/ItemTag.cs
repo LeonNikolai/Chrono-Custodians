@@ -5,6 +5,7 @@ using UnityEngine.Localization;
 [CreateAssetMenu(menuName = "Chrono Custodians/ItemTags")]
 public class ItemTag : ScriptableObject
 {
+    
     [SerializeField] string _id;
     [Header("Tag Tooltip Info")]
     [SerializeField] LocalizedString _displayName;

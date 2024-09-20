@@ -100,6 +100,16 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    IInteractable currentInteractible;
+    IInteractable CurrentInteractible { 
+        get => currentInteractible;
+        set
+        {
+            if (currentInteractible == value) return;
+            currentInteractible = value;
+            Hud.CrosshairTooltip = currentInteractible == null ? "" : "Press E to interact";
+        }
+    }
     IHighlightable CurrentHighlightable
     {
         set
@@ -108,14 +118,6 @@ public class PlayerMovement : NetworkBehaviour
             currentHighlightable?.HightlightExit();
             currentHighlightable = value;
             currentHighlightable?.HightlightEnter();
-            if (currentHighlightable is IInteractable interactable)
-            {
-                Hud.CrosshairTooltip = "Press E to interact";
-            }
-            else
-            {
-                Hud.CrosshairTooltip = "";
-            }
         }
     }
 
@@ -128,10 +130,19 @@ public class PlayerMovement : NetworkBehaviour
             if (hit.collider.TryGetComponent<IHighlightable>(out var highlightable))
             {
                 CurrentHighlightable = highlightable;
+                if(highlightable is IInteractable interactable)
+                {
+                    CurrentInteractible = interactable;
+                }
+                return;
+            } else if(hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            {
+                CurrentHighlightable = null;
+                CurrentInteractible = interactable;
                 return;
             }
         }
-
+        CurrentInteractible = null;
         CurrentHighlightable = null;
     }
 
@@ -233,11 +244,8 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     private void InputInteract()
-    {
-        if (currentHighlightable is IInteractable interactable)
-        {
-            interactable.Interact(this);
-        }
+    {   
+        CurrentInteractible?.Interact(this);
         //ChangeState(MovementState.Jetpack, 1f);
     }
 
