@@ -1,17 +1,19 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class WaypointManager : MonoBehaviour
 {
-    public static WaypointManager Instance { get; private set; }
+    public static WaypointManager instance { get; private set; }
 
     [SerializeField] private List<Transform> waypoints = new List<Transform>();
+    [HideInInspector] public List<Vector3> waypointPosition = new List<Vector3>();
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
         }
         else
         {
@@ -19,8 +21,16 @@ public class WaypointManager : MonoBehaviour
         }
     }
 
-    public List<Transform> GetWaypoints()
+    private void OnDestroy()
     {
-        return waypoints;
+        if (instance == this) instance = null;
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            waypointPosition.Add(waypoints[i].position);
+        }
     }
 }
