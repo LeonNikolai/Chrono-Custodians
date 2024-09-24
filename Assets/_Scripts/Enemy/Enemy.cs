@@ -2,10 +2,15 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using System.Collections;
 
 public abstract class Enemy : NetworkBehaviour
 {
-
+    public enum EnemyState
+    {
+        Roaming,
+        Searching
+    }
     [Header("Enemy Base")]
     // Base Statistics
     public bool DrawAttackGizmos = false;
@@ -23,11 +28,17 @@ public abstract class Enemy : NetworkBehaviour
     // AI Pathfinding Behavior Variables
     protected NavMeshAgent agent;
     [SerializeField] protected bool isRoaming = true;
-    [SerializeField] private Transform targetWaypoint;
+    [SerializeField] private Vector3 targetWaypoint;
     [SerializeField] private float CheckoffRadius = 5f;
     [SerializeField] private float waypointIgnoreRadius = 15f;
-    public List<Transform> waypoints = new List<Transform>();
-    public Queue<Transform> visitedWaypoints = new Queue<Transform>();
+    public List<Vector3> waypoints = new List<Vector3>();
+    public Queue<Vector3> visitedWaypoints = new Queue<Vector3>();
+    [HideInInspector] public GameObject player;
+    [Space]
+    [SerializeField] private int searchingAmount = 7;
+    private bool isSearching = false;
+
+
 
     [Header("Debug")]
     [SerializeField] private bool debug = false;
@@ -44,7 +55,7 @@ public abstract class Enemy : NetworkBehaviour
             agent.speed = moveSpeed;
             if (!isRoaming) return;
             GetWaypoints();
-            SelectNewWaypoint();
+            StartRoaming();
         }
     }
 
@@ -54,56 +65,62 @@ public abstract class Enemy : NetworkBehaviour
 
         if (!isRoaming) return;
         // Checks if the enemy is roaming and the distance between it and the target waypoint is within the checkoff radius
-        float sqrDistance = Vector3.SqrMagnitude(transform.position - targetWaypoint.position);
+        float sqrDistance = Vector3.SqrMagnitude(transform.position - targetWaypoint);
         if (sqrDistance < CheckoffRadius * CheckoffRadius) WaypointReached();
     }
 
     private void GetWaypoints()
     {
-        waypoints = WaypointManager.Instance.GetWaypoints();
+        waypoints = WaypointManager.instance.waypointPosition;
         // Enemy should find a waypoint manager and get a list of waypoints that are active.
     }
 
 
-    protected virtual void WaypointReached()
+    protected void WaypointReached()
     {
         // Adds the reached waypoint to a list and selects a new waypoint to go to.
-        if (targetWaypoint == null)
-        {
-            SelectNewWaypoint();
-            return;
-        }
         waypoints.Remove(targetWaypoint);
         visitedWaypoints.Enqueue(targetWaypoint);
-        if (debug)  targetWaypoint.GetComponentInChildren<MeshRenderer>().material = visited;
-        targetWaypoint = null;
-        SelectNewWaypoint();
 
     }
 
     private void SelectNewWaypoint()
     {
-        Transform newTarget = null;
+        Vector3 newTarget;
         if (waypoints.Count <= 0) return;
         do
         {
             newTarget = waypoints[Random.Range(0, waypoints.Count)];
-        } while (Vector3.SqrMagnitude(transform.position - newTarget.position) < waypointIgnoreRadius * waypointIgnoreRadius);
+        } while (Vector3.SqrMagnitude(transform.position - newTarget) < waypointIgnoreRadius * waypointIgnoreRadius);
 
         if (visitedWaypoints.Count > 10)
         {
-            Transform tempWaypoint = visitedWaypoints.Dequeue();
-            if (debug) tempWaypoint.GetComponentInChildren<MeshRenderer>().material = normal;
+            Vector3 tempWaypoint = visitedWaypoints.Dequeue();
             waypoints.Add(tempWaypoint);
         }
         targetWaypoint = newTarget;
-        if (debug) targetWaypoint.GetComponentInChildren<MeshRenderer>().material = target;
-        MoveToWaypoint();
-    }
+    } 
+
+    private void SelectWaypointNearby()
+    {
+        Vector3 newTarget;
+        if (waypoints.Count <= 0) return;
+        do
+        {
+            newTarget = waypoints[Random.Range(0, waypoints.Count)];
+        } while (Vector3.SqrMagnitude(transform.position - newTarget) > waypointIgnoreRadius * waypointIgnoreRadius);
+
+        if (visitedWaypoints.Count > 10)
+        {
+            Vector3 tempWaypoint = visitedWaypoints.Dequeue();
+            waypoints.Add(tempWaypoint);
+        }
+        targetWaypoint = newTarget;
+    }    
 
     private void MoveToWaypoint()
     {
-        agent.SetDestination(targetWaypoint.position);
+        agent.SetDestination(targetWaypoint);
     }
 
     public virtual void StopRoaming()
@@ -115,7 +132,7 @@ public abstract class Enemy : NetworkBehaviour
     public virtual void StartRoaming()
     {
         isRoaming = true;
-        SelectNewWaypoint();
+        StartCoroutine(Roaming());
     }
 
     private void OnDrawGizmos()
@@ -155,6 +172,81 @@ public abstract class Enemy : NetworkBehaviour
             // Draw waypoint ignore radius
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, waypointIgnoreRadius);
+
+
         }
+
+        if (targetWaypoint == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(targetWaypoint, 1f);
+    }
+
+    public virtual void StareAtPlayer()
+    {
+        if (!player) return;
+
+        // Calculate the direction to the player
+        Vector3 direction = player.transform.position - transform.position;
+
+        // Create the rotation we need to look at the target
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+        // Get the existing rotation (to lock specific axes)
+        Vector3 currentEuler = transform.rotation.eulerAngles;
+        Vector3 targetEuler = lookRotation.eulerAngles;
+
+        // Lock specific axes by overriding the values you want to lock
+        targetEuler.x = currentEuler.x; // Lock the X-axis
+        // targetEuler.y = currentEuler.y; // Lock the Y-axis
+        targetEuler.z = currentEuler.z; // Lock the Z-axis
+
+        // Apply the modified rotation
+        Quaternion finalRotation = Quaternion.Euler(targetEuler);
+
+        // Smoothly rotate towards the target while keeping the locked axes unchanged
+        transform.rotation = Quaternion.Slerp(transform.rotation, finalRotation, Time.deltaTime * 40);
+    }
+
+
+    public virtual IEnumerator Roaming()
+    {
+        isRoaming = true;
+        while (isRoaming)
+        {
+            SelectNewWaypoint();
+            agent.SetDestination(targetWaypoint);
+            yield return new WaitUntil(() => Vector3.SqrMagnitude(transform.position - targetWaypoint) <= CheckoffRadius * CheckoffRadius);
+            waypoints.Remove(targetWaypoint);
+            visitedWaypoints.Enqueue(targetWaypoint);
+        }
+        // If there's any logic after roaming, it comes after base, though typically roaming will continue until something else stops it.
+    }
+
+    public virtual IEnumerator Searching()
+    {
+        isSearching = true;
+        int waypointsSearched = searchingAmount;
+
+        while (isSearching)
+        {
+            SelectWaypointNearby();
+            agent.SetDestination(targetWaypoint);
+            yield return new WaitUntil(() => Vector3.SqrMagnitude(transform.position - targetWaypoint) <= CheckoffRadius * CheckoffRadius);
+            waypoints.Remove(targetWaypoint);
+            visitedWaypoints.Enqueue(targetWaypoint);
+            waypointsSearched -= 1;
+            if (waypointsSearched == 0)
+            {
+                Debug.Log("Stop Searching");
+                isSearching = false;
+            }
+        }
+        // Logic after searching comes after Base
+    }
+
+    protected void ResetEnemyToNormal()
+    {
+        agent.speed = moveSpeed;
+
     }
 }

@@ -13,7 +13,6 @@ enum LeechState
 public class EnemyLeech : Enemy
 {
     [SerializeField] private LeechState state;
-    [SerializeField] private GameObject player;
     private HealthSystem playerHealth;
     [SerializeField] private FieldOfView enemyFOV;
     private float normalSpeed;
