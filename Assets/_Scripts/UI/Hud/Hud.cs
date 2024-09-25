@@ -13,6 +13,11 @@ public class Hud : MonoBehaviour
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
 
+    public static bool Hidden
+    {
+        get => !instance._hudRoot.gameObject.activeSelf;
+        set => instance._hudRoot.gameObject.SetActive(!value);
+    }
     public static float Opacity
     {
         set => instance._hudRoot.alpha = value;

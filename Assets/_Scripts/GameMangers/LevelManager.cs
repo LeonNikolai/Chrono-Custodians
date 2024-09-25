@@ -22,6 +22,8 @@ public class LevelManager : NetworkBehaviour
     }
     internal void LoadLevelSceneInternal(LevelScene scene)
     {
+        bool isLoaded = _loadedScene == scene;
+        if (isLoaded) return;
         StartCoroutine(LoadLevelSceneAsync(scene));
     }
 

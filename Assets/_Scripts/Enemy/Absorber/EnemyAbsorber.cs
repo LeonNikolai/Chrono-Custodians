@@ -91,6 +91,7 @@ public class EnemyAbsorber : Enemy
         yield break;
     }
 
+
     IEnumerator Chasing() // When chasing, the Absorber will relentlessly go towards the player at increased speed.
     {
         // Place any transitionary stuff here. The state change has to be at the end
@@ -137,5 +138,16 @@ public class EnemyAbsorber : Enemy
         playerHealth.onDeath.RemoveListener(TargetPlayerDied);
         playerHealth = null;
         player = null;
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        if(agent != null) {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, agent.destination);
+            Gizmos.DrawWireSphere(agent.destination, 1);
+        }
     }
 }

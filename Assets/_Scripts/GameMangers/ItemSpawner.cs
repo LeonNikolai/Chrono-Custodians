@@ -35,13 +35,13 @@ public class ItemSpawner : NetworkBehaviour
         {
             if (forignItems > 0)
             {
-                SpawnItem(_forignItems[forignItemIndex], spawnpoint);
+                SpawnItem(_forignItems[forignItemIndex % _forignItems.Length], spawnpoint);
                 forignItemIndex++;
                 forignItems--;
             }
             else
             {
-                SpawnItem(_normalItems[normalItemIndex], spawnpoint);
+                SpawnItem(_normalItems[normalItemIndex % _normalItems.Length], spawnpoint);
                 normalItemIndex++;
             }
         }

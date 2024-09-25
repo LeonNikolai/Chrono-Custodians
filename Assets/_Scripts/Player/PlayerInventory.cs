@@ -92,11 +92,11 @@ public class PlayerInventory : NetworkBehaviour
             _player = GetComponent<Player>();
         }
 
-        if (IsServer)
+        EquippedNetworkItemIndex.OnValueChanged += EquippedItemChange;
+        if (IsOwner)
         {
             EquippedNetworkItemIndex.Value = 0;
         }
-        EquippedNetworkItemIndex.OnValueChanged += EquippedItemChange;
         Inventory.OnListChanged += InventoryChanged;
         base.OnNetworkSpawn();
     }
@@ -232,11 +232,11 @@ public class PlayerInventory : NetworkBehaviour
     private void Update()
     {
         EquippedItemLocalRefference?.OnEquipUpdate(this);
+        if (!IsOwner) return;
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             EquippedItemLocalRefference?.Drop();
         }
-
 
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
