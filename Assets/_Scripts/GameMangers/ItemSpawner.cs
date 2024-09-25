@@ -3,11 +3,10 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ItemManager : NetworkBehaviour
+public class ItemSpawner : NetworkBehaviour
 {
     public ItemData[] _normalItems;
     public ItemData[] _forignItems;
-    
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -48,9 +47,9 @@ public class ItemManager : NetworkBehaviour
         }
     }
 
-    private void SpawnItem(ItemData itemData, ItemSpawnPoint spawnpoint)
+    private void SpawnItem(ItemData itemData, Transform spawnpoint)
     {
-        var item = Instantiate(itemData.Prefab, spawnpoint.transform.position, spawnpoint.transform.rotation);
+        var item = Instantiate(itemData.Prefab, spawnpoint.position, spawnpoint.transform.rotation);
         if (item.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Spawn(true);

@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ItemSpawnPoint : MonoBehaviour
 {
-    public static HashSet<ItemSpawnPoint> AllSpawnPoints = new HashSet<ItemSpawnPoint>();
-    public static List<ItemSpawnPoint> GetShuffledSpawnPoints()
+    public static Dictionary<int, Transform> AllSpawnPoints = new();
+    public static List<Transform> GetShuffledSpawnPoints()
     {
-        List<ItemSpawnPoint> shuffledSpawnPoints = new List<ItemSpawnPoint>(AllSpawnPoints);
+        List<Transform> shuffledSpawnPoints = AllSpawnPoints.Values.ToList();
         for (int i = 0; i < shuffledSpawnPoints.Count; i++)
         {
             int randomIndex = Random.Range(i, shuffledSpawnPoints.Count);
-            ItemSpawnPoint temp = shuffledSpawnPoints[i];
+            Transform temp = shuffledSpawnPoints[i];
             shuffledSpawnPoints[i] = shuffledSpawnPoints[randomIndex];
             shuffledSpawnPoints[randomIndex] = temp;
         }
@@ -19,12 +20,12 @@ public class ItemSpawnPoint : MonoBehaviour
 
     void Awake()
     {
-        AllSpawnPoints.Add(this);
+        AllSpawnPoints.Add(gameObject.GetInstanceID(), transform);
         gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
-        AllSpawnPoints.Remove(this);
+        AllSpawnPoints.Remove(gameObject.GetInstanceID());
     }
 }

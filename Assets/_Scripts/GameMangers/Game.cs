@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Game : NetworkBehaviour
 {
@@ -11,8 +12,23 @@ public class Game : NetworkBehaviour
     }
 
     static GameSaveData _gameData;
-    private void Awake()
-    {
 
+    static bool _isLoading = false;
+    public static bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (_isLoading == value) return;
+            _isLoading = value;
+            IsLoadingChanged?.Invoke(value);
+        }
+    }
+
+    public static UnityEvent<bool> IsLoadingChanged = new UnityEvent<bool>();
+
+    private void Update()
+    {
+        IsLoading = LevelManager.IsLoading;
     }
 }

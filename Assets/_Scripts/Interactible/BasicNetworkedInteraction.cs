@@ -4,18 +4,22 @@ using UnityEngine.Events;
 
 public class BasicNetworkedInteraction : NetworkBehaviour, IHighlightable, IInteractable
 {
+    [Header("Networked Events")]
     [SerializeField] UnityEvent _onInteractServer = new UnityEvent();
-    [SerializeField] UnityEvent _onInteractClient = new UnityEvent();
-    [SerializeField] UnityEvent _onHighlightEnter = new UnityEvent();
-    [SerializeField] UnityEvent _onHighlightExit = new UnityEvent();
+    [SerializeField] UnityEvent _onInteractOtherClients = new UnityEvent();
+    [Header("Local Interactor Events")]
+    [SerializeField] UnityEvent _onInteractOwnClientLocal = new UnityEvent();
+    [Header("Local Interactor Highlight Events")]
+    [SerializeField] UnityEvent _onHighlightEnterLocal = new UnityEvent();
+    [SerializeField] UnityEvent _onHighlightExitLocal = new UnityEvent();
     public void HightlightEnter()
     {
-        _onHighlightEnter?.Invoke();
+        _onHighlightEnterLocal?.Invoke();
     }
 
     public void HightlightExit()
     {
-        _onHighlightExit?.Invoke();
+        _onHighlightExitLocal?.Invoke();
     }
 
     public void HightlightUpdate()
@@ -26,13 +30,14 @@ public class BasicNetworkedInteraction : NetworkBehaviour, IHighlightable, IInte
     public void Interact(PlayerMovement player)
     {
 
-        _onInteractClient?.Invoke();
+        _onInteractOwnClientLocal?.Invoke();
         InteractRpc();
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.NotMe)]
     private void InteractRpc()
     {
-        _onInteractServer?.Invoke();
+        if (IsServer) _onInteractServer?.Invoke();
+        _onInteractOtherClients?.Invoke();
     }
 }

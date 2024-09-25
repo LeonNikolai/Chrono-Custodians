@@ -1619,7 +1619,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 257040394}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 144669530}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: QuitApplication
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &257040394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2489,7 +2501,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00047334432}
+  m_AnchoredPosition: {x: 0, y: 0.00022227618}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &436962357
@@ -2834,7 +2846,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00045114468}
+  m_AnchoredPosition: {x: 0, y: 0.00016177137}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &496025688
@@ -3529,8 +3541,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 98.8775, y: -84.77}
-  m_SizeDelta: {x: 177.755, y: 0}
+  m_AnchoredPosition: {x: 95.1275, y: -84.77}
+  m_SizeDelta: {x: 170.255, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &655131302
 MonoBehaviour:
@@ -9846,15 +9858,15 @@ MonoBehaviour:
   m_text: <b>Build Version :</b><br>0.0.0.5<br><b>Build Date :</b><br>2024-09-24
     13:30:12
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
+  m_sharedMaterial: {fileID: -1086939817028454185, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 832372991
-  m_fontColor: {r: 1, g: 0, b: 0.61509705, a: 0.19215687}
+    rgba: 1275058125
+  m_fontColor: {r: 0.80566037, g: 0.8446235, b: 1, a: 0.29411766}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -12404,8 +12416,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 98.8775, y: -155.405}
-  m_SizeDelta: {x: 177.755, y: 0}
+  m_AnchoredPosition: {x: 95.1275, y: -155.405}
+  m_SizeDelta: {x: 170.255, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1944843074
 MonoBehaviour:
