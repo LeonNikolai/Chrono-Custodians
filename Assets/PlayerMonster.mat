@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ShadowMonster
+  m_Name: PlayerMonster
   m_Shader: {fileID: -6465566751694194690, guid: 2ec6a6232490fd74da20426f3b2938e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -111,8 +111,8 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _SurfaceMovementSpeed: 0.01
-    - _SurfaceNoiseScale: 0.15
+    - _SurfaceMovementSpeed: 0.025
+    - _SurfaceNoiseScale: 0.1
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:

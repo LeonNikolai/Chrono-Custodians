@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1503681729
+  GlobalObjectIdHash: 1972322131
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -291,12 +291,12 @@ MonoBehaviour:
   CheckoffRadius: 5
   waypointIgnoreRadius: 15
   waypoints: []
+  player: {fileID: 0}
   debug: 0
   normal: {fileID: 2100000, guid: 5e5a71d9518c0104093f6d4aded8c140, type: 2}
   target: {fileID: 2100000, guid: bf99d96761cab944594dccf55e8c43dd, type: 2}
   visited: {fileID: 2100000, guid: 48dc432e2b373b54fb6af402032a27aa, type: 2}
   state: 0
-  player: {fileID: 0}
   enemyFOV: {fileID: 3280239915536484577}
   chaseCountdown: 78
 --- !u!114 &3280239915536484577
@@ -313,6 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 25
   angle: 90
+  head: {fileID: 7356758483900432167}
   player: {fileID: 0}
   targetMask:
     serializedVersion: 2

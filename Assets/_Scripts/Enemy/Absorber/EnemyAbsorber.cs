@@ -14,7 +14,6 @@ public class EnemyAbsorber : Enemy
 {
     [Header("Absorber Specific")]
     [SerializeField] private AbsorberState state;
-    [SerializeField] private GameObject player;
     private HealthSystem playerHealth;
     [SerializeField] private FieldOfView enemyFOV;
 
@@ -22,13 +21,11 @@ public class EnemyAbsorber : Enemy
     [SerializeField] private float chaseCountdown;
     private float curChaseCountdown;
     private float curAttackCooldown;
-    private float normalSpeed;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (!IsServer) return;
-        normalSpeed = agent.speed;
 
     }
 
@@ -39,7 +36,7 @@ public class EnemyAbsorber : Enemy
         {
             case AbsorberState.Roaming:
                 state = AbsorberState.Roaming;
-                StartRoaming();
+                StartCoroutine(Roaming());
                 break;
 
             case AbsorberState.Stalking:
@@ -53,10 +50,6 @@ public class EnemyAbsorber : Enemy
                 break;
         }
     }
-    
-    public override void Attack()
-    {
-    }
 
     public void PlayerSpotted()
     {
@@ -65,6 +58,11 @@ public class EnemyAbsorber : Enemy
             player = enemyFOV.player;
             SwitchState(AbsorberState.Stalking);
         }
+    }
+
+    public override IEnumerator Roaming()
+    {
+        return base.Roaming();
     }
 
     IEnumerator Stalking()
@@ -85,20 +83,7 @@ public class EnemyAbsorber : Enemy
             else
             {
                 Debug.Log("Moving to player");
-                agent.speed = normalSpeed;
-                if (agent.destination != player.transform.position)
-                {
-if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavMesh.AllAreas)) {
-    agent.SetDestination(hit.position);
-} else if(  NavMesh.FindClosestEdge(player.transform.position, out hit, NavMesh.AllAreas))
-{
-    agent.SetDestination(hit.position);
-
-} else {
-    agent.SetDestination(player.transform.position);
-
-}
-                }
+                agent.speed = moveSpeed;
             }
 
             if (chaseCountdown <= 0) SwitchState(AbsorberState.Chasing);
@@ -113,7 +98,7 @@ if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavM
         state = AbsorberState.Chasing;
         playerHealth.onDeath.AddListener(TargetPlayerDied);
         Debug.Log("IM COMING FOR YA BICH!");
-        agent.speed = normalSpeed * 2;
+        agent.speed = moveSpeed * 2;
         agent.stoppingDistance = 2;
         // Place any chasing logic here
         while (state == AbsorberState.Chasing)
@@ -138,7 +123,7 @@ if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavM
             {
                 Debug.Log("Player is dead");
                 agent.isStopped = true;
-                agent.speed = normalSpeed;
+                agent.speed = moveSpeed;
                 yield return new WaitForSeconds(4);
                 SwitchState(AbsorberState.Roaming);
                 agent.isStopped = false;
@@ -152,20 +137,5 @@ if(NavMesh.SamplePosition(player.transform.position, out NavMeshHit hit, 5, NavM
         playerHealth.onDeath.RemoveListener(TargetPlayerDied);
         playerHealth = null;
         player = null;
-    }
-
-    private void StareAtPlayer()
-    {
-        if (!player) return;
-        Vector3 direction = player.transform.position - transform.position;
-
-        direction.x = 0;
-        direction.z = 0;
-
-        // Create the rotation we need to look at the target
-        Quaternion lookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-
-        // Smoothly rotate towards the target
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 40);
     }
 }
