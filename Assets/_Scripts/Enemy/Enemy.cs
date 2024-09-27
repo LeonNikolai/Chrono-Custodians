@@ -19,6 +19,7 @@ public abstract class Enemy : NetworkBehaviour
     [SerializeField] protected int attackDamage;
     [SerializeField] protected float attackCooldown;
     [SerializeField] protected float moveSpeed;
+    [SerializeField] public int tokenCost = 2; // This is how difficult the enemy is. Higher means it's more difficult to deal with. Try to stay within a scale of 1-5
 
     protected NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
@@ -42,7 +43,6 @@ public abstract class Enemy : NetworkBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool debug = false;
-    [SerializeField] private Material normal, target, visited;
     
 
     public override void OnNetworkSpawn()
@@ -224,14 +224,20 @@ public abstract class Enemy : NetworkBehaviour
 
     public virtual IEnumerator Searching()
     {
+        Debug.Log("Start Searching");
         isSearching = true;
         int waypointsSearched = searchingAmount;
+        int counter = 0;
 
-        while (isSearching)
+        while (waypointsSearched > 0)
         {
+            counter++;
+            yield return null;
             SelectWaypointNearby();
             agent.SetDestination(targetWaypoint);
+            Debug.Log("Moving to Search Point");
             yield return new WaitUntil(() => Vector3.SqrMagnitude(transform.position - targetWaypoint) <= CheckoffRadius * CheckoffRadius);
+            Debug.Log("Search point reached");
             waypoints.Remove(targetWaypoint);
             visitedWaypoints.Enqueue(targetWaypoint);
             waypointsSearched -= 1;
@@ -240,12 +246,19 @@ public abstract class Enemy : NetworkBehaviour
                 Debug.Log("Stop Searching");
                 isSearching = false;
             }
+            if (counter >= 50)
+            {
+                Debug.Log("Exceeding Run amount");
+                yield break;
+            }
         }
         // Logic after searching comes after Base
     }
 
-    protected void ResetEnemyToNormal()
+    public virtual void ResetEnemyToNormal()
     {
+        isSearching = false;
+        isRoaming = false;
         agent.speed = moveSpeed;
 
     }

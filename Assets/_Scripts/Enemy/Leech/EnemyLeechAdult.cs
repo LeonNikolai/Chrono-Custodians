@@ -13,7 +13,6 @@ enum LeechAdultState
 public class EnemyLeechAdult : Enemy
 {
     [SerializeField] private LeechAdultState state;
-    private HealthSystem playerHealth;
     [SerializeField] private FieldOfView enemyFOV;
 
     [Header("Leech Adult Specific")]
@@ -35,6 +34,7 @@ public class EnemyLeechAdult : Enemy
         {
             StopRoaming();
         }
+        if (state == _state) return;
         switch (_state)
         {
             case LeechAdultState.Roaming:
@@ -43,10 +43,12 @@ public class EnemyLeechAdult : Enemy
                 break;
 
             case LeechAdultState.Chasing:
+                Debug.Log("Entering Searching State");
                 StartCoroutine(Chasing());
                 break;
 
             case LeechAdultState.Searching:
+                Debug.Log("Entering Searching State");
                 StartCoroutine(Searching());
                 break;
 
@@ -60,56 +62,88 @@ public class EnemyLeechAdult : Enemy
     public void PlayerSpotted()
     {
         if (player != null) return;
+        Debug.Log("Player Spotted");
         player = enemyFOV.player;
-        StopAllCoroutines();
+        ResetEnemyToNormal();
+        Debug.Log("All Coroutines Stopped");
         SwitchState(LeechAdultState.Chasing);
     }
 
     public void PlayerLost()
     {
         if (player == null) return;
-        StopAllCoroutines();
+        Debug.Log("Player Lost");
+        ResetEnemyToNormal();
+        Debug.Log("All Coroutines Stopped");
         SwitchState(LeechAdultState.Searching);
     }
 
     private IEnumerator Chasing()
     {
         state = LeechAdultState.Chasing;
+        HealthSystem playerHealth = player.GetComponent<HealthSystem>();
         float curAttackCooldown = attackCooldown;
+        float curRushTime = rushTime;
+        float curRushCooldown = 0;
 
+        Debug.Log("Chasing Before Loop");
         while (state == LeechAdultState.Chasing)
         {
-            agent.speed = rushSpeed;
-            yield return new WaitForSeconds(rushTime);
+            yield return null;
+            curAttackCooldown -= Time.deltaTime;
+            Debug.Log("In Chasing Loop");
+            StareAtPlayer();
+            agent.SetDestination(player.transform.position);
 
-            agent.speed = moveSpeed;
-            yield return new WaitForSeconds(rushCooldown + Random.Range(-rushCooldownRandomModifier, rushCooldownRandomModifier));
-        }
-
-        agent.SetDestination(player.transform.position);
-
-        if (Vector3.SqrMagnitude(player.transform.position - transform.position) < attackRange * attackRange)
-        {
-            if (curAttackCooldown <= 0)
+            if (curRushTime > 0)
             {
-                if (IsServer)
+                Debug.Log("Rushing");
+                agent.speed = rushSpeed;
+                curRushTime -= Time.deltaTime;
+                if (curRushTime <= 0)
                 {
-                    playerHealth.TakeDamageServer(attackDamage);
+                    curRushCooldown = rushCooldown + Random.Range(-rushCooldownRandomModifier, rushCooldownRandomModifier);
                 }
-                curAttackCooldown = attackCooldown;
+            }
+
+            if (curRushCooldown > 0)
+            {
+                Debug.Log("Rush Cooldown");
+                agent.speed = moveSpeed;
+                curRushCooldown -= Time.deltaTime;
+                if (curRushCooldown <= 0)
+                {
+
+                    curRushTime = rushTime;
+                }
+            }
+
+            if (Vector3.SqrMagnitude(player.transform.position - transform.position) < attackRange * attackRange)
+            {
+                if (curAttackCooldown <= 0)
+                {
+                    Debug.Log("Attacking Player");
+                    if (IsServer)
+                    {
+                        playerHealth.TakeDamageServer(attackDamage);
+                    }
+                    curAttackCooldown = attackCooldown;
+                }
+            }
+
+            if (enemyFOV.canSeePlayer == false)
+            {
+                SwitchState(LeechAdultState.Searching);
+                yield break;
             }
         }
-
-        yield return null;
     }
 
     public override IEnumerator Searching()
     {
-        /*
-        yield return base.Searching();
-        */
+        //yield return base.Searching();
         Debug.Log("Searching..");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2); 
         SwitchState(LeechAdultState.Roaming);
 
     }
@@ -117,5 +151,11 @@ public class EnemyLeechAdult : Enemy
     private IEnumerator Dying()
     {
         yield return null;
+    }
+
+    public override void ResetEnemyToNormal()
+    {
+        base.ResetEnemyToNormal();
+        player = null;
     }
 }

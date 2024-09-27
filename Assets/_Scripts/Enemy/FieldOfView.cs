@@ -73,8 +73,11 @@ public class FieldOfView : NetworkBehaviour
             {
                 if (IsPlayerVisible(target))
                 {
+                    if (!canSeePlayer)
+                    {
+                        OnPlayerSeen.Invoke();
+                    }
                     canSeePlayer = true;
-                    OnPlayerSeen.Invoke();
                 }
                 else
                 {
@@ -91,7 +94,14 @@ public class FieldOfView : NetworkBehaviour
             {
                 if (canSeePlayer)
                 {
-                    OnPlayerLost.Invoke();
+                    if (closestDistance <= 5)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        OnPlayerLost.Invoke();
+                    }
                 }
                 canSeePlayer = false;
                 player = null;
