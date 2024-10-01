@@ -48,10 +48,14 @@ public class Player : NetworkBehaviour, IScanable
             }
         }
     }
-
+    [SerializeField] LocalizedStringGroup possiblePlayerScanResults;
     public string ScanTitle => "Player";
-
-    public string ScanResult => "Minimum wage worker";
+    public string ScanResult {
+        get {
+            var seed = (int)OwnerClientId + NetworkManager.Singleton.ConnectedHostname.GetHashCode();
+            return possiblePlayerScanResults.GetString(seed % possiblePlayerScanResults.Length);
+        }
+    }
 
     private void Awake()
     {

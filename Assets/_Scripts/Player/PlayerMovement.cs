@@ -109,7 +109,9 @@ public class PlayerMovement : NetworkBehaviour
         get => currentInteractible;
         set
         {
-            if (currentInteractible == value) return;
+            if (currentInteractible == value) {
+                UpdateHud();
+            }
             currentInteractible = value;
             UpdateHud();
         }
@@ -117,12 +119,15 @@ public class PlayerMovement : NetworkBehaviour
 
     private void UpdateHud()
     {
+        if (currentInteractible == null) {
+            Hud.CrosshairTooltip = "";
+            return;
+        }
         if (currentInteractible is IInteractionMessage message)
         {
             Hud.CrosshairTooltip = currentInteractible.Interactible ? message.InteractionMessage : message.CantInteractMessage;
             return;
         }
-        if (currentInteractible == null) Hud.CrosshairTooltip = "";
         Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
     }
 

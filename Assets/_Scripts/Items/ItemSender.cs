@@ -1,20 +1,28 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
-public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage
+public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,IScanable
 {
-    public int TargetYear = 0;
+    public NetworkVariable<int> SelectedYear = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [Rpc(SendTo.Server)]
+    public void SetSelectedYearServerRpc(int year)
+    {
+        SelectedYear.Value = year;
+    }
+    [SerializeField] private TMP_Text _yearText;
     [SerializeField] private LocalizedString _interactionMessage;
     public string InteractionMessage => _interactionMessage.GetLocalizedString();
     [SerializeField] private LocalizedString _cantInteractMessage;
     public string CantInteractMessage => _cantInteractMessage.GetLocalizedString();
     public static UnityEvent<ItemData> OnItemSendServer;
 
-    public struct ItemSendEvent {
+    public struct ItemSendEvent
+    {
         public ItemData ItemData;
         public LevelScene level;
         public int TargetYear;
@@ -29,10 +37,14 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage
     {
         if (OnItemSendServer == null) OnItemSendServer = new();
     }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        TargetYear = LevelManager.LoadedScene ? LevelManager.LoadedScene.AstronomicalYear : 0;
+        if (IsServer)
+        {
+            SelectedYear.Value = LevelManager.LoadedScene ? LevelManager.LoadedScene.AstronomicalYear : 2000;
+        }
     }
     public bool Interactible
     {
@@ -49,10 +61,12 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage
         }
     }
 
+    public string ScanTitle => "Temporal Mailbox";
+    public string ScanResult => "Send items to the past or future";
+
     public void Interact(Player player)
     {
         TrySendEquippedItemServerRpc();
-
     }
 
     [Rpc(SendTo.Server, RequireOwnership = true)]
@@ -76,12 +90,17 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage
 
     private void SendItem(ItemData itemData)
     {
-        SentItems.Add(new ItemSendEvent {
+        SentItems.Add(new ItemSendEvent
+        {
             ItemData = itemData,
             level = LevelManager.LoadedScene,
-            TargetYear = TargetYear
+            TargetYear = SelectedYear.Value
         });
         OnItemSendServer.Invoke(itemData);
     }
-}
 
+    public void OnScan(Player player)
+    {
+
+    }
+}

@@ -6,6 +6,9 @@ public class BasicInteraction : MonoBehaviour, IHighlightable, IInteractable
     [SerializeField] UnityEvent _onInteract = new UnityEvent();
     [SerializeField] UnityEvent _onHighlightEnter = new UnityEvent();
     [SerializeField] UnityEvent _onHighlightExit = new UnityEvent();
+    public UnityEvent OnInteract => _onInteract;
+    public UnityEvent OnHighlightEnter => _onHighlightEnter;
+    public UnityEvent OnHighlightExit => _onHighlightExit;
 
     public bool Interactible => true;
 
