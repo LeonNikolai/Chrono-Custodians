@@ -7,7 +7,9 @@ public class StationaryItemScanner : NetworkBehaviour, IInteractable
     public Item _itemReference = null;
     public NetworkVariable<NetworkObjectReference> _itemInSystem = new NetworkVariable<NetworkObjectReference>();
 
-    public void Interact(PlayerMovement player)
+    public bool Interactible => true;
+
+    public void Interact(Player player)
     {
         InteractServerRpc();
     }

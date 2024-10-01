@@ -9,6 +9,8 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField] Transform _playerHand;
     [SerializeField] LayerMask _dropIgnoreLayers = ~0;
     public Transform Hand => _playerHand ? _playerHand : _player.transform;
+    public Transform Head =>  _player.HeadTransform;
+    public Player Player => _player;
 
     const int InventorySize = 10;
     // Inventory
@@ -63,13 +65,13 @@ public class PlayerInventory : NetworkBehaviour
             if (_equippedItemLocalRefference != null)
             {
                 Debug.Log("Unequipping: " + _equippedItemLocalRefference);
-                _equippedItemLocalRefference.OnUnequip(this);
+                _equippedItemLocalRefference.OnUnequip(_player);
             }
             _equippedItemLocalRefference = value;
             if (_equippedItemLocalRefference != null)
             {
                 Debug.Log("Equipping: " + _equippedItemLocalRefference);
-                _equippedItemLocalRefference.OnEquip(this);
+                _equippedItemLocalRefference.OnEquip(_player);
             }
         }
     }

@@ -15,9 +15,11 @@ public class Player : NetworkBehaviour
     [Header("Player Components")]
     [SerializeField] PlayerInventory _inventory;
     [SerializeField] PlayerMovement _movement;
+    [SerializeField] HealthSystem _health;
 
     public PlayerInventory Inventory => _inventory;
     public PlayerMovement Movement => _movement;
+    public HealthSystem Health => _health;
     public Transform HeadTransform => Movement.CameraTransform;
 
     // Network variables
@@ -50,6 +52,7 @@ public class Player : NetworkBehaviour
         if (Input == null) Input = new InputSystem_Actions();
         if(_inventory == null) _inventory = GetComponent<PlayerInventory>();
         if(_movement == null) _movement = GetComponent<PlayerMovement>();
+        if(_health == null) _health = GetComponent<HealthSystem>();
     }
 
     public override void OnNetworkSpawn()

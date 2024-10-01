@@ -28,6 +28,7 @@ public class LookupController : MonoBehaviour, IInteractable
 
     private Dictionary<string, ItemTag> infoQuery = new Dictionary<string, ItemTag>();
 
+    public bool Interactible => true;
 
     private void Awake()
     {
@@ -189,7 +190,7 @@ public class LookupController : MonoBehaviour, IInteractable
     }
 
 
-    public void Interact(PlayerMovement player)
+    public void Interact(Player player)
     {
         OpenMenu();
     }

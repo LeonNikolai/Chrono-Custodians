@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5445368168447230306}
+  - component: {fileID: 3373931065488904967}
   m_Layer: 0
   m_Name: HAND
   m_TagString: Untagged
@@ -25,12 +26,43 @@ Transform:
   m_GameObject: {fileID: 5091999888518791510}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.25}
+  m_LocalPosition: {x: 0.2, y: -0.2, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1397814148479679156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3373931065488904967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5091999888518791510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 1
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &5472914112539880004
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,8 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78bb468f48a992546a70b54cd0a54e71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inventory: {fileID: 0}
-  _movement: {fileID: 0}
+  _inventory: {fileID: 3662181299126535597}
+  _movement: {fileID: 7213086198297157121}
+  _health: {fileID: 2648385201836132714}
   Age:
     m_InternalValue: 20
 --- !u!114 &7213086198297157121
@@ -122,6 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cd4dc96a896439682cf4c7f7b96521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 8184387821958102025}
   stamina: 0
   xRotation: 0
   moveSpeed: 6
@@ -270,6 +304,9 @@ MonoBehaviour:
   currentHealth:
     m_InternalValue: 0
   onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onAlive:
     m_PersistentCalls:
       m_Calls: []
   alive: {fileID: 0}

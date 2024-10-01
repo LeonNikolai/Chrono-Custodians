@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    [SerializeField] Player _player;
     public float stamina;
     public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -25,6 +26,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Awake()
     {
         if (characterController == null) characterController = GetComponent<CharacterController>();
+        if(_player == null) _player = GetComponent<Player>();
     }
     private void Start()
     {
@@ -107,7 +109,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (currentInteractible == value) return;
             currentInteractible = value;
-            Hud.CrosshairTooltip = currentInteractible == null ? "" : "Press E to interact";
+            Hud.CrosshairTooltip = currentInteractible == null ? "" : currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
         }
     }
     IHighlightable CurrentHighlightable
@@ -245,8 +247,10 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InputInteract()
     {   
-        CurrentInteractible?.Interact(this);
-        //ChangeState(MovementState.Jetpack, 1f);
+        if(CurrentInteractible is not null && CurrentInteractible.Interactible) {
+            CurrentInteractible.Interact(_player);
+        }
+        //ChangeState(MovementState.Jetpack, 1f);s
     }
 
     public void ChangeModifier(MovementModifier modifier, bool enable)

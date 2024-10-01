@@ -1,33 +1,21 @@
 using UnityEngine;
 
-public class Ladder : MonoBehaviour, IHighlightable, IInteractable
+public class Ladder : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float rotation;
     [SerializeField] private bool endPoint, rotateAtSpawn;
 
-    public void HightlightEnter() 
+    public bool Interactible => true;
+
+    public void Interact(Player player) 
     {
-        Debug.Log("HighLight Enter");
-    }
-    
-    public void HightlightUpdate() 
-    {
-        
-    }
-    
-    public void HightlightExit() 
-    {
-        Debug.Log("HighLight Exit");
-    }
-    
-    public void Interact(PlayerMovement player) 
-    {
-        if (player.movementState.currentState != MovementState.Climbing) 
+        var movment = player.Movement;
+        if (movment.movementState.currentState != MovementState.Climbing) 
         {
-            player.ChangeState(MovementState.Climbing, 0f);
-            player.ChangePosition(spawnPoint.position);
-            SetPlayerRotation(player);
+            movment.ChangeState(MovementState.Climbing, 0f);
+            movment.ChangePosition(spawnPoint.position);
+            SetPlayerRotation(movment);
         }
     }
 

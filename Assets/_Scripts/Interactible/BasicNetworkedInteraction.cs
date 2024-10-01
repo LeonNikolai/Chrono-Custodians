@@ -12,6 +12,9 @@ public class BasicNetworkedInteraction : NetworkBehaviour, IHighlightable, IInte
     [Header("Local Interactor Highlight Events")]
     [SerializeField] UnityEvent _onHighlightEnterLocal = new UnityEvent();
     [SerializeField] UnityEvent _onHighlightExitLocal = new UnityEvent();
+
+    public bool Interactible => true;
+
     public void HightlightEnter()
     {
         _onHighlightEnterLocal?.Invoke();
@@ -27,7 +30,7 @@ public class BasicNetworkedInteraction : NetworkBehaviour, IHighlightable, IInte
 
     }
 
-    public void Interact(PlayerMovement player)
+    public void Interact(Player player)
     {
 
         _onInteractOwnClientLocal?.Invoke();

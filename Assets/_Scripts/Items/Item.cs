@@ -2,12 +2,10 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IHighlightable
+public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IScanable
 {
 
-    bool hasItemPhysics = false;
     [SerializeField] ItemData _itemData;
-    private Transform _transformTarget = null;
 
     [Header("Item Refferences")]
     [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
@@ -15,6 +13,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public Collider[] Collider => _collider;
 
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public bool InInventory
     {
         get
@@ -25,7 +24,14 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     public ItemData ItemData => _itemData;
 
-    public void Interact(PlayerMovement player)
+    public bool Interactible => true;
+
+    public virtual string ScanTitle => _itemData ? _itemData.Name : "Unknown Item";
+
+    public virtual string ScanResult => _itemData ? _itemData.Description : "No Description";
+    
+
+    public void Interact(Player player)
     {
         // Do logic on server
         PickupItemServerRpc();
@@ -41,66 +47,70 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public override void OnNetworkSpawn()
     {
         currentSlot.OnValueChanged += OnSlotChanged;
+        isPickedUpByPlayer.OnValueChanged += OnPickedUpChanged;
         base.OnNetworkSpawn();
     }
 
 
-    public override void OnGainedOwnership()
-    {
-        _transformTarget = Player.LocalPlayer.Inventory.Hand;
-        OnSlotChanged(currentSlot.Value, currentSlot.Value);
-        base.OnGainedOwnership();
-    }
 
-    public override void OnLostOwnership()
-    {
-        _transformTarget = null;
-        OnSlotChanged(currentSlot.Value, currentSlot.Value);
-        base.OnLostOwnership();
-    }
 
-    public void EnableColliders(bool enable = true)
+    public virtual void EnableColliders(bool enable = true)
     {
         foreach (var collider in _collider)
         {
             collider.enabled = enable;
         }
     }
-    public void EnableVisuals(bool enable = true)
+    public virtual void EnableVisuals(bool enable = true)
     {
         foreach (var collider in _meshRenderers)
         {
             collider.enabled = enable;
         }
     }
-
+    private void OnPickedUpChanged(bool previousValue, bool newValue)
+    {
+        HandleReparenting(OwnerClientId);
+        OnSlotChanged(currentSlot.Value, currentSlot.Value);
+    }
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
         base.OnOwnershipChanged(previous, current);
+        HandleReparenting(current);
+        OnSlotChanged(currentSlot.Value, currentSlot.Value);
+    }
+
+    private void HandleReparenting(ulong currentOwnerId)
+    {
+
+        if (isPickedUpByPlayer.Value && Player.Players.TryGetValue(currentOwnerId, out Player Character))
+        {
+            transform.SetParent(Character.Inventory.Hand, true);
+            Debug.Log("Item is owned by player");
+            if (IsOwner)
+            {
+                Debug.Log("Item is owned by player and is owner");
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+            }
+            return;
+        }
+        transform.SetParent(null, true);
     }
 
     [Rpc(SendTo.Server)]
     public void PickupItemServerRpc(RpcParams rpcParams = default)
     {
         var clientId = rpcParams.Receive.SenderClientId;
-        Debug.Log("Client picked up item");
-        if (IsOwnedByServer)
+        if (IsOwnedByServer && !isPickedUpByPlayer.Value)
         {
-            Debug.Log("Server picked up item");
             if (Player.Players.TryGetValue(clientId, out Player Character))
             {
                 if (Character.Inventory.TryAddItem(NetworkObject))
                 {
                     NetworkObject.ChangeOwnership(clientId);
                     currentSlot.Value = ItemSlotType.PlayerInventory;
-                    if (NetworkObject.TrySetParent(Character.transform, false))
-                    {
-                        transform.localEulerAngles = Vector3.zero;
-                    }
-                    else
-                    {
-                        Debug.Log("Didnt reparrent");
-                    }
+                    isPickedUpByPlayer.Value = true;
                 }
             }
         }
@@ -131,16 +141,9 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             if (player.Inventory.TryRemoveItem(NetworkObject))
             {
                 NetworkObject.RemoveOwnership();
-                if (NetworkObject.TryRemoveParent(true))
-                {
-                    currentSlot.Value = ItemSlotType.None;
-                    transform.position = pos;
-                    transform.rotation = rot;
-                }
-                else
-                {
-                    Debug.Log("Didnt reparrent");
-                }
+                isPickedUpByPlayer.Value = false;
+                transform.position = pos;
+                transform.rotation = rot;
             }
         }
 
@@ -153,15 +156,9 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             if (player.Inventory.TryRemoveItem(NetworkObject))
             {
                 NetworkObject.RemoveOwnership();
-                if (NetworkObject.TryRemoveParent(true))
-                {
-                    currentSlot.Value = ItemSlotType.None;
-                    player.Inventory.DropPlacement(transform);
-                }
-                else
-                {
-                    Debug.Log("Didnt reparrent");
-                }
+                player.Inventory.DropPlacement(transform);
+                currentSlot.Value = ItemSlotType.None;
+                isPickedUpByPlayer.Value = false;
             }
         }
 
@@ -178,36 +175,24 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
 
 
-    public virtual void OnEquip(object playerCharacter)
+    public virtual void OnEquip(object character)
     {
         OnSlotChanged(currentSlot.Value, currentSlot.Value);
         EnableColliders(false);
         EnableVisuals(true);
     }
 
-    public virtual void OnEquipUpdate(object playerCharacter)
+    public virtual void OnEquipUpdate(object character)
     {
-        MoveHandLocation();
     }
 
-    private void MoveHandLocation()
-    {
-        // Network object can only be parented to another network object, so we need to manually move the object to the hand location
-        bool isPlacedInMachine = IsServer && currentSlot.Value == ItemSlotType.Machine;
-        bool isHeldByPlayer = IsOwner;
-        if ((isHeldByPlayer || isPlacedInMachine) && _transformTarget != null)
-        {
-            transform.position = _transformTarget.position;
-            transform.rotation = _transformTarget.rotation;
-        }
-    }
 
-    public virtual void OnUnequip(object playerCharacter)
+    public virtual void OnUnequip(object character)
     {
         OnSlotChanged(currentSlot.Value, currentSlot.Value);
     }
 
-    public void OnEnterInventory(object playerCharacter, ItemSlotType slotType)
+    public void OnEnterInventory(object inventory, ItemSlotType slotType)
     {
         if (!IsOwner) return;
         currentSlot.Value = slotType;
@@ -230,25 +215,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         }
     }
 
-    public void OnExitInventory(object playerCharacter, ItemSlotType slotType)
+    public void OnExitInventory(object inventory, ItemSlotType slotType)
     {
 
     }
 
-    public void HightlightEnter()
+    public void OnScan(Player player)
     {
 
     }
-
-    public void HightlightUpdate()
-    {
-
-    }
-
-    public void HightlightExit()
-    {
-
-    }
-
-
 }
