@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Awake()
     {
         if (characterController == null) characterController = GetComponent<CharacterController>();
-        if(_player == null) _player = GetComponent<Player>();
+        if (_player == null) _player = GetComponent<Player>();
     }
     private void Start()
     {
@@ -73,7 +74,7 @@ public class PlayerMovement : NetworkBehaviour
         PlayerStamina();
         PlayerMove();
         PlayerCamera();
-        if(transform.position.y < -100f)
+        if (transform.position.y < -100f)
         {
             ChangePosition(PlayerSpawner.getSpawnPoint());
         }
@@ -103,15 +104,28 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     IInteractable currentInteractible;
-    IInteractable CurrentInteractible { 
+    IInteractable CurrentInteractible
+    {
         get => currentInteractible;
         set
         {
             if (currentInteractible == value) return;
             currentInteractible = value;
-            Hud.CrosshairTooltip = currentInteractible == null ? "" : currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+            UpdateHud();
         }
     }
+
+    private void UpdateHud()
+    {
+        if (currentInteractible is IInteractionMessage message)
+        {
+            Hud.CrosshairTooltip = currentInteractible.Interactible ? message.InteractionMessage : message.CantInteractMessage;
+            return;
+        }
+        if (currentInteractible == null) Hud.CrosshairTooltip = "";
+        Hud.CrosshairTooltip = currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+    }
+
     IHighlightable CurrentHighlightable
     {
         set
@@ -132,12 +146,13 @@ public class PlayerMovement : NetworkBehaviour
             if (hit.collider.TryGetComponent<IHighlightable>(out var highlightable))
             {
                 CurrentHighlightable = highlightable;
-                if(highlightable is IInteractable interactable)
+                if (highlightable is IInteractable interactable)
                 {
                     CurrentInteractible = interactable;
                 }
                 return;
-            } else if(hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            }
+            else if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
             {
                 CurrentHighlightable = null;
                 CurrentInteractible = interactable;
@@ -246,8 +261,9 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     private void InputInteract()
-    {   
-        if(CurrentInteractible is not null && CurrentInteractible.Interactible) {
+    {
+        if (CurrentInteractible is not null && CurrentInteractible.Interactible)
+        {
             CurrentInteractible.Interact(_player);
         }
         //ChangeState(MovementState.Jetpack, 1f);s

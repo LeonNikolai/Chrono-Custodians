@@ -20,7 +20,8 @@ public class ItemData : ScriptableObject
     public GameObject Prefab => _prefab;
 
     [Header("Hisorical Info")]
-    [SerializeField] bool timelessItem = false;
+    [SerializeField] bool _unSendable = false;
+    public bool UnSendable => _unSendable;
 
     [Header("Valid Years")]
     [SerializeField] int _astronomicalYearStart = 2024;

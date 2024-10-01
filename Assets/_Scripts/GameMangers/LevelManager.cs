@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-50)]
@@ -13,6 +14,7 @@ public class LevelManager : NetworkBehaviour
     [SerializeField] LevelScene _autoEnterScene = null;
 
     static LevelScene _loadedScene = null;
+    public static LevelScene LoadedScene => _loadedScene;
     public UnityEvent<bool> LevelLoaded;
     public UnityEvent<bool> LevelLoadedInverted;
     public static void LoadLevelScene(LevelScene scene)
