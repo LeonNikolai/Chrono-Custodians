@@ -123,7 +123,7 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
         if (currentInteractible == null) Hud.CrosshairTooltip = "";
-        Hud.CrosshairTooltip = currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+        Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
     }
 
     IHighlightable CurrentHighlightable
