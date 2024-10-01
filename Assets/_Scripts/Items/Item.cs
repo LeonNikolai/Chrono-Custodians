@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IScanable
 {
@@ -28,8 +29,27 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     public virtual string ScanTitle => _itemData ? _itemData.Name : "Unknown Item";
 
-    public virtual string ScanResult => _itemData ? _itemData.Description : "No Description";
-    
+    public virtual string ScanResult
+    {
+        get
+        {
+            if(_itemData) {
+                string tags = "";
+                if(_itemData.Tags.Length > 0) tags = _itemData.Tags[0].Name;
+                for (int i = 1; i < _itemData.Tags.Length; i++)
+                {
+                    if(i == _itemData.Tags.Length - 1) {
+                        if(_itemData.Tags.Length > 2) tags += ", ";
+                        tags += "and ";
+                    }
+                    else tags += ", ";
+                    tags += _itemData.Tags[i].Name;
+                }
+                return $"{_itemData.Description}\n\n Made of : {tags}";
+            }
+            return _itemData ? _itemData.Description : "No Description\n\n";
+        }
+    }
 
     public void Interact(Player player)
     {

@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
-public class Player : NetworkBehaviour
+public class Player : NetworkBehaviour, IScanable
 {
     // Static variables
     public static Player LocalPlayer = null;
@@ -47,6 +48,11 @@ public class Player : NetworkBehaviour
             }
         }
     }
+
+    public string ScanTitle => "Player";
+
+    public string ScanResult => "Minimum wage worker";
+
     private void Awake()
     {
         if (Input == null) Input = new InputSystem_Actions();
@@ -77,5 +83,10 @@ public class Player : NetworkBehaviour
         }
         AllPlayers.Remove(this);
         Players.Remove(OwnerClientId);
+    }
+
+    public void OnScan(Player player)
+    {
+        
     }
 }

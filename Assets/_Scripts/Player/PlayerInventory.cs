@@ -303,7 +303,7 @@ public class PlayerInventory : NetworkBehaviour
                 dropItem.rotation = Quaternion.LookRotation(Vector3.forward, hitnormal);
                 return;
             }
-            if (Physics.Raycast(hit.point, Vector3.down, out RaycastHit groundHit, MaxDownwardsDrop))
+            if (Physics.Raycast(Vector3.MoveTowards(hit.point,_player.transform.position,0.1f), Vector3.down, out RaycastHit groundHit, MaxDownwardsDrop))
             {
                 dropItem.position = groundHit.point;
                 var normal = groundHit.normal;

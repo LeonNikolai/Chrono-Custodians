@@ -3,6 +3,8 @@ using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 public interface IScanable
 {
     string ScanTitle { get; }
@@ -17,6 +19,7 @@ public class ScannerItem : Item
     [SerializeField] private Canvas scannerCanvas;
     [SerializeField] private TMP_Text scanTitleText;
     [SerializeField] private TMP_Text scanResultText;
+    [SerializeField] private ScrollRect scanResultScrollRect;
     [SerializeField] private LayerMask scanableLayer = ~0;
 
 
@@ -75,7 +78,7 @@ public class ScannerItem : Item
         if (isPickedUpByPlayer.Value && player != null)
         {
             var ray = new Ray(player.HeadTransform.position, player.HeadTransform.forward);
-            if (Physics.Raycast(ray, out var hit, scanRange, scanableLayer))
+            if (Physics.Raycast(ray, out var hit, scanRange, scanableLayer, QueryTriggerInteraction.Ignore))
             {
                 var scanable = hit.collider.GetComponent<IScanable>();
                 Scanable = scanable;
@@ -89,6 +92,10 @@ public class ScannerItem : Item
                 if (Player.Input.Player.Attack.WasReleasedThisFrame())
                 {
                     StopAllCoroutines();
+                }
+                if (Mouse.current.scroll.ReadValue().y != 0)
+                {
+                    scanResultScrollRect.verticalNormalizedPosition += Mouse.current.scroll.ReadValue().y * 0.1f;
                 }
             }
         }

@@ -73,9 +73,9 @@ public class PlayerMovement : NetworkBehaviour
         PlayerStamina();
         PlayerMove();
         PlayerCamera();
-        if(transform.position.y < -20f)
+        if(transform.position.y < -100f)
         {
-            ChangePosition(new Vector3(0f, 1f, 0f));
+            ChangePosition(PlayerSpawner.getSpawnPoint());
         }
     }
 

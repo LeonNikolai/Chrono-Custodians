@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
@@ -210,6 +211,7 @@ public class LookupController : MonoBehaviour, IInteractable
         Menu.ActiveMenu = Menu.MenuType.Closed;
         Menu.CustomMenuCloseAttempt.RemoveListener(CloseMenu);
         Hud.Hidden = false;
+        EventSystem.current.SetSelectedGameObject(null);
         StopAllCoroutines();
         ClearDisplay();
     }
