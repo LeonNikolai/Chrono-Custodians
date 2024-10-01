@@ -9,5 +9,6 @@ public interface IHighlightable
 
 public interface IInteractable
 {
-    void Interact(PlayerMovement player);
+    void Interact(Player player);
+    public bool Interactible { get; }
 }

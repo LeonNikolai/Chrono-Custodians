@@ -1,6 +1,9 @@
+
+using UnityEngine;
+
 public interface IEquippable {
-    void Drop();
-    void OnEquip(object playerCharacter);
-    void OnEquipUpdate(object playerCharacter);
-    void OnUnequip(object playerCharacter);
+    void Drop(Vector3? position = null);
+    void OnEquip(object equipper);
+    void OnEquipUpdate(object equipper);
+    void OnUnequip(object equipper);
 }

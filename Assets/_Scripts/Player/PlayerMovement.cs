@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    [SerializeField] Player _player;
     public float stamina;
     public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -25,6 +26,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Awake()
     {
         if (characterController == null) characterController = GetComponent<CharacterController>();
+        if(_player == null) _player = GetComponent<Player>();
     }
     private void Start()
     {
@@ -100,6 +102,16 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    IInteractable currentInteractible;
+    IInteractable CurrentInteractible { 
+        get => currentInteractible;
+        set
+        {
+            if (currentInteractible == value) return;
+            currentInteractible = value;
+            Hud.CrosshairTooltip = currentInteractible == null ? "" : currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+        }
+    }
     IHighlightable CurrentHighlightable
     {
         set
@@ -108,14 +120,6 @@ public class PlayerMovement : NetworkBehaviour
             currentHighlightable?.HightlightExit();
             currentHighlightable = value;
             currentHighlightable?.HightlightEnter();
-            if (currentHighlightable is IInteractable interactable)
-            {
-                Hud.CrosshairTooltip = "Press E to interact";
-            }
-            else
-            {
-                Hud.CrosshairTooltip = "";
-            }
         }
     }
 
@@ -128,10 +132,19 @@ public class PlayerMovement : NetworkBehaviour
             if (hit.collider.TryGetComponent<IHighlightable>(out var highlightable))
             {
                 CurrentHighlightable = highlightable;
+                if(highlightable is IInteractable interactable)
+                {
+                    CurrentInteractible = interactable;
+                }
+                return;
+            } else if(hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            {
+                CurrentHighlightable = null;
+                CurrentInteractible = interactable;
                 return;
             }
         }
-
+        CurrentInteractible = null;
         CurrentHighlightable = null;
     }
 
@@ -233,12 +246,11 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     private void InputInteract()
-    {
-        if (currentHighlightable is IInteractable interactable)
-        {
-            interactable.Interact(this);
+    {   
+        if(CurrentInteractible is not null && CurrentInteractible.Interactible) {
+            CurrentInteractible.Interact(_player);
         }
-        //ChangeState(MovementState.Jetpack, 1f);
+        //ChangeState(MovementState.Jetpack, 1f);s
     }
 
     public void ChangeModifier(MovementModifier modifier, bool enable)

@@ -22,6 +22,10 @@ public class MainMenu : MonoBehaviour
     {
         NetworkManager.Singleton.SceneManager.LoadScene(GameScene, LoadSceneMode.Single);
     }
+    public void QuitApplication()
+    {
+        Application.Quit();
+    }
 
 
 }

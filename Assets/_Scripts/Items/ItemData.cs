@@ -17,6 +17,7 @@ public class ItemData : ScriptableObject
 
     [Header("Item Spawn")]
     [SerializeField] GameObject _prefab;
+    public GameObject Prefab => _prefab;
 
     [Header("Hisorical Info")]
     [SerializeField] bool timelessItem = false;

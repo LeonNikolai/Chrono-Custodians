@@ -9,11 +9,14 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField] Transform _playerHand;
     [SerializeField] LayerMask _dropIgnoreLayers = ~0;
     public Transform Hand => _playerHand ? _playerHand : _player.transform;
+    public Transform Head =>  _player.HeadTransform;
+    public Player Player => _player;
 
     const int InventorySize = 10;
     // Inventory
     public NetworkList<NetworkObjectReference> Inventory;
-
+    
+    public NetworkObjectReference CurrentEquippedNetworkObject => Inventory[EquippedNetworkItemIndex.Value];
     public bool TryAddItem(NetworkObject item)
     {
         if (item == null) return false;
@@ -62,13 +65,13 @@ public class PlayerInventory : NetworkBehaviour
             if (_equippedItemLocalRefference != null)
             {
                 Debug.Log("Unequipping: " + _equippedItemLocalRefference);
-                _equippedItemLocalRefference.OnUnequip(this);
+                _equippedItemLocalRefference.OnUnequip(_player);
             }
             _equippedItemLocalRefference = value;
             if (_equippedItemLocalRefference != null)
             {
                 Debug.Log("Equipping: " + _equippedItemLocalRefference);
-                _equippedItemLocalRefference.OnEquip(this);
+                _equippedItemLocalRefference.OnEquip(_player);
             }
         }
     }
@@ -91,11 +94,11 @@ public class PlayerInventory : NetworkBehaviour
             _player = GetComponent<Player>();
         }
 
-        if (IsServer)
+        EquippedNetworkItemIndex.OnValueChanged += EquippedItemChange;
+        if (IsOwner)
         {
             EquippedNetworkItemIndex.Value = 0;
         }
-        EquippedNetworkItemIndex.OnValueChanged += EquippedItemChange;
         Inventory.OnListChanged += InventoryChanged;
         base.OnNetworkSpawn();
     }
@@ -231,11 +234,11 @@ public class PlayerInventory : NetworkBehaviour
     private void Update()
     {
         EquippedItemLocalRefference?.OnEquipUpdate(this);
+        if (!IsOwner) return;
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             EquippedItemLocalRefference?.Drop();
         }
-
 
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
