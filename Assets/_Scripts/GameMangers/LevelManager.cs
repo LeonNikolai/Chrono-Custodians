@@ -75,7 +75,7 @@ public class LevelManager : NetworkBehaviour
     }
 
 
-    static LevelManager instance;
+    public static LevelManager instance;
     private void Awake()
     {
         if (LevelLoaded == null) LevelLoaded = new UnityEvent<bool>();
@@ -100,5 +100,15 @@ public class LevelManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
 
+    }
+
+    public List<string> GetLevelSceneNames()
+    {
+        List<string> strings = new List<string>();
+        foreach(var level in _levelScene)
+        {
+            strings.Add(level.SceneName);
+        }
+        return strings;
     }
 }
