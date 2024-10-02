@@ -1,21 +1,12 @@
 using UnityEngine;
 
-public class OpenHudInteraction : MonoBehaviour, IInteractable, IHighlightable
+public class OpenHudInteraction : MonoBehaviour, IInteractable
 {
     [SerializeField] Menu.MenuType _menuType = Menu.MenuType.PauseMenu;
-    public void HightlightEnter()
-    {
-    }
 
-    public void HightlightExit()
-    {
-    }
+    public bool Interactible => true;
 
-    public void HightlightUpdate()
-    {
-    }
-
-    public void Interact(PlayerMovement player)
+    public void Interact(Player player)
     {
         Menu.ActiveMenu = _menuType;
     }

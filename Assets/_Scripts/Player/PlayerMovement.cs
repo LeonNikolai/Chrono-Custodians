@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    [SerializeField] Player _player;
     public float stamina;
     public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -25,6 +27,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Awake()
     {
         if (characterController == null) characterController = GetComponent<CharacterController>();
+        if (_player == null) _player = GetComponent<Player>();
     }
     private void Start()
     {
@@ -71,9 +74,9 @@ public class PlayerMovement : NetworkBehaviour
         PlayerStamina();
         PlayerMove();
         PlayerCamera();
-        if(transform.position.y < -20f)
+        if (transform.position.y < -100f)
         {
-            ChangePosition(new Vector3(0f, 1f, 0f));
+            ChangePosition(PlayerSpawner.getSpawnPoint());
         }
     }
 
@@ -100,6 +103,34 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    IInteractable currentInteractible;
+    IInteractable CurrentInteractible
+    {
+        get => currentInteractible;
+        set
+        {
+            if (currentInteractible == value) {
+                UpdateHud();
+            }
+            currentInteractible = value;
+            UpdateHud();
+        }
+    }
+
+    private void UpdateHud()
+    {
+        if (currentInteractible == null) {
+            Hud.CrosshairTooltip = "";
+            return;
+        }
+        if (currentInteractible is IInteractionMessage message)
+        {
+            Hud.CrosshairTooltip = currentInteractible.Interactible ? message.InteractionMessage : message.CantInteractMessage;
+            return;
+        }
+        Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+    }
+
     IHighlightable CurrentHighlightable
     {
         set
@@ -108,14 +139,6 @@ public class PlayerMovement : NetworkBehaviour
             currentHighlightable?.HightlightExit();
             currentHighlightable = value;
             currentHighlightable?.HightlightEnter();
-            if (currentHighlightable is IInteractable interactable)
-            {
-                Hud.CrosshairTooltip = "Press E to interact";
-            }
-            else
-            {
-                Hud.CrosshairTooltip = "";
-            }
         }
     }
 
@@ -128,10 +151,20 @@ public class PlayerMovement : NetworkBehaviour
             if (hit.collider.TryGetComponent<IHighlightable>(out var highlightable))
             {
                 CurrentHighlightable = highlightable;
+                if (highlightable is IInteractable interactable)
+                {
+                    CurrentInteractible = interactable;
+                }
+                return;
+            }
+            else if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            {
+                CurrentHighlightable = null;
+                CurrentInteractible = interactable;
                 return;
             }
         }
-
+        CurrentInteractible = null;
         CurrentHighlightable = null;
     }
 
@@ -234,11 +267,11 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InputInteract()
     {
-        if (currentHighlightable is IInteractable interactable)
+        if (CurrentInteractible is not null && CurrentInteractible.Interactible)
         {
-            interactable.Interact(this);
+            CurrentInteractible.Interact(_player);
         }
-        //ChangeState(MovementState.Jetpack, 1f);
+        //ChangeState(MovementState.Jetpack, 1f);s
     }
 
     public void ChangeModifier(MovementModifier modifier, bool enable)

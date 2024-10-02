@@ -1,26 +1,51 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-
+[DefaultExecutionOrder(-2)]
 public class WaypointManager : MonoBehaviour
 {
-    public static WaypointManager Instance { get; private set; }
+    public static WaypointManager instance { get; private set; } = null;
 
     [SerializeField] private List<Transform> waypoints = new List<Transform>();
+    [HideInInspector] public List<Vector3> waypointPosition = new List<Vector3>();
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject); // There should only be one instance, so destroy duplicates
+            instance = this;
         }
     }
 
-    public List<Transform> GetWaypoints()
+
+    private void OnDestroy()
     {
-        return waypoints;
+        if (instance == this) instance = null;
+        UpdatePoints();
+    }
+
+    private void Start()
+    {
+        Debug.Log("WaypointManager is ready");
+        if (instance == null || instance == this)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("There should only be one instance of WaypointManager");
+            Destroy(gameObject); // There should only be one instance, so destroy duplicates
+            return;
+        }
+        UpdatePoints();
+    }
+
+    private void UpdatePoints()
+    {
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            waypointPosition.Clear();
+            waypointPosition.Add(waypoints[i].position);
+        }
     }
 }

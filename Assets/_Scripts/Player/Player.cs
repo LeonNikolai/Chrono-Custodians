@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 [DefaultExecutionOrder(-100)]
-public class Player : NetworkBehaviour
+public class Player : NetworkBehaviour, IScanable
 {
     // Static variables
     public static Player LocalPlayer = null;
@@ -15,9 +16,11 @@ public class Player : NetworkBehaviour
     [Header("Player Components")]
     [SerializeField] PlayerInventory _inventory;
     [SerializeField] PlayerMovement _movement;
+    [SerializeField] HealthSystem _health;
 
     public PlayerInventory Inventory => _inventory;
     public PlayerMovement Movement => _movement;
+    public HealthSystem Health => _health;
     public Transform HeadTransform => Movement.CameraTransform;
 
     // Network variables
@@ -45,11 +48,21 @@ public class Player : NetworkBehaviour
             }
         }
     }
+    [SerializeField] LocalizedStringGroup possiblePlayerScanResults;
+    public string ScanTitle => "Player";
+    public string ScanResult {
+        get {
+            var seed = (int)OwnerClientId + NetworkManager.Singleton.ConnectedHostname.GetHashCode();
+            return possiblePlayerScanResults.GetString(seed % possiblePlayerScanResults.Length);
+        }
+    }
+
     private void Awake()
     {
         if (Input == null) Input = new InputSystem_Actions();
         if(_inventory == null) _inventory = GetComponent<PlayerInventory>();
         if(_movement == null) _movement = GetComponent<PlayerMovement>();
+        if(_health == null) _health = GetComponent<HealthSystem>();
     }
 
     public override void OnNetworkSpawn()
@@ -74,5 +87,10 @@ public class Player : NetworkBehaviour
         }
         AllPlayers.Remove(this);
         Players.Remove(OwnerClientId);
+    }
+
+    public void OnScan(Player player)
+    {
+        
     }
 }

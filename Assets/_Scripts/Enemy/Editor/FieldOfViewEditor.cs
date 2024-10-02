@@ -8,19 +8,19 @@ public class FieldOfViewEditor : Editor
     {
         FieldOfView fieldOfView = (FieldOfView)target;
         Handles.color = Color.white;
-        Handles.DrawWireArc(fieldOfView.transform.position, Vector3.up, Vector3.forward, 360, fieldOfView.radius);
+        Handles.DrawWireArc(fieldOfView.head.position, Vector3.up, Vector3.forward, 360, fieldOfView.radius);
 
-        Vector3 viewAngle01 = DirectionFromAngle(fieldOfView.transform.eulerAngles.y, -fieldOfView.angle / 2);
-        Vector3 viewAngle02 = DirectionFromAngle(fieldOfView.transform.eulerAngles.y, fieldOfView.angle / 2);
+        Vector3 viewAngle01 = DirectionFromAngle(fieldOfView.head.eulerAngles.y, -fieldOfView.angle / 2);
+        Vector3 viewAngle02 = DirectionFromAngle(fieldOfView.head.eulerAngles.y, fieldOfView.angle / 2);
 
         Handles.color = Color.yellow;
-        Handles.DrawLine(fieldOfView.transform.position, fieldOfView.transform.position + viewAngle01 * fieldOfView.radius);
-        Handles.DrawLine(fieldOfView.transform.position, fieldOfView.transform.position + viewAngle02 * fieldOfView.radius);
+        Handles.DrawLine(fieldOfView.head.position, fieldOfView.head.position + viewAngle01 * fieldOfView.radius);
+        Handles.DrawLine(fieldOfView.head.position, fieldOfView.head.position + viewAngle02 * fieldOfView.radius);
 
         if (fieldOfView.canSeePlayer)
         {
             Handles.color = Color.green;
-            Handles.DrawLine(fieldOfView.transform.position, fieldOfView.player.transform.position);
+            Handles.DrawLine(fieldOfView.head.position, fieldOfView.player.transform.position);
         }
     }
 
