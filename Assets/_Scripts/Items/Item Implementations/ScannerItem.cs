@@ -79,7 +79,7 @@ public class ScannerItem : Item
         {
             var ray = new Ray(player.HeadTransform.position + player.HeadTransform.forward*0.25f, player.HeadTransform.forward);
             Debug.DrawRay(ray.origin, ray.direction * scanRange, Color.red, 0.1f);
-            if (Physics.Raycast(ray, out var hit, scanRange, scanableLayer, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(ray, out var hit, scanRange, scanableLayer, QueryTriggerInteraction.Collide))
             {
                 var scanable = hit.collider.GetComponent<IScanable>();
                 Scanable = scanable;
