@@ -21,6 +21,7 @@ public class WaypointManager : MonoBehaviour
     private void OnDestroy()
     {
         if (instance == this) instance = null;
+        UpdatePoints();
     }
 
     private void Start()
@@ -36,8 +37,14 @@ public class WaypointManager : MonoBehaviour
             Destroy(gameObject); // There should only be one instance, so destroy duplicates
             return;
         }
+        UpdatePoints();
+    }
+
+    private void UpdatePoints()
+    {
         for (int i = 0; i < waypoints.Count; i++)
         {
+            waypointPosition.Clear();
             waypointPosition.Add(waypoints[i].position);
         }
     }
