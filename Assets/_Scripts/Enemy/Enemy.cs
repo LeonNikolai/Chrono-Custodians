@@ -61,6 +61,7 @@ public abstract class Enemy : NetworkBehaviour
 
     private void Update()
     {
+        if(!IsSpawned) return;
         if (!IsServer) return;
 
         if (!isRoaming) return;

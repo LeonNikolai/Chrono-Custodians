@@ -15,13 +15,13 @@ public class WaypointManager : MonoBehaviour
         {
             instance = this;
         }
+        UpdatePoints();
     }
 
 
     private void OnDestroy()
     {
         if (instance == this) instance = null;
-        UpdatePoints();
     }
 
     private void Start()
@@ -42,9 +42,10 @@ public class WaypointManager : MonoBehaviour
 
     private void UpdatePoints()
     {
+        waypointPosition.Clear();
         for (int i = 0; i < waypoints.Count; i++)
         {
-            waypointPosition.Clear();
+            if(waypoints[i] == null) continue;
             waypointPosition.Add(waypoints[i].position);
         }
     }
