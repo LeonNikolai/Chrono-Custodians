@@ -10,13 +10,13 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField] Transform _playerHand;
     [SerializeField] LayerMask _dropIgnoreLayers = ~0;
     public Transform Hand => _playerHand ? _playerHand : _player.transform;
-    public Transform Head =>  _player.HeadTransform;
+    public Transform Head => _player.HeadTransform;
     public Player Player => _player;
 
     const int InventorySize = 10;
     // Inventory
     public NetworkList<NetworkObjectReference> Inventory;
-    
+
     public NetworkObjectReference CurrentEquippedNetworkObject => Inventory[EquippedNetworkItemIndex.Value];
     public bool TryAddItem(NetworkObject item)
     {
@@ -29,6 +29,15 @@ public class PlayerInventory : NetworkBehaviour
         // Prevent replacing item
         if (Inventory[EquippedNetworkItemIndex.Value].TryGet(out NetworkObject currentItem))
         {
+            // Try find empty slot
+            for (int i = 0; i < Inventory.Count; i++)
+            {
+                if (!Inventory[i].TryGet(out NetworkObject current))
+                {
+                    Inventory[i] = new NetworkObjectReference(item);
+                    return true;
+                }
+            }
             return false;
         }
         Inventory[EquippedNetworkItemIndex.Value] = new NetworkObjectReference(item);
@@ -73,6 +82,16 @@ public class PlayerInventory : NetworkBehaviour
             {
                 Debug.Log("Equipping: " + _equippedItemLocalRefference);
                 _equippedItemLocalRefference.OnEquip(_player);
+            }
+            if(IsOwner) {
+                if (EquippedItemLocalRefference is ItemUseToolTip toolTip)
+                {
+                    Hud.ItemTooltip = toolTip.ItemToolTip;
+                }
+                else
+                {
+                    Hud.ItemTooltip = "";
+                }
             }
         }
     }
@@ -143,19 +162,19 @@ public class PlayerInventory : NetworkBehaviour
                 break;
             case NetworkListEvent<NetworkObjectReference>.EventType.Value:
                 {
-                    if (changeEvent.Value.TryGet(out NetworkObject oldValueItem))
+                    if (changeEvent.Value.TryGet(out NetworkObject newItemValue))
                     {
-                        if (oldValueItem.TryGetComponent<IInventoryItem>(out var inventoryItemEnter))
+                        if (newItemValue.TryGetComponent<IInventoryItem>(out var inventoryItemEnter))
                         {
                             inventoryItemEnter.OnEnterInventory(this, ItemSlotType.PlayerInventory);
-                            if (changeEvent.Index == EquippedNetworkItemIndex.Value)
-                            {
-                                EquippedItemLocalRefference = inventoryItemEnter as IEquippable;
-                            }
                         }
-                        else
+                        if (changeEvent.Index == EquippedNetworkItemIndex.Value)
                         {
-                            if (changeEvent.Index == EquippedNetworkItemIndex.Value)
+                            if (newItemValue.TryGetComponent<IEquippable>(out var equippableItem))
+                            {
+                                EquippedItemLocalRefference = equippableItem;
+                            }
+                            else
                             {
                                 EquippedItemLocalRefference = null;
                             }
@@ -168,6 +187,7 @@ public class PlayerInventory : NetworkBehaviour
                             EquippedItemLocalRefference = null;
                         }
                     }
+
                     if (changeEvent.PreviousValue.TryGet(out NetworkObject removedItem))
                     {
                         if (removedItem.TryGetComponent<IInventoryItem>(out var inventoryItemExit))
@@ -212,6 +232,7 @@ public class PlayerInventory : NetworkBehaviour
     private void UpdateHud()
     {
         if (!IsOwner) return;
+
         for (int i = 0; i < InventorySize; i++)
         {
             if (Inventory[i].TryGet(out NetworkObject item))
@@ -222,12 +243,12 @@ public class PlayerInventory : NetworkBehaviour
                 }
                 else
                 {
-                    Hud.SetInventoryIcon(null, i, false);
+                    Hud.SetInventoryIcon(null, i, i == EquippedNetworkItemIndex.Value);
                 }
             }
             else
             {
-                Hud.SetInventoryIcon(null, i, false);
+                Hud.SetInventoryIcon(null, i, i == EquippedNetworkItemIndex.Value);
             }
         }
     }
@@ -304,7 +325,7 @@ public class PlayerInventory : NetworkBehaviour
                 dropItem.rotation = Quaternion.LookRotation(Vector3.forward, hitnormal);
                 return;
             }
-            if (Physics.Raycast(Vector3.MoveTowards(hit.point,_player.transform.position,0.1f), Vector3.down, out RaycastHit groundHit, MaxDownwardsDrop))
+            if (Physics.Raycast(Vector3.MoveTowards(hit.point, _player.transform.position, 0.1f), Vector3.down, out RaycastHit groundHit, MaxDownwardsDrop))
             {
                 dropItem.position = groundHit.point;
                 var normal = groundHit.normal;

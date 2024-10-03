@@ -10,6 +10,7 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _staminaBar;
     [SerializeField] UiBar _shieldBar;
     [SerializeField] TMP_Text _crosshairTooltip;
+    [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
 
@@ -42,6 +43,17 @@ public class Hud : MonoBehaviour
         get
         {
             return instance?._crosshairTooltip?.text ?? "";
+        }
+    }
+    public static string ItemTooltip
+    {
+        set
+        {
+            instance._itemTooltip.text = value;
+        }
+        get
+        {
+            return instance?._itemTooltip?.text ?? "";
         }
     }
 

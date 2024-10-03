@@ -245,3 +245,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     }
 }
+
+public interface ItemUseToolTip
+{
+    string ItemToolTip { get; }
+}
