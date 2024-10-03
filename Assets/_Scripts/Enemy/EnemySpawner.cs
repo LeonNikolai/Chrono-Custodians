@@ -6,8 +6,10 @@ using System.Collections;
 
 public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 {
-    [SerializeField] private GameObject[] enemies; // The array of enemies that can be spawned
-    private Vector3[] spawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
+    [SerializeField] private GameObject[] outsideEnemies; // The array of enemies that can be spawned outside
+    [SerializeField] private GameObject[] insideEnemies; // The array of enemies that can be spawned inside
+    private List<Vector3> outsideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
+    private List<Vector3> insideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
     [SerializeField] private Difficulty difficulty; // Selected difficulty level
 
     [SerializeField] private int tokenCount;
@@ -30,7 +32,8 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
         if (IsServer)
         {
             base.OnNetworkSpawn();
-            spawnPoints = WaypointManager.instance.waypointPosition.ToArray();
+            outsideSpawnPoints = WaypointManager.instance.GetWaypoints(WaypointType.Outside);
+            insideSpawnPoints = WaypointManager.instance.GetWaypoints(WaypointType.Inside);
             tokenCount = GetTokenCount(difficulty);
             StartCoroutine(SpawnTimer());
         }
@@ -54,8 +57,8 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
     private int GetRemainingTokens()
     {
-        if (spawnedEnemies.Count == 0) return GetTokenCount(difficulty);
-        int tokensRemaining = GetTokenCount(difficulty);
+        if (spawnedEnemies.Count == 0) return tokenCount;
+        int tokensRemaining = tokenCount;
         foreach (int value in spawnedEnemies.Values)
         {
             tokensRemaining -= value;
@@ -64,18 +67,23 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
     }
 
     // Spawns the enemy if theres tokens available for it.
-    private void SpawnEnemy()
+    private void SpawnEnemy(WaypointType type)
     {
+        List<Vector3> enemyWaypoints = outsideSpawnPoints;
+        if (type == WaypointType.Inside)
+        {
+            enemyWaypoints = insideSpawnPoints;
+        }
         tokensRemaining = GetRemainingTokens();
         if (tokensRemaining <= 0)
         {
             Debug.Log("Not enough tokens remaining to spawn an enemy");
             return;
         }
-        GameObject prefabToSpawn = ChooseEnemyToSpawn();
+        GameObject prefabToSpawn = ChooseEnemyToSpawn(type);
         if (prefabToSpawn == null)
         {
-            Debug.LogError("No available enemy to spawn");
+            Debug.LogWarning($"No enemies in spawnList");
             return;
         }
         int tokenCost = GetTokenCost(prefabToSpawn);
@@ -83,10 +91,10 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
         if (tokenCost < tokensRemaining)
         {
-            int randomSpawn = Random.Range(0, spawnPoints.Length);
+            int randomSpawn = Random.Range(0, enemyWaypoints.Count);
             GameObject enemy = Instantiate(prefabToSpawn);
             tokensRemaining -= tokenCost;
-            enemy.transform.position = spawnPoints[randomSpawn];
+            enemy.transform.position = enemyWaypoints[randomSpawn];
             spawnedEnemies.Add(enemy, tokenCost);
             if (enemy.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
             {
@@ -97,6 +105,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
             {
                 Debug.LogError("The enemy must have a NetworkObject component.");
             }
+            enemy.GetComponent<Enemy>().SetWaypoints(enemyWaypoints);
         }
         else
         {
@@ -104,28 +113,45 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
         }
     }
 
-    private GameObject ChooseEnemyToSpawn()
+    private GameObject ChooseEnemyToSpawn(WaypointType type)
     {
-        if (enemies.Length == 0)
+        if (outsideEnemies.Length == 0)
         {
             Debug.Log("No enemy prefabs");
             return null;
         }
-        List<GameObject> tempEnemiesArray = enemies.ToList();
-        foreach(GameObject enemy in enemies)
+
+        List<GameObject> tempEnemiesList = new List<GameObject>();
+        if (type == WaypointType.Outside)
         {
-            if (enemy.GetComponent<Enemy>().tokenCost > tokensRemaining)
+            tempEnemiesList = outsideEnemies.ToList();
+            foreach (GameObject enemy in outsideEnemies)
             {
-                tempEnemiesArray.Remove(enemy);
+                if (enemy.GetComponent<Enemy>().tokenCost > tokensRemaining)
+                {
+                    tempEnemiesList.Remove(enemy);
+                }
             }
         }
-        if (tempEnemiesArray.Count == 0)
+        else
+        {
+            tempEnemiesList = insideEnemies.ToList();
+            foreach (GameObject enemy in insideEnemies)
+            {
+                if (enemy.GetComponent<Enemy>().tokenCost > tokensRemaining)
+                {
+                    tempEnemiesList.Remove(enemy);
+                }
+            }
+        }
+
+        if (tempEnemiesList.Count == 0)
         {
             Debug.Log("No enemies can be spawned");
             return null;
         }
-        int random = Random.Range(0, tempEnemiesArray.Count);
-        return tempEnemiesArray[random];
+        int random = Random.Range(0, tempEnemiesList.Count);
+        return tempEnemiesList[random];
     }
 
     private int GetTokenCost(GameObject enemy)
@@ -143,8 +169,18 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
             int SpawnTime = Random.Range(spawnTimeMin, spawnTimeMax+1);
             yield return new WaitForSeconds(SpawnTime);
             CheckEnemies();
-            SpawnEnemy();
+            SpawnEnemy(EnemyType());
         }
+    }
+
+    private WaypointType EnemyType()
+    {
+        int totalEnemies = outsideEnemies.Length + insideEnemies.Length;
+        if (Random.Range(1, totalEnemies+1) <= outsideEnemies.Length)
+        {
+            return WaypointType.Outside;
+        }
+        return WaypointType.Inside;
     }
 
     private void CheckEnemies()
