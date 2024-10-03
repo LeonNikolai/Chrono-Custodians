@@ -13,7 +13,7 @@ public class PlayerInventory : NetworkBehaviour
     public Transform Head => _player.HeadTransform;
     public Player Player => _player;
 
-    const int InventorySize = 10;
+    const int InventorySize = 6;
     // Inventory
     public NetworkList<NetworkObjectReference> Inventory;
 
@@ -86,7 +86,7 @@ public class PlayerInventory : NetworkBehaviour
             if(IsOwner) {
                 if (EquippedItemLocalRefference is ItemUseToolTip toolTip)
                 {
-                    Hud.ItemTooltip = toolTip.ItemToolTip;
+                    Hud.ItemTooltip = toolTip?.ItemToolTip;
                 }
                 else
                 {

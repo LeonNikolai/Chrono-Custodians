@@ -47,14 +47,12 @@ public class PlayerSpawner : NetworkBehaviour
 
         foreach (var item in spawnEquipments)
         {
-            if (item.TryGetComponent(out Item itemComponent))
+            if (item == null) continue;
+            var instacne = Instantiate(item, playerInstance.transform.position, playerInstance.transform.rotation);
+            instacne.GetComponent<NetworkObject>().Spawn();
+            if (instacne.TryGetComponent(out Item itemInstance))
             {
-                var instacne = Instantiate(item, playerInstance.transform.position, playerInstance.transform.rotation);
-                instacne.GetComponent<NetworkObject>().Spawn();
-                if (instacne.TryGetComponent(out Item itemInstance))
-                {
-                    itemInstance.PickupItemServer(clientId);
-                }
+                itemInstance.PickupItemServer(clientId);
             }
         }
     }

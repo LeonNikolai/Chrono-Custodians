@@ -56,7 +56,7 @@ public class ScannerItem : Item, ItemUseToolTip
     }
 
 
-    public string ItemToolTip => "Hold Left Mouse Button to scan objects, Mouse Wheel to scroll results";
+    public string ItemToolTip => $"Hold {Player.Input?.Player.Attack?.activeControl?.displayName ?? "Left Mouse"} to scan objects, Mouse Wheel to scroll results";
 
     public override void OnNetworkSpawn()
     {
