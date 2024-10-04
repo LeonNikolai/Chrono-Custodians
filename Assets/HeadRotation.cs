@@ -82,13 +82,13 @@ public class HeadRotation : MonoBehaviour
         }
 
         if (fov == null) return;
-        if (fov.canSeePlayer && target == null)
+        if (fov.canSeeTarget && target == null)
         {
-            if (fov.player)
+            if (fov.curtarget)
             {
-                LookTarget(fov.player.transform);
+                LookTarget(fov.curtarget.transform);
             }
-        }else if (!fov.canSeePlayer && target != null)
+        }else if (!fov.canSeeTarget && target != null)
         {
             target = null;
             returnRotation = originalRotation;

@@ -115,11 +115,23 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
     private GameObject ChooseEnemyToSpawn(WaypointType type)
     {
-        if (outsideEnemies.Length == 0)
+        if (type == WaypointType.Outside)
         {
-            Debug.Log("No enemy prefabs");
-            return null;
+            if (outsideEnemies.Length == 0)
+            {
+                Debug.Log("No outside enemy prefabs");
+                return null;
+            }
         }
+        else
+        {
+            if (insideEnemies.Length == 0)
+            {
+                Debug.Log("No inside enemy prefabs");
+                return null;
+            }
+        }
+
 
         List<GameObject> tempEnemiesList = new List<GameObject>();
         if (type == WaypointType.Outside)
