@@ -11,7 +11,7 @@ public interface IScanable
     string ScanResult { get; }
     public void OnScan(Player player);
 }
-public class ScannerItem : Item
+public class ScannerItem : Item, ItemUseToolTip
 {
     [Header("Scanner Settings")]
     [SerializeField] private float scanRange = 10f;
@@ -54,6 +54,9 @@ public class ScannerItem : Item
             return scanable;
         }
     }
+
+
+    public string ItemToolTip => $"Hold {Player.Input?.Player.Attack?.activeControl?.displayName ?? "Left Mouse"} to scan objects, Mouse Wheel to scroll results";
 
     public override void OnNetworkSpawn()
     {

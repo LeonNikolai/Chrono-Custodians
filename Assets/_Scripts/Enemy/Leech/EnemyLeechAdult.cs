@@ -5,6 +5,7 @@ using UnityEngine;
 enum LeechAdultState
 {
     Roaming,
+    Patrolling,
     Chasing,
     Searching,
     Dying
@@ -14,12 +15,14 @@ public class EnemyLeechAdult : Enemy
 {
     [SerializeField] private LeechAdultState state;
     [SerializeField] private FieldOfView enemyFOV;
+    [SerializeField] private FieldOfView itemFOV;
 
     [Header("Leech Adult Specific")]
     [SerializeField] private float rushCooldown = 5;
     [SerializeField] private float rushCooldownRandomModifier = 5;
     [SerializeField] private float rushSpeed = 10;
     [SerializeField] private float rushTime = 3;
+    [SerializeField] private Transform targetItem;
 
     public override void OnNetworkSpawn()
     {
@@ -40,6 +43,10 @@ public class EnemyLeechAdult : Enemy
             case LeechAdultState.Roaming:
                 state = LeechAdultState.Roaming;
                 StartCoroutine(Roaming());
+                break;
+
+            case LeechAdultState.Patrolling:
+                StartCoroutine(Patrolling());
                 break;
 
             case LeechAdultState.Chasing:
@@ -63,9 +70,8 @@ public class EnemyLeechAdult : Enemy
     {
         if (player != null) return;
         Debug.Log("Player Spotted");
-        player = enemyFOV.player;
+        player = enemyFOV.curtarget;
         ResetEnemyToNormal();
-        Debug.Log("All Coroutines Stopped");
         SwitchState(LeechAdultState.Chasing);
     }
 
@@ -74,13 +80,57 @@ public class EnemyLeechAdult : Enemy
         if (player == null) return;
         Debug.Log("Player Lost");
         ResetEnemyToNormal();
-        Debug.Log("All Coroutines Stopped");
         SwitchState(LeechAdultState.Searching);
+    }
+
+    public void ItemSeen()
+    {
+        if (player != null) return;
+        if (targetItem != null) return;
+        targetItem = itemFOV.curtarget.transform;
+        ResetEnemyToNormal();
+        if (state == LeechAdultState.Roaming)
+        {
+            SwitchState(LeechAdultState.Patrolling);
+        }
+    }
+
+    private IEnumerator Patrolling()
+    {
+        state = LeechAdultState.Patrolling;
+        float distance = (targetItem.position - transform.position).magnitude;
+        agent.SetDestination(targetItem.position);
+        do
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            distance = (targetItem.position - transform.position).magnitude;
+        } while (distance > 0.5f);
+        while (state == LeechAdultState.Patrolling)
+        {
+            Debug.Log("Looking");
+            float timer = 2;
+            float angle = Random.Range(0f, Mathf.PI * 2);
+            float x = Mathf.Cos(angle);
+            float z = Mathf.Sin(angle);
+            Vector3 newPos = new Vector3(x, 0, z);
+            Debug.Log(newPos);
+            Quaternion lookPos = Quaternion.LookRotation(newPos);
+            while (timer > 0)
+            {
+                Debug.Log("Turning");
+                yield return new WaitForEndOfFrame();
+                timer -= Time.deltaTime;
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookPos, Time.deltaTime * 3);
+            }
+        }
+        yield return null;
     }
 
     private IEnumerator Chasing()
     {
         state = LeechAdultState.Chasing;
+        player = enemyFOV.curtarget;
         HealthSystem playerHealth = player.GetComponent<HealthSystem>();
         float curAttackCooldown = attackCooldown;
         float curRushTime = rushTime;
@@ -131,7 +181,7 @@ public class EnemyLeechAdult : Enemy
                 }
             }
 
-            if (enemyFOV.canSeePlayer == false)
+            if (enemyFOV.canSeeTarget == false)
             {
                 SwitchState(LeechAdultState.Searching);
                 yield break;

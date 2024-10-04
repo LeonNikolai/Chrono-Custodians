@@ -5,10 +5,11 @@ public class PlayerSpawner : NetworkBehaviour
 {
 
     public GameObject playerPrefab;
+    public GameObject[] spawnEquipments = new GameObject[0];
     public Transform[] spawnPoints = new Transform[0];
     public static Vector3 getSpawnPoint()
     {
-        if(spawner) return spawner.getSpawnPos().position;
+        if (spawner) return spawner.getSpawnPos().position;
         return new Vector3(0, 0, 0);
     }
     static PlayerSpawner spawner;
@@ -43,7 +44,17 @@ public class PlayerSpawner : NetworkBehaviour
         Transform spawnPoint = getSpawnPos();
         GameObject playerInstance = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
         playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-        Debug.Log("Player spawned for client " + clientId);
+
+        foreach (var item in spawnEquipments)
+        {
+            if (item == null) continue;
+            var instacne = Instantiate(item, playerInstance.transform.position, playerInstance.transform.rotation);
+            instacne.GetComponent<NetworkObject>().Spawn();
+            if (instacne.TryGetComponent(out Item itemInstance))
+            {
+                itemInstance.PickupItemServer(clientId);
+            }
+        }
     }
 
     private Transform getSpawnPos()
@@ -53,10 +64,10 @@ public class PlayerSpawner : NetworkBehaviour
 
     override public void OnDestroy()
     {
- 
+
         if (IsServer)
         {
-            if(NetworkManager.Singleton) NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            if (NetworkManager.Singleton) NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
         }
     }
 }

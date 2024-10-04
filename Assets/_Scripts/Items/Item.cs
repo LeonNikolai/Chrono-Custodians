@@ -122,6 +122,10 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public void PickupItemServerRpc(RpcParams rpcParams = default)
     {
         var clientId = rpcParams.Receive.SenderClientId;
+        PickupItemServer(clientId);
+    }
+    public void PickupItemServer(ulong clientId)
+    {
         if (IsOwnedByServer && !isPickedUpByPlayer.Value)
         {
             if (Player.Players.TryGetValue(clientId, out Player Character))
@@ -244,4 +248,9 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
 
     }
+}
+
+public interface ItemUseToolTip
+{
+    string ItemToolTip { get; }
 }

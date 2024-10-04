@@ -55,7 +55,7 @@ public class EnemyAbsorber : Enemy
     {
         if (state == AbsorberState.Roaming && player == null)
         {
-            player = enemyFOV.player;
+            player = enemyFOV.curtarget;
             SwitchState(AbsorberState.Stalking);
         }
     }
@@ -74,7 +74,7 @@ public class EnemyAbsorber : Enemy
         {
             StareAtPlayer();
             yield return null;
-            if (enemyFOV.canSeePlayer)
+            if (enemyFOV.canSeeTarget)
             {
                 chaseCountdown -= Time.deltaTime;
                 Debug.Log("Staring at player");

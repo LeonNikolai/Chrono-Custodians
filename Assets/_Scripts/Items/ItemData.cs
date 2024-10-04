@@ -14,6 +14,8 @@ public class ItemData : ScriptableObject
     public string Id => _id != null && String.IsNullOrEmpty(_id) ? _id : name;
     public string Name => _name != null && !_name.IsEmpty ? _name.GetLocalizedString() : name ?? "Item Name";
     public string Description => _description != null && !_description.IsEmpty ? _description.GetLocalizedString() : name ?? "Item Description";
+    public int instabilityCostMin = 1;
+    public int instabilityCostMax = 2;
 
     [Header("Item Spawn")]
     [SerializeField] GameObject _prefab;

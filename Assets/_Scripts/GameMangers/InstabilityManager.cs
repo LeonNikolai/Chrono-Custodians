@@ -8,6 +8,7 @@ public class InstabilityManager : NetworkBehaviour
 {
     public static InstabilityManager instance;
 
+    public string currentLevel;
     [SerializeField] private List<string> levels = new List<string>();
 
     private int day = 1; // This counts the days until a week has passed then returns to 0
@@ -34,6 +35,7 @@ public class InstabilityManager : NetworkBehaviour
             Destroy(this);
         }
         levels = LevelManager.instance.GetLevelSceneNames();
+        StartCoroutine(IncreaseInstability());
     }
 
     // Update the level's instability. This should happen at the end of a level/start of level selection
@@ -44,7 +46,14 @@ public class InstabilityManager : NetworkBehaviour
         {
             levels.Add(levelName);
         }
-        levelInstability[levelName] += instabilityToAdd;
+        if (levelInstability.ContainsKey(levelName))
+        {
+            levelInstability[levelName] += instabilityToAdd;
+        }
+        else
+        {
+            levelInstability.Add(levelName, instabilityToAdd);
+        }
     }
 
     private void RemoveObjectsAndInstability()
@@ -66,15 +75,9 @@ public class InstabilityManager : NetworkBehaviour
         return _levelInstability;
     }
 
-
-
-    // adds instability and objects to levels. It should visit multiple locations (levels) and
-    // then it should add a random number of objects. Instability should be added with a random number from 1-5 for each object
-    // but generally prefer the numbers 1-2 with higher numbers being rarer.
-    // It should do this until it has gone to all visit locations. The total objects and instability should be divided amongst the locations.
     private IEnumerator IncreaseInstability()
     {
-        int instabilityPerVisit = 5;
+        int instabilityPerVisit = 5 * day + Random.Range(-2, 2);
         int touristVisitLocations = Random.Range(2, 6);
         if (levels.Count < touristVisitLocations) touristVisitLocations = levels.Count;
         int totalInstabilityToAdd = instabilityPerVisit * touristVisitLocations;
@@ -89,7 +92,6 @@ public class InstabilityManager : NetworkBehaviour
             int randomLocationIndex = Random.Range(0, unvisitedLocations.Count);
             string selectedLocation = unvisitedLocations[randomLocationIndex];
 
-            instabilityPerVisit = 5 * day + Random.Range(-2, 2);
             if (touristVisitLocations == 1)
             {
                 instabilityPerVisit = totalInstabilityToAdd;
@@ -108,6 +110,4 @@ public class InstabilityManager : NetworkBehaviour
             }
         }
     }
-
-
 }

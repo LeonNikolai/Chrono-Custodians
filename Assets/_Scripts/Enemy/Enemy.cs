@@ -61,6 +61,7 @@ public abstract class Enemy : NetworkBehaviour
 
     private void Update()
     {
+        if(!IsSpawned) return;
         if (!IsServer) return;
 
         if (!isRoaming) return;
@@ -71,10 +72,14 @@ public abstract class Enemy : NetworkBehaviour
 
     private void GetWaypoints()
     {
-        waypoints = WaypointManager.instance.waypointPosition;
+        waypoints = WaypointManager.instance.GetWaypoints(WaypointType.Outside);
         // Enemy should find a waypoint manager and get a list of waypoints that are active.
     }
 
+    public void SetWaypoints(List<Vector3> _waypoints)
+    {
+        waypoints = _waypoints;
+    }
 
     protected void WaypointReached()
     {

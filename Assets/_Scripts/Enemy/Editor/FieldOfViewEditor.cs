@@ -17,10 +17,10 @@ public class FieldOfViewEditor : Editor
         Handles.DrawLine(fieldOfView.head.position, fieldOfView.head.position + viewAngle01 * fieldOfView.radius);
         Handles.DrawLine(fieldOfView.head.position, fieldOfView.head.position + viewAngle02 * fieldOfView.radius);
 
-        if (fieldOfView.canSeePlayer)
+        if (fieldOfView.canSeeTarget)
         {
             Handles.color = Color.green;
-            Handles.DrawLine(fieldOfView.head.position, fieldOfView.player.transform.position);
+            Handles.DrawLine(fieldOfView.head.position, fieldOfView.curtarget.transform.position);
         }
     }
 
