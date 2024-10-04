@@ -21,7 +21,7 @@ public class LevelSelection : MonoBehaviour
 
         }
         if (_Name) _Name.text = _levelScene.LevelName;
-        if (_Year) _Year.text = _levelScene.CommonYear(_levelScene.AstronomicalYear);
+        if (_Year) _Year.text = TimeConverter.ToCommonYear(_levelScene.AstronomicalYear);
     }
 
     public void SetLevelForSelection(LevelScene levelScene)
@@ -33,6 +33,6 @@ public class LevelSelection : MonoBehaviour
     private void UpdateVisuals()
     {
         if (_Name) _Name.text = _levelScene.LevelName;
-        if (_Year) _Year.text = _levelScene.CommonYear(_levelScene.AstronomicalYear);
+        if (_Year) _Year.text = TimeConverter.ToCommonYear(_levelScene.AstronomicalYear);
     }
 }

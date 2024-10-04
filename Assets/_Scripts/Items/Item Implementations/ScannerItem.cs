@@ -56,7 +56,7 @@ public class ScannerItem : Item, ItemUseToolTip
     }
 
 
-    public string ItemToolTip => $"Hold {Player.Input?.Player.Attack?.activeControl?.displayName ?? "Left Mouse"} to scan objects, Mouse Wheel to scroll results";
+    public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to scan objects, Mouse Wheel to scroll results";
 
     public override void OnNetworkSpawn()
     {
@@ -89,11 +89,11 @@ public class ScannerItem : Item, ItemUseToolTip
             }
             if(player != null && player.IsLocalPlayer)
             {
-                if (Player.Input.Player.Attack.WasPressedThisFrame())
+                if (Player.Input.Player.UseItemPrimary.WasPressedThisFrame())
                 {
                     StartCoroutine(Scan());
                 }
-                if (Player.Input.Player.Attack.WasReleasedThisFrame())
+                if (Player.Input.Player.UseItemPrimary.WasReleasedThisFrame())
                 {
                     StopAllCoroutines();
                 }

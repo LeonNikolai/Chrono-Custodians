@@ -136,7 +136,7 @@ public class EnemyAbsorber : Enemy
         yield break;
     }
 
-    private void TargetPlayerDied()
+    private void TargetPlayerDied(bool dead)
     {
         playerHealth.onDeath.RemoveListener(TargetPlayerDied);
         playerHealth = null;

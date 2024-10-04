@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-# if UNITY_EDITOR
+using System;
+
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 
@@ -15,7 +17,7 @@ public class ItemSpawnPoint : MonoBehaviour
         List<Transform> shuffledSpawnPoints = AllSpawnPoints.Values.ToList();
         for (int i = 0; i < shuffledSpawnPoints.Count; i++)
         {
-            int randomIndex = Random.Range(i, shuffledSpawnPoints.Count);
+            int randomIndex = UnityEngine.Random.Range(i, shuffledSpawnPoints.Count);
             Transform temp = shuffledSpawnPoints[i];
             shuffledSpawnPoints[i] = shuffledSpawnPoints[randomIndex];
             shuffledSpawnPoints[randomIndex] = temp;
@@ -36,7 +38,7 @@ public class ItemSpawnPoint : MonoBehaviour
 
     public void SnapToNavMesh()
     {
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, Mathf.Infinity, NavMesh.AllAreas))
         {
             transform.position = hit.position;
         }
@@ -64,7 +66,8 @@ public class ItemSpawnPoint : MonoBehaviour
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(ItemSpawnPoint))][CanEditMultipleObjects] 
+[CustomEditor(typeof(ItemSpawnPoint))]
+[CanEditMultipleObjects]
 public class ItemSpawnPointEditor : Editor
 {
     private void OnSceneGUI()

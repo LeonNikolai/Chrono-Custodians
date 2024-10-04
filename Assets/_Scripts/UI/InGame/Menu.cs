@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,7 +70,7 @@ public class Menu : MonoBehaviour
 
     private void Awake()
     {
-        if(CustomMenuCloseAttempt == null) CustomMenuCloseAttempt = new UnityEvent();
+        if (CustomMenuCloseAttempt == null) CustomMenuCloseAttempt = new UnityEvent();
         if (instance == null) instance = this;
         else Destroy(gameObject);
         RefreshMenu();
@@ -78,6 +79,17 @@ public class Menu : MonoBehaviour
     private void OnDestroy()
     {
         if (instance == this) instance = null;
+    }
+
+    public void CloseAttempt()
+    {
+        if (currentMenu == MenuType.Custom)
+        {
+            CustomMenuCloseAttempt.Invoke();
+            return;
+        }
+
+        ActiveMenu = MenuType.Closed;
     }
     private void Update()
     {
@@ -88,14 +100,7 @@ public class Menu : MonoBehaviour
                 ActiveMenu = MenuType.PauseMenu;
                 return;
             }
-            if (currentMenu == MenuType.Custom)
-            {
-                CustomMenuCloseAttempt.Invoke();
-                return;
-            }
-
-            ActiveMenu = MenuType.Closed;
-
+            CloseAttempt();
         }
     }
 
@@ -108,5 +113,10 @@ public class Menu : MonoBehaviour
     {
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
+    }
+
+    internal static void Close()
+    {
+        instance.CloseAttempt();
     }
 }

@@ -1,6 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
-
+[DefaultExecutionOrder(-100)]
 public class PlayerContentEnabler : NetworkBehaviour
 {
     [Header("Local Player Enabler")]

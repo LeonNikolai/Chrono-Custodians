@@ -17,10 +17,10 @@ public class LevelSceneEditor : Editor
     public override void OnInspectorGUI()
     {
         var astr = levelScene.AstronomicalYear;
-        var ISOText = levelScene.ISOYear(astr);
-        var Greg = levelScene.GregorianYear(astr);
-        var Common = levelScene.CommonYear(astr);
-        var HumanCommon = levelScene.HumanEra(astr);
+        var ISOText = TimeConverter.ToISOYear(astr);
+        var Greg = TimeConverter.ToGregorianYear(astr);
+        var Common = TimeConverter.ToCommonYear(astr);
+        var HumanCommon = TimeConverter.ToHumanEraYear(astr);
         DrawDefaultInspector();
 
 

@@ -22,36 +22,40 @@ public class LevelScene : ScriptableObject
     {
         LevelManager.LoadLevelScene(this);
     }
-    public string ISOYear(int time)
+}
+
+public static class TimeConverter
+{
+    public static string ToISOYear(int astronomicalYear)
     {
-        return time.ToString("D4");
+        return astronomicalYear.ToString("D4");
     }
-    public string GregorianYear(int time)
+    public static string ToGregorianYear(int astronomicalYear)
     {
-        if (time <= 0)
+        if (astronomicalYear <= 0)
         {
             // 1 BC is year 0 so we need to add 1 to convert 0 to 1
-            return $"{-time + 1} BC";
+            return $"{-astronomicalYear + 1} BC";
         }
         else
         {
-            return $"{time} AD";
+            return $"{astronomicalYear} AD";
         }
     }
-    public string CommonYear(int time)
+    public static string ToCommonYear(int astronomicalYear)
     {
-        if (time <= 0)
+        if (astronomicalYear <= 0)
         {
             // 1 BC is year 0 so we need to add 1 to convert 0 to 1
-            return $"{-time + 1} BCE";
+            return $"{-astronomicalYear + 1} BCE";
         }
         else
         {
-            return $"{time} CE";
+            return $"{astronomicalYear} CE";
         }
     }
-    public string HumanEra(int time)
+    public static string ToHumanEraYear(int astronomicalYear)
     {
-        return $"{time + 10000} HE";
+        return $"{astronomicalYear + 10000} HE";
     }
 }

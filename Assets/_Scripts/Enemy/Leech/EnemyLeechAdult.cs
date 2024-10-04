@@ -142,6 +142,7 @@ public class EnemyLeechAdult : Enemy
         while (state == LeechAdultState.Chasing)
         {
             yield return null;
+            if(!App.IsRunning) yield return null;
             curAttackCooldown -= Time.deltaTime;
             Debug.Log("In Chasing Loop");
             StareAtPlayer();

@@ -32,7 +32,7 @@ public class LevelManager : NetworkBehaviour
     public static bool IsLoading { get; private set; }
     IEnumerator LoadLevelSceneAsync(LevelScene scene)
     {
-        InstabilityManager.instance.currentLevel = scene.ToString();
+        if(InstabilityManager.instance) InstabilityManager.instance.currentLevel = scene.ToString();
         while (IsLoading)
         {
             yield return null;

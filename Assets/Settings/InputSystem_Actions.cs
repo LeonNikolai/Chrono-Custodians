@@ -47,10 +47,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Attack"",
+                    ""name"": ""UseItemPrimary"",
                     ""type"": ""Button"",
                     ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseItemSecondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""9e5b2c72-fca1-4b73-ab23-c56bc465d875"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -104,7 +113,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Sprint"",
                     ""type"": ""Button"",
                     ""id"": ""641cd816-40e6-41b4-8c3d-04687c349290"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -283,7 +292,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -294,7 +303,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -305,7 +314,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Touch"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -316,7 +325,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -327,7 +336,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -338,7 +347,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Attack"",
+                    ""action"": ""UseItemPrimary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -495,6 +504,65 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2f998d7-350c-448f-804f-2db4f0f70663"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseItemSecondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Spectator"",
+            ""id"": ""9c5c5a22-41c0-47dd-ac40-9ceaca465a05"",
+            ""actions"": [
+                {
+                    ""name"": ""SpectateNextPerson"",
+                    ""type"": ""Button"",
+                    ""id"": ""06625bb3-1548-4fc2-a75a-db55315c6da1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SpectatePreviousPerson"",
+                    ""type"": ""Button"",
+                    ""id"": ""508f9fb2-f841-4e0d-ba10-a85e7b33fde0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1940da0e-0e2e-4237-82c0-e66a349d4795"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""SpectateNextPerson"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fdeb600c-2e20-44d8-882a-b62886a7ac70"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""SpectatePreviousPerson"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -588,6 +656,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be"",
                     ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EscapeMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc6509bf-fe26-4390-84ac-49d30d0393bc"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1011,6 +1088,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c26388f0-d46a-4181-bb65-6f183e1535d7"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""EscapeMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1082,13 +1170,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_UseItemPrimary = m_Player.FindAction("UseItemPrimary", throwIfNotFound: true);
+        m_Player_UseItemSecondary = m_Player.FindAction("UseItemSecondary", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        // Spectator
+        m_Spectator = asset.FindActionMap("Spectator", throwIfNotFound: true);
+        m_Spectator_SpectateNextPerson = m_Spectator.FindAction("SpectateNextPerson", throwIfNotFound: true);
+        m_Spectator_SpectatePreviousPerson = m_Spectator.FindAction("SpectatePreviousPerson", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1101,11 +1194,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_EscapeMenu = m_UI.FindAction("EscapeMenu", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
     {
         Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Player.Disable() has not been called.");
+        Debug.Assert(!m_Spectator.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Spectator.Disable() has not been called.");
         Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputSystem_Actions.UI.Disable() has not been called.");
     }
 
@@ -1170,7 +1265,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_UseItemPrimary;
+    private readonly InputAction m_Player_UseItemSecondary;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Jump;
@@ -1183,7 +1279,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         public PlayerActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @UseItemPrimary => m_Wrapper.m_Player_UseItemPrimary;
+        public InputAction @UseItemSecondary => m_Wrapper.m_Player_UseItemSecondary;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
@@ -1205,9 +1302,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @Attack.started += instance.OnAttack;
-            @Attack.performed += instance.OnAttack;
-            @Attack.canceled += instance.OnAttack;
+            @UseItemPrimary.started += instance.OnUseItemPrimary;
+            @UseItemPrimary.performed += instance.OnUseItemPrimary;
+            @UseItemPrimary.canceled += instance.OnUseItemPrimary;
+            @UseItemSecondary.started += instance.OnUseItemSecondary;
+            @UseItemSecondary.performed += instance.OnUseItemSecondary;
+            @UseItemSecondary.canceled += instance.OnUseItemSecondary;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -1236,9 +1336,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @Attack.started -= instance.OnAttack;
-            @Attack.performed -= instance.OnAttack;
-            @Attack.canceled -= instance.OnAttack;
+            @UseItemPrimary.started -= instance.OnUseItemPrimary;
+            @UseItemPrimary.performed -= instance.OnUseItemPrimary;
+            @UseItemPrimary.canceled -= instance.OnUseItemPrimary;
+            @UseItemSecondary.started -= instance.OnUseItemSecondary;
+            @UseItemSecondary.performed -= instance.OnUseItemSecondary;
+            @UseItemSecondary.canceled -= instance.OnUseItemSecondary;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -1275,6 +1378,60 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     }
     public PlayerActions @Player => new PlayerActions(this);
 
+    // Spectator
+    private readonly InputActionMap m_Spectator;
+    private List<ISpectatorActions> m_SpectatorActionsCallbackInterfaces = new List<ISpectatorActions>();
+    private readonly InputAction m_Spectator_SpectateNextPerson;
+    private readonly InputAction m_Spectator_SpectatePreviousPerson;
+    public struct SpectatorActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+        public SpectatorActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SpectateNextPerson => m_Wrapper.m_Spectator_SpectateNextPerson;
+        public InputAction @SpectatePreviousPerson => m_Wrapper.m_Spectator_SpectatePreviousPerson;
+        public InputActionMap Get() { return m_Wrapper.m_Spectator; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(SpectatorActions set) { return set.Get(); }
+        public void AddCallbacks(ISpectatorActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SpectatorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SpectatorActionsCallbackInterfaces.Add(instance);
+            @SpectateNextPerson.started += instance.OnSpectateNextPerson;
+            @SpectateNextPerson.performed += instance.OnSpectateNextPerson;
+            @SpectateNextPerson.canceled += instance.OnSpectateNextPerson;
+            @SpectatePreviousPerson.started += instance.OnSpectatePreviousPerson;
+            @SpectatePreviousPerson.performed += instance.OnSpectatePreviousPerson;
+            @SpectatePreviousPerson.canceled += instance.OnSpectatePreviousPerson;
+        }
+
+        private void UnregisterCallbacks(ISpectatorActions instance)
+        {
+            @SpectateNextPerson.started -= instance.OnSpectateNextPerson;
+            @SpectateNextPerson.performed -= instance.OnSpectateNextPerson;
+            @SpectateNextPerson.canceled -= instance.OnSpectateNextPerson;
+            @SpectatePreviousPerson.started -= instance.OnSpectatePreviousPerson;
+            @SpectatePreviousPerson.performed -= instance.OnSpectatePreviousPerson;
+            @SpectatePreviousPerson.canceled -= instance.OnSpectatePreviousPerson;
+        }
+
+        public void RemoveCallbacks(ISpectatorActions instance)
+        {
+            if (m_Wrapper.m_SpectatorActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ISpectatorActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SpectatorActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SpectatorActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public SpectatorActions @Spectator => new SpectatorActions(this);
+
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
@@ -1288,6 +1445,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_ScrollWheel;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_EscapeMenu;
     public struct UIActions
     {
         private @InputSystem_Actions m_Wrapper;
@@ -1302,6 +1460,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @EscapeMenu => m_Wrapper.m_UI_EscapeMenu;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1341,6 +1500,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+            @EscapeMenu.started += instance.OnEscapeMenu;
+            @EscapeMenu.performed += instance.OnEscapeMenu;
+            @EscapeMenu.canceled += instance.OnEscapeMenu;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1375,6 +1537,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+            @EscapeMenu.started -= instance.OnEscapeMenu;
+            @EscapeMenu.performed -= instance.OnEscapeMenu;
+            @EscapeMenu.canceled -= instance.OnEscapeMenu;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1441,13 +1606,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
+        void OnUseItemPrimary(InputAction.CallbackContext context);
+        void OnUseItemSecondary(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPrevious(InputAction.CallbackContext context);
         void OnNext(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+    }
+    public interface ISpectatorActions
+    {
+        void OnSpectateNextPerson(InputAction.CallbackContext context);
+        void OnSpectatePreviousPerson(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1461,5 +1632,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        void OnEscapeMenu(InputAction.CallbackContext context);
     }
 }

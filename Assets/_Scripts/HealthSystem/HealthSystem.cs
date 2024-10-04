@@ -7,16 +7,15 @@ public class HealthSystem : NetworkBehaviour
 {
     public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-    public UnityEvent onDeath;
-    public UnityEvent onAlive;
+    public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public UnityEvent<bool> onDeath;
 
     [SerializeField] private Material alive, dead;
 
     bool shouldUpdateHud = false;
-    private void Awake() {
-        if(onDeath == null) onDeath = new UnityEvent();
-        if(onAlive == null) onAlive = new UnityEvent();
+    private void Awake()
+    {
+        if (onDeath == null) onDeath = new();
     }
     public override void OnNetworkSpawn()
     {
@@ -26,7 +25,8 @@ public class HealthSystem : NetworkBehaviour
             currentHealth.Value = maxHealth.Value;
         }
 
-        if(IsOwner) {
+        if (IsOwner)
+        {
             if (TryGetComponent<Player>(out var player))
             {
                 shouldUpdateHud = true;
@@ -41,6 +41,12 @@ public class HealthSystem : NetworkBehaviour
         {
             currentHealth.OnValueChanged += OnHealthChanged;
         }
+        isDead.OnValueChanged += OnDeath;
+    }
+
+    private void OnDeath(bool previousValue, bool newValue)
+    {
+        onDeath?.Invoke(newValue);
     }
 
     public override void OnNetworkDespawn()
@@ -49,29 +55,20 @@ public class HealthSystem : NetworkBehaviour
         {
             currentHealth.OnValueChanged -= OnHealthChanged;
         }
+        isDead.OnValueChanged -= OnDeath;
         base.OnNetworkDespawn();
     }
 
 
-    bool _isDead = false;
+
     public bool IsDead
     {
         get
         {
-            return IsDead;
-        }
-        private set
-        {
-            if (value == _isDead) return;
-            _isDead = value;
-            if (_isDead) Die(); else Alive();
+            return isDead.Value;
         }
     }
 
-    private void Alive()
-    {
-        onAlive?.Invoke();
-    }
 
     public void TakeDamageServer(int damage)
     {
@@ -81,15 +78,10 @@ public class HealthSystem : NetworkBehaviour
 
     private void OnHealthChanged(int previousValue, int newValue)
     {
-        IsDead = newValue <= 0;
+        if (IsServer) isDead.Value = newValue <= 0;
         if (shouldUpdateHud && IsOwner)
         {
             Hud.Health = (float)currentHealth.Value / (float)maxHealth.Value;
         }
-    }
-
-    private void Die()
-    {
-        onDeath?.Invoke();
     }
 }

@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 2661400972708518534}
   - component: {fileID: 8184387821958102025}
   - component: {fileID: 7213086198297157121}
-  - component: {fileID: 8373816239347703288}
   - component: {fileID: 3805886783288695613}
   - component: {fileID: 6880905970790039328}
   - component: {fileID: 5726932989996754182}
@@ -117,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4041252940
+  GlobalObjectIdHash: 26464475
   InScenePlacedSourceGlobalObjectIdHash: 4041252940
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -141,8 +140,11 @@ MonoBehaviour:
   _inventory: {fileID: 3662181299126535597}
   _movement: {fileID: 7213086198297157121}
   _health: {fileID: 2648385201836132714}
-  Age:
-    m_InternalValue: 20
+  _camera: {fileID: 3089590618775013198}
+  PlayerIsInMenu:
+    m_InternalValue: 0
+  PlayerIsSpectating:
+    m_InternalValue: 0
   possiblePlayerScanResults: {fileID: 11400000, guid: edbaa36bf7dc1a647b9e4ce4717a1f14, type: 2}
 --- !u!114 &7213086198297157121
 MonoBehaviour:
@@ -169,27 +171,6 @@ MonoBehaviour:
   staminaText: {fileID: 0}
   speedText: {fileID: 0}
   rotate: {fileID: 1397814148479679156}
---- !u!114 &8373816239347703288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5472914112539880004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e6ebf881c6b59b4091fda72f18ff9d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableGameObjectIfOwnedByLocal: []
-  enableBehaviourIfOwnedByLocal: []
-  disableGameObjectIfOwnedByLocal: []
-  disableBehaviourIfOwnedByLocal: []
-  enableGameObjectIfOwnedRemotePlayer: []
-  enableBehaviourIfOwnedRemotePlayer: []
-  disableGameObjectIfOwnedRemotePlayer:
-  - {fileID: 7145292218947091899}
-  disableBehaviourIfOwnedRemotePlayer: []
 --- !u!136 &3805886783288695613
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -304,10 +285,9 @@ MonoBehaviour:
     m_InternalValue: 100
   currentHealth:
     m_InternalValue: 0
+  isDead:
+    m_InternalValue: 0
   onDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  onAlive:
     m_PersistentCalls:
       m_Calls: []
   alive: {fileID: 0}

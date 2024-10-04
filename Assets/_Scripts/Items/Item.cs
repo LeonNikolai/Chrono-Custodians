@@ -7,11 +7,11 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 {
 
     [SerializeField] ItemData _itemData;
-
     [Header("Item Refferences")]
     [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
     [SerializeField] Collider[] _collider = new Collider[0];
     public Collider[] Collider => _collider;
+    public ulong RandomSeed => NetworkObject.NetworkObjectId;
 
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);

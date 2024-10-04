@@ -29,6 +29,7 @@ public class ItemData : ScriptableObject
     [Header("Valid Years")]
     [SerializeField] int _astronomicalYearStart = 2024;
     [SerializeField] int _astronomicalYearEnd = 2024;
+    public int AstronomicalYearStart => _astronomicalYearStart;
 
     [Header("Hints")]
     [SerializeField] ItemTag[] _tags = new ItemTag[0];

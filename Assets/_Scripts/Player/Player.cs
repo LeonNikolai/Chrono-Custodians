@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 [DefaultExecutionOrder(-100)]
 public class Player : NetworkBehaviour, IScanable
@@ -17,14 +20,15 @@ public class Player : NetworkBehaviour, IScanable
     [SerializeField] PlayerInventory _inventory;
     [SerializeField] PlayerMovement _movement;
     [SerializeField] HealthSystem _health;
-
+    [SerializeField] CinemachineCamera _camera;
+    public CinemachineCamera Camera => _camera;
     public PlayerInventory Inventory => _inventory;
     public PlayerMovement Movement => _movement;
     public HealthSystem Health => _health;
     public Transform HeadTransform => Movement.CameraTransform;
 
-    // Network variables
-    public NetworkVariable<float> Age = new NetworkVariable<float>(20);
+    public NetworkVariable<bool> PlayerIsInMenu = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> PlayerIsSpectating = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private static bool inMenu;
     public static bool InMenu
@@ -33,25 +37,118 @@ public class Player : NetworkBehaviour, IScanable
         set
         {
             inMenu = value;
-            if (inMenu)
+            if (LocalPlayer) LocalPlayer.PlayerIsInMenu.Value = value;
+            UpdateInteractionState();
+            UpdateCamera();
+        }
+    }
+    public static bool isSpectating;
+    public static bool IsSpectating
+    {
+        get => isSpectating;
+        set
+        {
+            isSpectating = value;
+            if (LocalPlayer) LocalPlayer.PlayerIsSpectating.Value = value;
+            UpdateInteractionState();
+        }
+    }
+    public static int spectateIndex;
+    public static int SpectateIndex
+    {
+        get => spectateIndex;
+        set
+        {
+            spectateIndex = value;
+            if (spectateIndex < 0) spectateIndex = AllPlayers.Count - 1;
+            if (spectateIndex >= AllPlayers.Count) spectateIndex = 0;
+            Debug.Log($"Spectating {AllPlayers.Count} players, now spectating {spectateIndex}");
+            UpdateCamera();
+        }
+    }
+
+    private static void UpdateCamera()
+    {
+        if (!isSpectating)
+        {
+            foreach (var player in AllPlayers)
             {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                if (Input != null) Input.Player.Disable();
+                player.Camera.enabled = false;
             }
-            else
+            if (LocalPlayer) LocalPlayer.Camera.enabled = true;
+            return;
+        }
+        int index = 0;
+        bool found = false;
+        foreach (var player in AllPlayers)
+        {
+            player.Camera.enabled = index == spectateIndex;
+            if (index == spectateIndex) found = true;
+            index++;
+        }
+        if (found == false)
+        {
+            SpectateIndex = 0;
+            Debug.LogWarning("No player found to spectate");
+        }
+    }
+
+    public static void UpdateInteractionState()
+    {
+        if (inMenu)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            DisableGameInput();
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            EnabableGameInput();
+        }
+    }
+
+    private static void EnabableGameInput()
+    {
+        if (IsSpectating)
+        {
+            if (Input != null)
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                if (Input != null) Input.Player.Enable();
+                Input.Player.Disable();
+                Input.Spectator.Enable();
+            }
+            Hud.Hidden = true;
+            Debug.Log("IS Spectating");
+        }
+        else
+        {
+            Hud.Hidden = false;
+            if (Input != null)
+            {
+                Input.Player.Enable();
+                Input.Spectator.Disable();
+                Debug.Log("IS NOT Spectating");
             }
         }
     }
+
+    private static void DisableGameInput()
+    {
+        if (Input != null)
+        {
+            Input.Player.Disable();
+            Input.Spectator.Disable();
+        }
+    }
+
     [SerializeField] LocalizedStringGroup possiblePlayerScanResults;
     public string ScanTitle => "Player";
-    public string ScanResult {
-        get {
+    public string ScanResult
+    {
+        get
+        {
             var seed = (int)OwnerClientId + NetworkManager.Singleton.ConnectedHostname.GetHashCode();
             return possiblePlayerScanResults.GetString(seed % possiblePlayerScanResults.Length);
         }
@@ -59,10 +156,28 @@ public class Player : NetworkBehaviour, IScanable
 
     private void Awake()
     {
+        if (Camera) Camera.enabled = false;
         if (Input == null) Input = new InputSystem_Actions();
-        if(_inventory == null) _inventory = GetComponent<PlayerInventory>();
-        if(_movement == null) _movement = GetComponent<PlayerMovement>();
-        if(_health == null) _health = GetComponent<HealthSystem>();
+        if (_inventory == null) _inventory = GetComponent<PlayerInventory>();
+        if (_movement == null) _movement = GetComponent<PlayerMovement>();
+        if (_health == null) _health = GetComponent<HealthSystem>();
+        UpdateInteractionState();
+
+    }
+
+    private void SpectatePrevious(InputAction.CallbackContext context)
+    {
+        SpectateIndex--;
+    }
+
+    private void SpectateNext(InputAction.CallbackContext context)
+    {
+        SpectateIndex++;
+    }
+
+    private void Start()
+    {
+        UpdateInteractionState();
     }
 
     public override void OnNetworkSpawn()
@@ -72,10 +187,26 @@ public class Player : NetworkBehaviour, IScanable
             LocalPlayer = this;
             Input.Player.Enable();
             InMenu = false;
+            Input.Spectator.SpectateNextPerson.performed += SpectateNext;
+            Input.Spectator.SpectatePreviousPerson.performed += SpectatePrevious;
+            Health.onDeath.AddListener(OnSpectatingChanged);
         }
         AllPlayers.Add(this);
         Players.Add(OwnerClientId, this);
         base.OnNetworkSpawn();
+        Camera.enabled = IsOwner;
+        UpdateInteractionState();
+
+    }
+
+    private void OnSpectatingChanged(bool isDead)
+    {
+        if (isDead)
+        {
+            Menu.Close();
+        }
+        IsSpectating = isDead;
+        UpdateInteractionState();
     }
 
     public override void OnDestroy()
@@ -91,6 +222,6 @@ public class Player : NetworkBehaviour, IScanable
 
     public void OnScan(Player player)
     {
-        
+
     }
 }
