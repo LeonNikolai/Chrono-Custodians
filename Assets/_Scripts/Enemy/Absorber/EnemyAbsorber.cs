@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
+using UnityEngine.Video;
 
 enum AbsorberState
 {
@@ -57,6 +59,8 @@ public class EnemyAbsorber : Enemy
         {
             player = enemyFOV.curtarget;
             SwitchState(AbsorberState.Stalking);
+            GameObject volume = GetComponentInChildren<Volume>().gameObject;
+            volume.SetActive(true);
         }
     }
 
