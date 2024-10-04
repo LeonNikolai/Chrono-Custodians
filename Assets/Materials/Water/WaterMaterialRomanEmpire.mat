@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterMaterial
+  m_Name: WaterMaterialRomanEmpire
   m_Shader: {fileID: -6465566751694194690, guid: d3ddad5bf5f974fb091f39af43d33356, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -46,16 +46,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depth: -2
-    - _Displacement: 0.5
+    - _Depth: -1
+    - _Displacement: 1
     - _Float_1: 0
-    - _NormalStrength: 0.2
+    - _NormalStrength: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 1
     - _Strength: 0.2
-    - _Wave1Speed: 200
-    - _Wave2Speed: -150
+    - _Wave1Speed: 150
+    - _Wave2Speed: -100
     - _WaveSpeed: 100
     m_Colors:
     - _DeepColor: {r: 0.1254895, g: 0.49008116, b: 0.5660378, a: 0.88235295}
