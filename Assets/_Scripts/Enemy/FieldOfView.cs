@@ -12,16 +12,16 @@ public class FieldOfView : NetworkBehaviour
 
     public Transform head;
 
-    public GameObject player;
+    public GameObject curtarget;
     private CapsuleCollider playerCollider;
     private int raycastPoints = 3;
 
     [SerializeField] private LayerMask targetMask;
     [SerializeField] private LayerMask obstructionMask;
 
-    public UnityEvent OnPlayerSeen;
-    public UnityEvent OnPlayerLost;
-    public bool canSeePlayer;
+    public UnityEvent OnTargetFound;
+    public UnityEvent OnTargetLost;
+    public bool canSeeTarget;
 
     public override void OnNetworkSpawn()
     {
@@ -54,18 +54,18 @@ public class FieldOfView : NetworkBehaviour
         if (rangeChecks.Length != 0)
         {
             float closestDistance = Vector3.Distance(head.position, rangeChecks[0].transform.position);
-            player = rangeChecks[0].gameObject;
+            curtarget = rangeChecks[0].gameObject;
             for (int i = 1; i < rangeChecks.Length; i++)
             {
                 float newDistance = Vector3.Distance(head.position, rangeChecks[i].transform.position);
                 if (closestDistance > newDistance)
                 {
                     closestDistance = newDistance;
-                    player = rangeChecks[i].gameObject;
+                    curtarget = rangeChecks[i].gameObject;
                 }
             }
 
-            Transform target = player.transform;
+            Transform target = curtarget.transform;
             playerCollider = target.GetComponent<CapsuleCollider>();
             Vector3 directionToTarget = (target.position - head.position).normalized;
 
@@ -73,26 +73,26 @@ public class FieldOfView : NetworkBehaviour
             {
                 if (IsPlayerVisible(target))
                 {
-                    if (!canSeePlayer)
+                    if (!canSeeTarget)
                     {
-                        OnPlayerSeen.Invoke();
+                        OnTargetFound.Invoke();
                     }
-                    canSeePlayer = true;
+                    canSeeTarget = true;
                 }
                 else
                 {
-                    if (canSeePlayer)
+                    if (canSeeTarget)
                     {
-                        OnPlayerLost.Invoke();
+                        OnTargetLost.Invoke();
                     }
-                    canSeePlayer = false;
-                    player = null;
+                    canSeeTarget = false;
+                    curtarget = null;
                     playerCollider = null;
                 }
             }
             else
             {
-                if (canSeePlayer)
+                if (canSeeTarget)
                 {
                     if (closestDistance <= 5)
                     {
@@ -100,20 +100,20 @@ public class FieldOfView : NetworkBehaviour
                     }
                     else
                     {
-                        OnPlayerLost.Invoke();
+                        OnTargetLost.Invoke();
                     }
                 }
-                canSeePlayer = false;
-                player = null;
+                canSeeTarget = false;
+                curtarget = null;
                 playerCollider = null;
             }
         }
-        else if (canSeePlayer)
+        else if (canSeeTarget)
         {
 
-            OnPlayerLost.Invoke();
-            canSeePlayer = false;
-            player = null;
+            OnTargetLost.Invoke();
+            canSeeTarget = false;
+            curtarget = null;
             playerCollider = null;
         }
     }
@@ -123,21 +123,34 @@ public class FieldOfView : NetworkBehaviour
         // Perform multiple raycasts along the player's body to detect visibility
         for (int i = 0; i < raycastPoints; i++)
         {
-            // Calculate the point along the player's body for this raycast
-            float heightOffset = (playerCollider.height / (raycastPoints - 1)) * i;
-            Vector3 raycastOrigin = target.position + Vector3.up * heightOffset;
-
-            Vector3 directionToTarget = (raycastOrigin - head.position).normalized;
-            float distanceToTarget = Vector3.Distance(head.position, raycastOrigin);
-
-            // Perform the raycast for this point
-            if (!Physics.Raycast(head.position, directionToTarget, distanceToTarget, obstructionMask))
+            if (playerCollider == null)
             {
-                // If any point is visible, we consider the player visible
-                return true;
+
+                Vector3 directionToTarget = (target.position - head.position).normalized;
+                float distanceToTarget = Vector3.Distance(head.position, target.position);
+
+                if (!Physics.Raycast(head.position, directionToTarget, distanceToTarget, obstructionMask))
+                {
+                    // If any point is visible, we consider the player visible
+                    return true;
+                }
+
+            }
+            else
+            {
+                // Calculate the point along the player's body for this raycast
+                float heightOffset = (playerCollider.height / (raycastPoints - 1)) * i;
+                Vector3 raycastOrigin = target.position + Vector3.up * heightOffset;
+
+                Vector3 directionToTarget = (raycastOrigin - head.position).normalized;
+                float distanceToTarget = Vector3.Distance(head.position, raycastOrigin);
+                if (!Physics.Raycast(head.position, directionToTarget, distanceToTarget, obstructionMask))
+                {
+                    // If any point is visible, we consider the player visible
+                    return true;
+                }
             }
         }
-
         // If none of the points are visible, the player is not visible
         return false;
     }

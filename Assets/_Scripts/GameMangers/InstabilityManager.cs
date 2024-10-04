@@ -8,6 +8,7 @@ public class InstabilityManager : NetworkBehaviour
 {
     public static InstabilityManager instance;
 
+    public string currentLevel;
     [SerializeField] private List<string> levels = new List<string>();
 
     private int day = 1; // This counts the days until a week has passed then returns to 0
@@ -34,6 +35,7 @@ public class InstabilityManager : NetworkBehaviour
             Destroy(this);
         }
         levels = LevelManager.instance.GetLevelSceneNames();
+        StartCoroutine(IncreaseInstability());
     }
 
     // Update the level's instability. This should happen at the end of a level/start of level selection
@@ -44,7 +46,14 @@ public class InstabilityManager : NetworkBehaviour
         {
             levels.Add(levelName);
         }
-        levelInstability[levelName] += instabilityToAdd;
+        if (levelInstability.ContainsKey(levelName))
+        {
+            levelInstability[levelName] += instabilityToAdd;
+        }
+        else
+        {
+            levelInstability.Add(levelName, instabilityToAdd);
+        }
     }
 
     private void RemoveObjectsAndInstability()
@@ -101,6 +110,4 @@ public class InstabilityManager : NetworkBehaviour
             }
         }
     }
-
-
 }
