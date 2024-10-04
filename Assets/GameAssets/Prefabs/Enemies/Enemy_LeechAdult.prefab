@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 3308426672989945309}
   - component: {fileID: 8424506856430388398}
   - component: {fileID: 6040716580596591629}
+  - component: {fileID: 2587220341275888067}
   m_Layer: 0
   m_Name: Enemy_LeechAdult
   m_TagString: Untagged
@@ -244,16 +245,19 @@ MonoBehaviour:
   targetWaypoint: {x: 0, y: 0, z: 0}
   CheckoffRadius: 5
   waypointIgnoreRadius: 15
+  insideOrOutside: 0
   waypoints: []
   player: {fileID: 0}
   searchingAmount: 7
   debug: 0
   state: 0
   enemyFOV: {fileID: 8424506856430388398}
+  itemFOV: {fileID: 2587220341275888067}
   rushCooldown: 10
   rushCooldownRandomModifier: 5
   rushSpeed: 7
   rushTime: 3
+  targetItem: {fileID: 0}
 --- !u!114 &8424506856430388398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,14 +273,14 @@ MonoBehaviour:
   radius: 20
   angle: 120
   head: {fileID: 3521694754398139705}
-  player: {fileID: 0}
+  curtarget: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 8
   obstructionMask:
     serializedVersion: 2
     m_Bits: 1
-  OnPlayerSeen:
+  OnTargetFound:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3308426672989945309}
@@ -291,10 +295,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnPlayerLost:
+  OnTargetLost:
     m_PersistentCalls:
       m_Calls: []
-  canSeePlayer: 0
+  canSeeTarget: 0
 --- !u!114 &6040716580596591629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +335,47 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &2587220341275888067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5712975056265632853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 456438c0c6ea21842b7f3a1bddcaebaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0
+  angle: 0
+  head: {fileID: 3521694754398139705}
+  curtarget: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  OnTargetFound:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3308426672989945309}
+        m_TargetAssemblyTypeName: EnemyLeechAdult, Assembly-CSharp
+        m_MethodName: ItemSeen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTargetLost:
+    m_PersistentCalls:
+      m_Calls: []
+  canSeeTarget: 0
 --- !u!1 &6233446472924844643
 GameObject:
   m_ObjectHideFlags: 0

@@ -75,9 +75,10 @@ public class LookupController : MonoBehaviour, IInteractable
         List<IEnumerator> coroutines = new List<IEnumerator>();
         input = input.ToLower();
 
-        if (input.StartsWith("help"))
+        if (input.StartsWith("cmds"))
         {
             string textToDisplay = $"<color=#909090>info [search]</color> - Get information on something\n";
+            textToDisplay += $"<color=#909090>help</color> - instructions\n";
             textToDisplay += $"<color=#909090>list</color> - List all attribues\n";
             textToDisplay += $"<color=#909090>clear</color> - Clear the screen\n";
             textToDisplay += $"<color=#909090>exit</color> - Close the computer\n";
@@ -91,6 +92,24 @@ public class LookupController : MonoBehaviour, IInteractable
         if (input.StartsWith("clear"))
         {
             ClearDisplay();
+            return;
+        }
+        if (input.StartsWith("help"))
+        {
+            string textToDisplay = $"With the handheld scanner, (<color=#909090>1</color>) you can find the notable features of items\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"Use this console to search up notable features of items.\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"Use the information to deduce where the item is meant to go\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"Some items are meant to stay in this time period, do not trash those.\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"Good luck Chrono Custodians\n";
+            ClearDisplay();
+            coroutines.Add(DisplayText($"<color=#909090>>{input}</color>"));
+            coroutines.Add(AddSpace());
+            coroutines.Add(DisplayText(textToDisplay));
+            StartCoroutine(ProcessCoroutines(coroutines));
             return;
         }
         if (input.StartsWith("exit"))

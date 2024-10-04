@@ -84,4 +84,25 @@ public class WaypointManager : MonoBehaviour
                 return insideVectors;
         }
     }
+
+    public void FindWaypoints()
+    {
+        WaypointController[] waypoints = FindObjectsByType<WaypointController>(FindObjectsSortMode.None);
+        waypointsOutside.Clear();
+        waypointsInside.Clear();
+
+        foreach (var waypoint in waypoints)
+        {
+            if (waypoint.type == WaypointType.Outside)
+            {
+                waypointsOutside.Add(waypoint.transform);
+            }
+            else if (waypoint.type == WaypointType.Inside)
+            {
+                waypointsInside.Add(waypoint.transform);
+            }
+        }
+
+        UpdateWaypoints();
+    }
 }

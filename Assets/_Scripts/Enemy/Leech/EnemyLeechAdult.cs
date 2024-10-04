@@ -135,6 +135,8 @@ public class EnemyLeechAdult : Enemy
         float curAttackCooldown = attackCooldown;
         float curRushTime = rushTime;
         float curRushCooldown = 0;
+        float TargetLostTimer = 5;
+        float curTargetLostTimer = TargetLostTimer;
 
         Debug.Log("Chasing Before Loop");
         while (state == LeechAdultState.Chasing)
@@ -181,10 +183,20 @@ public class EnemyLeechAdult : Enemy
                 }
             }
 
-            if (enemyFOV.canSeeTarget == false)
+            if (enemyFOV.canSeeTarget == false || enemyFOV.canSeeTarget && enemyFOV.curtarget != player)
             {
-                SwitchState(LeechAdultState.Searching);
-                yield break;
+                yield return new WaitForEndOfFrame();
+                curTargetLostTimer -= Time.deltaTime;
+                if (curTargetLostTimer <= 0)
+                {
+                    ResetEnemyToNormal();
+                    SwitchState(LeechAdultState.Searching);
+                    yield break;
+                }
+            }
+            else if (!enemyFOV.canSeeTarget)
+            {
+                curTargetLostTimer = TargetLostTimer;
             }
         }
     }
@@ -193,7 +205,7 @@ public class EnemyLeechAdult : Enemy
     {
         //yield return base.Searching();
         Debug.Log("Searching..");
-        yield return new WaitForSeconds(2); 
+        yield return null;
         SwitchState(LeechAdultState.Roaming);
 
     }

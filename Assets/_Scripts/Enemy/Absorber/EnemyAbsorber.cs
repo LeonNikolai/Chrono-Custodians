@@ -59,8 +59,6 @@ public class EnemyAbsorber : Enemy
         {
             player = enemyFOV.curtarget;
             SwitchState(AbsorberState.Stalking);
-            GameObject volume = GetComponentInChildren<Volume>().gameObject;
-            volume.SetActive(true);
         }
     }
 
@@ -77,6 +75,7 @@ public class EnemyAbsorber : Enemy
         while (state == AbsorberState.Stalking)
         {
             StareAtPlayer();
+            agent.SetDestination(player.transform.position);
             yield return null;
             if (enemyFOV.canSeeTarget)
             {

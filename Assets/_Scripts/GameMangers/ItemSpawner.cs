@@ -57,7 +57,7 @@ public class ItemSpawner : NetworkBehaviour
             }
             int instabilityCost = UnityEngine.Random.Range(itemToSpawn.instabilityCostMin, itemToSpawn.instabilityCostMax);
 
-            SpawnItem(itemToSpawn, spawnpoints[foreignItemIndex]);
+            SpawnItem(itemToSpawn, spawnpoints[foreignItemIndex], instabilityCost);
 
             curInstabilityBudget -= instabilityCost;
 
@@ -68,7 +68,7 @@ public class ItemSpawner : NetworkBehaviour
                 int normalItemIndex = foreignItemIndex;
                 for ( int i = 0; i < normalItemsToSpawn; i++ )
                 {
-                    SpawnItem(_normalItems[UnityEngine.Random.Range(0, _normalItems.Length)], spawnpoints[normalItemIndex]);
+                    SpawnItem(_normalItems[UnityEngine.Random.Range(0, _normalItems.Length)], spawnpoints[normalItemIndex], 0);
                     normalItemIndex++;
                 }
             }
@@ -135,9 +135,10 @@ public class ItemSpawner : NetworkBehaviour
         ItemData item = _forignItems[randomIndex];
     }
 
-    private void SpawnItem(ItemData itemData, Transform spawnpoint)
+    private void SpawnItem(ItemData itemData, Transform spawnpoint, int instability)
     {
         var item = Instantiate(itemData.Prefab, spawnpoint.position, spawnpoint.transform.rotation);
+        item.GetComponent<ItemData>().instabilityCost = instability;
         if (item.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Spawn(true);
