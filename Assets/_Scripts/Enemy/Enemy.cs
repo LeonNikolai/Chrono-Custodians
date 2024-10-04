@@ -32,6 +32,7 @@ public abstract class Enemy : NetworkBehaviour
     [SerializeField] private Vector3 targetWaypoint;
     [SerializeField] private float CheckoffRadius = 5f;
     [SerializeField] private float waypointIgnoreRadius = 15f;
+    [SerializeField] private WaypointType insideOrOutside;
     public List<Vector3> waypoints = new List<Vector3>();
     public Queue<Vector3> visitedWaypoints = new Queue<Vector3>();
     [HideInInspector] public GameObject player;
@@ -72,7 +73,7 @@ public abstract class Enemy : NetworkBehaviour
 
     private void GetWaypoints()
     {
-        waypoints = WaypointManager.instance.GetWaypoints(WaypointType.Outside);
+        waypoints = WaypointManager.instance.GetWaypoints(insideOrOutside);
         // Enemy should find a waypoint manager and get a list of waypoints that are active.
     }
 
