@@ -6,6 +6,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
+public struct ItemSendEvent
+{
+    public ItemData ItemData;
+    public LevelScene level;
+    public int TargetYear;
+
+}
+
 public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,IScanable
 {
     public NetworkVariable<int> SelectedYear = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -19,15 +27,9 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     public string InteractionMessage => _interactionMessage.GetLocalizedString();
     [SerializeField] private LocalizedString _cantInteractMessage;
     public string CantInteractMessage => _cantInteractMessage.GetLocalizedString();
-    public static UnityEvent<ItemData> OnItemSendServer;
+    public static UnityEvent<ItemSendEvent> OnItemSendServer;
 
-    public struct ItemSendEvent
-    {
-        public ItemData ItemData;
-        public LevelScene level;
-        public int TargetYear;
 
-    }
     public static List<ItemSendEvent> SentItems = new List<ItemSendEvent>();
     public static void ClearSentItems()
     {
@@ -90,13 +92,14 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
 
     private void SendItem(ItemData itemData)
     {
-        SentItems.Add(new ItemSendEvent
+        ItemSendEvent item = new ItemSendEvent 
         {
             ItemData = itemData,
             level = LevelManager.LoadedScene,
             TargetYear = SelectedYear.Value
-        });
-        OnItemSendServer.Invoke(itemData);
+        };
+        SentItems.Add(item);
+        OnItemSendServer.Invoke(item);
     }
 
     public void OnScan(Player player)
