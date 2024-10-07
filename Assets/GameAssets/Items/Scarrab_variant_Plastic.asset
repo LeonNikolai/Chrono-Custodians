@@ -32,9 +32,12 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   _icon: {fileID: 21300000, guid: 7ee5486e6268149d1b8cb7877044b126, type: 3}
+  instabilityCostMin: 1
+  instabilityCostMax: 2
+  instabilityCost: 0
   _prefab: {fileID: 5210718235762905003, guid: da8ba4bc41d22f347b30bd7b374855d2, type: 3}
   _unSendable: 0
-  _astronomicalYearStart: -100
+  _astronomicalYearStart: 1907
   _astronomicalYearEnd: 10000
   _tags:
   - {fileID: 11400000, guid: ecbe18ced0945b647a963f4844303dc6, type: 2}

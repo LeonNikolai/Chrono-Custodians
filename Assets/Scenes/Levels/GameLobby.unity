@@ -891,8 +891,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8045071641048442111, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 249046611}
   m_SourcePrefab: {fileID: 100100000, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+--- !u!1 &249046610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8045071641048442111, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+  m_PrefabInstance: {fileID: 249046609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &249046611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249046610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 518f598c1c786fa44aaa974e1a13a359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnGameStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1645335868}
+        m_TargetAssemblyTypeName: ItemTracker, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnGameWin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGameLost:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &252889179
 GameObject:
   m_ObjectHideFlags: 0
@@ -3487,7 +3528,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -110.20512, y: 10.969999}
-  m_SizeDelta: {x: 1080, y: 317.24}
+  m_SizeDelta: {x: 1080, y: 368.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1645335864
 MonoBehaviour:
@@ -3591,8 +3632,39 @@ MonoBehaviour:
   percentageText: {fileID: 1983459282}
   itemsRemaining: 10
   temporalInstability: 0
-  temporalInstabilityVelocity: 0.5
+  baseTemporalInstabilityVelocity: 0.2
+  temporalInstabilityMax: 100
   hasStarted: 0
+  OnLastItemSent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 249046611}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameWon
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnInstabilityThresholdReached:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 249046611}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameLost
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1756352163
 GameObject:
   m_ObjectHideFlags: 0
@@ -4849,7 +4921,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -116}
+  m_AnchoredPosition: {x: 0, y: -143}
   m_SizeDelta: {x: 1006.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1983459282
@@ -5285,6 +5357,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 353343449215732414, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8783
+      objectReference: {fileID: 0}
     - target: {fileID: 2641444429903856205, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 108

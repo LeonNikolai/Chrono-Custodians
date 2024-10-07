@@ -15,7 +15,8 @@ public class ItemTracker : NetworkBehaviour
 
     [SerializeField] private int itemsRemaining;
     [SerializeField] private float temporalInstability = 0;
-    [SerializeField] private float temporalInstabilityVelocity = 0.5f;
+    [SerializeField] private float baseTemporalInstabilityVelocity = 0.2f;
+    private float temporalInstabilityVelocity = 0.5f;
     [SerializeField] private float temporalInstabilityMax = 100;
 
     [SerializeField] private bool hasStarted = false;
@@ -23,8 +24,8 @@ public class ItemTracker : NetworkBehaviour
     private float lossCountdown = 3;
     private float curLossCountdown;
 
-    public UnityEvent OnWin;
-    public UnityEvent OnLose;
+    public UnityEvent OnLastItemSent;
+    public UnityEvent OnInstabilityThresholdReached;
 
     public override void OnNetworkSpawn()
     {
@@ -40,7 +41,7 @@ public class ItemTracker : NetworkBehaviour
             slider.value = temporalInstability;
             if (itemsRemaining == 0)
             {
-                OnWin.Invoke();
+                OnLastItemSent.Invoke();
             }
             if (temporalInstability >= temporalInstabilityMax && curLossCountdown > 0)
             {
@@ -55,12 +56,12 @@ public class ItemTracker : NetworkBehaviour
             if (curLossCountdown <= 0)
             {
                 curLossCountdown = 0;
-                OnLose.Invoke();
+                OnInstabilityThresholdReached.Invoke();
             }
         }
 
-        velocityText.text = $"Temporal Instability Velocity: ";
-        if (temporalInstabilityVelocity > 0.5)
+        velocityText.text = $"Time Bubble Degradation: ";
+        if (temporalInstabilityVelocity < 0.75)
         {
             velocityText.text += $"<color=#FFFF00>";
         }
@@ -70,22 +71,22 @@ public class ItemTracker : NetworkBehaviour
         }
         velocityText.text += $"{temporalInstabilityVelocity}/s</color>";
 
-        percentageText.text = $"Temporal Instability: ";
+        percentageText.text = $"Time Bubble Integrity Loss: ";
         if (temporalInstability < 50)
         {
             percentageText.text += $"<color=#00FF00>";
         }
-        else if (temporalInstability >= 50)
+        else if (temporalInstability >= 50 && temporalInstability < 75)
         {
             percentageText.text += $"<color=#FFFF00>";
-        }else if (temporalInstability >= 75)
+        }else if (temporalInstability >= 75 && temporalInstability < 100)
         {
             percentageText.text += $"<color=#FF0000>";
         }
         percentageText.text += $"{Mathf.Floor(temporalInstability)}%</color>";
         if (temporalInstability >= 100)
         {
-            percentageText.text = $"<color=#FF0000>Warning, temporal instability too high. Imminent destruction of timeline in <color=#FFFF00>{Mathf.Ceil(curLossCountdown)}</color> seconds";
+            percentageText.text = $"<color=#FF0000>Warning, Time Bubble integrity too low. Leaving time period in <color=#FFFF00>{Mathf.Ceil(curLossCountdown)}</color> seconds";
         }
 
 
@@ -110,5 +111,24 @@ public class ItemTracker : NetworkBehaviour
         temporalInstabilityVelocity += 0.1f;
 
         itemText.text = $"{itemsRemaining} foreign items remaining in this time period";
+    }
+
+    public void StartTimer(bool enabled)
+    {
+        hasStarted = enabled;
+    }
+
+    public void StartGame()
+    {
+        RestartTimer();
+        StartTimer(true);
+    }
+
+    public void RestartTimer()
+    {
+        hasStarted = false;
+        temporalInstability = 0;
+        itemsRemaining = 0;
+        temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
     }
 }
