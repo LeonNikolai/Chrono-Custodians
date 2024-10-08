@@ -200,11 +200,14 @@ public class ItemTracker : NetworkBehaviour
             int yearEnd = item.ItemData.AstronomicalYearEnd;
             if (item.TargetYear >= yearStart && item.TargetYear <= yearEnd)
             {
-                temporalInstability -= 25;
+                temporalInstability -= 15;
+                temporalInstabilityVelocity -= 0.1f;
+                if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
                 if (temporalInstability < 0) temporalInstability = 0;
                 return;
             }
         }
+        temporalInstability += 10;
         temporalInstabilityVelocity += 0.1f;
 
         itemText.text = $"{ItemsRemaining} foreign items remaining in this time period";
