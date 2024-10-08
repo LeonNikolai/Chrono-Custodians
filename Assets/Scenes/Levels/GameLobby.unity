@@ -2266,7 +2266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _resultTextDisplay: {fileID: 336234014}
   _resultReasonDisplay: {fileID: 2020581586}
-  _restartButton: {fileID: 0}
+  _restartButton: {fileID: 1068815290}
   _winText:
     m_TableReference:
       m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
@@ -3180,6 +3180,17 @@ MonoBehaviour:
   isAlert: 0
   m_InputValidator: {fileID: 0}
   m_ShouldActivateOnSelect: 1
+--- !u!114 &1068815290 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1840605283498475801, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+  m_PrefabInstance: {fileID: 1785611584}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1119938983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4331,7 +4342,6 @@ MonoBehaviour:
   itemText: {fileID: 1182300533}
   velocityText: {fileID: 745019456}
   percentageText: {fileID: 1983459282}
-  itemsRemaining: 10
   temporalInstability: 0
   TemporalInstabilityNetworked:
     m_InternalValue: 0
