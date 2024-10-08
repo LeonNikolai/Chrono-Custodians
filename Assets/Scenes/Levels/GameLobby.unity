@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelScene: {fileID: 11400000, guid: 91b37493903c64944b47193d26475d35, type: 2}
-  _interactible: 0
+  _interactible: 1
   _onlyHost: 0
   _onlyIfNoLevelLoaded: 0
 --- !u!114 &25946742
@@ -2237,7 +2237,7 @@ MonoBehaviour:
   _levelScene: {fileID: 11400000, guid: 488a1a21c8b54fb4e8abd43fa45ab6d6, type: 2}
   _interactible: 1
   _onlyHost: 0
-  _onlyIfNoLevelLoaded: 1
+  _onlyIfNoLevelLoaded: 0
 --- !u!1 &633560417
 GameObject:
   m_ObjectHideFlags: 0

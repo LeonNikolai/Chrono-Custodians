@@ -47,6 +47,7 @@ public class ItemTracker : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        itemsRemaining = 10;
         ItemSender.OnItemSendServer.AddListener(OnItemSent);
         GameManager.instance.gameState.OnValueChanged += OnGameStateChanged;
         if (GameManager.instance.gameState.Value == GameManager.GameState.InLevel)

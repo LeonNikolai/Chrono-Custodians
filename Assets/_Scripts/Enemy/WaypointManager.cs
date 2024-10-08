@@ -15,8 +15,8 @@ public class WaypointManager : MonoBehaviour
     [SerializeField] private List<Transform> waypointsOutside = new List<Transform>();
     [SerializeField] private List<Transform> waypointsInside = new List<Transform>();
 
-     private List<Vector3> outsideVectors = new List<Vector3>();
-    [HideInInspector] private List<Vector3> insideVectors = new List<Vector3>();
+    [SerializeField] private List<Vector3> outsideVectors = new List<Vector3>();
+    [SerializeField] private List<Vector3> insideVectors = new List<Vector3>();
 
     private void Awake()
     {
