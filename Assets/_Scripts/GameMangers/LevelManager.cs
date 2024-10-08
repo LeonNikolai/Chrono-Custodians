@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -33,8 +34,26 @@ public class LevelManager : NetworkBehaviour
     }
 
     public void Reload() {
-        Debug.Log("Reloading level");
-        LoadLevelScene(_loadedScene);
+        if(IsHost) {
+            StartCoroutine(ReloadCoroutine());
+            return;
+        }
+        ReloadServerRpc();
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        IsLoading = true;
+        var scene = NetworkManager.Singleton.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        while (IsLoading)
+        {
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    [Rpc(SendTo.Server)]
+    private void ReloadServerRpc()
+    {
+        StartCoroutine(ReloadCoroutine());
     }
 
     private void LoadLevelServer(LevelScene scene)

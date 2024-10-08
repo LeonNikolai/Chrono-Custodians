@@ -60,7 +60,8 @@ public class EndGameMenu : MonoBehaviour
 
     private void Reload()
     {
-        LevelManager.instance.Reload();
+        // Some logic to reload the level
+        Menu.instance.GoToMainMenu();
     }
 
     void OnDestroy()

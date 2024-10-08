@@ -40,6 +40,8 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     public void Interact(Player player)
     {
+        if(!Interactible) return;
+        StartCoroutine(ScanCoroutine());
         if (IsHost || IsServer)
         {
             LoadLevel();
