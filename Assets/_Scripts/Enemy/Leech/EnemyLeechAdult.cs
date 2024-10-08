@@ -194,7 +194,8 @@ public class EnemyLeechAdult : Enemy
             else if (!enemyFOV.canSeeTarget)
             {
                 curTargetLostTimer = TargetLostTimer;
-            }else if (playerHealth.currentHealth.Value <= 0)
+            }
+            if (playerHealth.currentHealth.Value <= 0)
             {
                 ResetEnemyToNormal();
                 SwitchState(LeechAdultState.Roaming);

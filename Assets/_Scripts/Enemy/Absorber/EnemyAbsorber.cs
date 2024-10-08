@@ -52,6 +52,7 @@ public class EnemyAbsorber : Enemy
 
     public void PlayerSpotted()
     {
+        if (!IsServer) return;
         if (state == AbsorberState.Roaming && player == null)
         {
             player = enemyFOV.curtarget;
@@ -135,7 +136,9 @@ public class EnemyAbsorber : Enemy
 
     private void TargetPlayerDied(bool dead)
     {
+        if (!IsServer) return;
         playerHealth.onDeath.RemoveListener(TargetPlayerDied);
+        SwitchState(AbsorberState.Roaming);
         playerHealth = null;
         player = null;
     }
