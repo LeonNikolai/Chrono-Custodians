@@ -108,6 +108,7 @@ public class LookupController : MonoBehaviour, IInteractable
             coroutines.Add(DisplayText($"<color=#909090>>{input}</color>"));
             coroutines.Add(AddSpace());
             coroutines.Add(DisplayText(textToDisplay));
+            coroutines.Add(AddSpace());
             StartCoroutine(ProcessCoroutines(coroutines));
             return;
         }
@@ -144,13 +145,15 @@ public class LookupController : MonoBehaviour, IInteractable
             coroutines.Add(DisplayText($"<color=#909090>>{input}</color>"));
             coroutines.Add(AddSpace());
             coroutines.Add(DisplayText(textToDisplay));
+            coroutines.Add(AddSpace());
             StartCoroutine(ProcessCoroutines(coroutines));
             return;
         }
         ClearDisplay();
         coroutines.Add(DisplayText($"<color=#{ColorUtility.ToHtmlStringRGB(errorColor)}>Command not found: {input}</color>"));
         coroutines.Add(AddSpace());
-        coroutines.Add(DisplayText($"<color=#909090>Try typing 'help' for a list of commands</color>"));
+        coroutines.Add(DisplayText($"<color=#909090>Try typing 'cmds' for a list of commands</color>"));
+        coroutines.Add(AddSpace());
         StartCoroutine(ProcessCoroutines(coroutines));
     }
 

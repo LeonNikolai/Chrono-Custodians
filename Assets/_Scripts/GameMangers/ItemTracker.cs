@@ -198,7 +198,7 @@ public class ItemTracker : NetworkBehaviour
             ItemsRemaining--;
             int yearStart = item.ItemData.AstronomicalYearStart;
             int yearEnd = item.ItemData.AstronomicalYearEnd;
-            if (item.TargetYear > yearStart && item.TargetYear < yearEnd)
+            if (item.TargetYear >= yearStart && item.TargetYear <= yearEnd)
             {
                 temporalInstability -= 25;
                 if (temporalInstability < 0) temporalInstability = 0;
