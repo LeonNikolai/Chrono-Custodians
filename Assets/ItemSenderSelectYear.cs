@@ -1,7 +1,5 @@
-using System;
 using TMPro;
 using Unity.Cinemachine;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

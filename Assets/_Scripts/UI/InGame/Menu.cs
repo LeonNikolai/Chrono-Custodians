@@ -1,4 +1,3 @@
-using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,12 +12,14 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject _menuRoot;
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _levelSelection;
+    [SerializeField] private GameObject _levelEndScreen;
     public static UnityEvent CustomMenuCloseAttempt;
     public enum MenuType
     {
         Closed,
         PauseMenu,
         LevelSelection,
+        LevelEnd,
         Custom
     }
 
@@ -54,6 +55,9 @@ public class Menu : MonoBehaviour
             case MenuType.LevelSelection:
                 _levelSelection?.SetActive(true);
                 break;
+            case MenuType.LevelEnd:
+                _levelEndScreen?.SetActive(true);
+                break;
             case MenuType.Custom:
                 break;
         }
@@ -64,6 +68,7 @@ public class Menu : MonoBehaviour
         _menuRoot.SetActive(false);
         _pauseMenu.SetActive(false);
         _levelSelection.SetActive(false);
+        _levelEndScreen.SetActive(false);
     }
 
     static public Menu instance;
@@ -88,6 +93,7 @@ public class Menu : MonoBehaviour
             CustomMenuCloseAttempt.Invoke();
             return;
         }
+        if (currentMenu == MenuType.LevelEnd) return;
 
         ActiveMenu = MenuType.Closed;
     }

@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using TMPro;
 using Unity.Netcode;
-using Unity.Services.Lobbies;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -13,8 +12,26 @@ public class ItemTracker : NetworkBehaviour
     [SerializeField] private TMP_Text velocityText;
     [SerializeField] private TMP_Text percentageText;
 
-    [SerializeField] private int itemsRemaining;
+    private int itemsRemaining;
+    private int ItemsRemaining
+    {
+        get => itemsRemaining;
+        set
+        {
+            bool changed = itemsRemaining != value;
+            itemsRemaining = value;
+            if (itemsRemaining < 0) itemsRemaining = 0;
+            if (changed)
+            {
+                if (itemsRemaining == 0)
+                {
+                    OnLastItemSent.Invoke();
+                }
+            }
+        }
+    }
     [SerializeField] private float temporalInstability = 0;
+    [SerializeField] NetworkVariable<float> TemporalInstabilityNetworked = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private float baseTemporalInstabilityVelocity = 0.2f;
     private float temporalInstabilityVelocity = 0.5f;
     [SerializeField] private float temporalInstabilityMax = 100;
@@ -31,17 +48,68 @@ public class ItemTracker : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         ItemSender.OnItemSendServer.AddListener(OnItemSent);
+        GameManager.instance.gameState.OnValueChanged += OnGameStateChanged;
+        if (GameManager.instance.gameState.Value == GameManager.GameState.InLevel)
+        {
+            StartGame();
+        }
     }
 
+    private void OnGameStateChanged(GameManager.GameState previousValue, GameManager.GameState newValue)
+    {
+        if (newValue == GameManager.GameState.InLevel)
+        {
+            StartGame();
+        }
+        else
+        {
+            RestartTimer();
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        ItemSender.OnItemSendServer.RemoveListener(OnItemSent);
+        base.OnDestroy();
+    }
+
+    public bool stabilityReached = false;
+    public bool StabilityReached
+    {
+        get => stabilityReached;
+        set
+        {
+            if (value != stabilityReached)
+            {
+                stabilityReached = value;
+                if (stabilityReached)
+                {
+
+                    OnInstabilityReached();
+                }
+            }
+        }
+    }
+
+    private void OnInstabilityReached()
+    {
+        Debug.LogWarning("Instability Reached");
+        GameManager.instance.GameLost();
+        OnInstabilityThresholdReached.Invoke();
+    }
+    const float NetworkSensitivity = 0.04f;
     private void Update()
     {
-        if (hasStarted)
+        if (!hasStarted) return;
+        if (IsServer)
         {
             temporalInstability += Time.deltaTime * temporalInstabilityVelocity;
-            slider.value = temporalInstability;
-            if (itemsRemaining == 0)
+
+            // Ratelimit the instabilityupdate
+            if (Mathf.Abs(TemporalInstabilityNetworked.Value - temporalInstability) > NetworkSensitivity)
             {
-                OnLastItemSent.Invoke();
+                Debug.Log("Updating Temporal Instability");
+                TemporalInstabilityNetworked.Value = temporalInstability;
             }
             if (temporalInstability >= temporalInstabilityMax && curLossCountdown > 0)
             {
@@ -56,10 +124,42 @@ public class ItemTracker : NetworkBehaviour
             if (curLossCountdown <= 0)
             {
                 curLossCountdown = 0;
-                OnInstabilityThresholdReached.Invoke();
+                StabilityReached = true;
             }
+            else
+            {
+                StabilityReached = false;
+            }
+            UpdateVisuals();
         }
+        else if (IsClient)
+        {
+            float timing = temporalInstability - TemporalInstabilityNetworked.Value;
+            // Forcefull Time correction
+            if (Math.Abs(timing) < NetworkSensitivity)
+            {
+                float sign = Mathf.Sign(timing);
+                // -1 if the client is needs to decrease the value
+                // 1 if the client needs to increase the value
+                if (sign == 1)
+                {
+                    // The client is behind
+                    temporalInstability = TemporalInstabilityNetworked.Value - NetworkSensitivity;
+                }
+                else if (sign == -1)
+                {
+                    // The client is ahead
+                    temporalInstability = TemporalInstabilityNetworked.Value + NetworkSensitivity;
+                }
+            }
+            temporalInstability = Mathf.MoveTowards(temporalInstability, TemporalInstabilityNetworked.Value, Time.deltaTime * temporalInstabilityVelocity);
+            UpdateVisuals();
+        }
+    }
 
+    private void UpdateVisuals()
+    {
+        slider.value = temporalInstability;
         velocityText.text = $"Time Bubble Degradation: ";
         if (temporalInstabilityVelocity < 0.75)
         {
@@ -79,7 +179,8 @@ public class ItemTracker : NetworkBehaviour
         else if (temporalInstability >= 50 && temporalInstability < 75)
         {
             percentageText.text += $"<color=#FFFF00>";
-        }else if (temporalInstability >= 75 && temporalInstability < 100)
+        }
+        else if (temporalInstability >= 75 && temporalInstability < 100)
         {
             percentageText.text += $"<color=#FF0000>";
         }
@@ -88,17 +189,13 @@ public class ItemTracker : NetworkBehaviour
         {
             percentageText.text = $"<color=#FF0000>Warning, Time Bubble integrity too low. Leaving time period in <color=#FFFF00>{Mathf.Ceil(curLossCountdown)}</color> seconds";
         }
-
-
-
     }
-
 
     private void OnItemSent(ItemSendEvent item)
     {
         if (item.ItemData.instabilityCost > 0)
         {
-            itemsRemaining--;
+            ItemsRemaining--;
             int yearStart = item.ItemData.AstronomicalYearStart;
             int yearEnd = item.ItemData.AstronomicalYearEnd;
             if (item.TargetYear > yearStart && item.TargetYear < yearEnd)
@@ -110,7 +207,7 @@ public class ItemTracker : NetworkBehaviour
         }
         temporalInstabilityVelocity += 0.1f;
 
-        itemText.text = $"{itemsRemaining} foreign items remaining in this time period";
+        itemText.text = $"{ItemsRemaining} foreign items remaining in this time period";
     }
 
     public void StartTimer(bool enabled)
@@ -128,7 +225,7 @@ public class ItemTracker : NetworkBehaviour
     {
         hasStarted = false;
         temporalInstability = 0;
-        itemsRemaining = 0;
+        ItemsRemaining = 10;
         temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
     }
 }

@@ -1,7 +1,5 @@
-using System;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IScanable
 {

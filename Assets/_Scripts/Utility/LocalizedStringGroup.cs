@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.UIElements;
 
 [CreateAssetMenu(menuName = "Chrono Custodians/LocalizedStringGroup")]
 public class LocalizedStringGroup : ScriptableObject

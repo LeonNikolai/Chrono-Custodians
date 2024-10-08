@@ -4,7 +4,6 @@ using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering.Universal;
 
 [DefaultExecutionOrder(-100)]
 public class Player : NetworkBehaviour, IScanable
@@ -13,6 +12,31 @@ public class Player : NetworkBehaviour, IScanable
     public static Player LocalPlayer = null;
     public static HashSet<Player> AllPlayers = new HashSet<Player>();
     public static Dictionary<ulong, Player> Players = new Dictionary<ulong, Player>();
+    public static int PlayerAliveCount => AllPlayers.Count - PlayerDeadCount;
+    public static Action OnPlayerDeadCountChanged = delegate { };
+    public static Action AllPlayersDead = delegate { };
+    public static bool AllPlayersAreDead => PlayerDeadCount == AllPlayers.Count;
+    static int playerDeadCount = -1;
+    public static int PlayerDeadCount
+    {
+        get
+        {
+            return playerDeadCount;
+        }
+        set
+        {
+            bool changed = playerDeadCount != value;
+            playerDeadCount = value;
+            if (changed)
+            {
+                OnPlayerDeadCountChanged.Invoke();
+                if (playerDeadCount == AllPlayers.Count)
+                {
+                    AllPlayersDead.Invoke();
+                }
+            }
+        }
+    }
     public static InputSystem_Actions Input = null;
 
     // Serialized fields
@@ -191,12 +215,26 @@ public class Player : NetworkBehaviour, IScanable
             Input.Spectator.SpectatePreviousPerson.performed += SpectatePrevious;
             Health.onDeath.AddListener(OnSpectatingChanged);
         }
+        Health.onDeath.AddListener(OnHealthChanged);
         AllPlayers.Add(this);
         Players.Add(OwnerClientId, this);
         base.OnNetworkSpawn();
         Camera.enabled = IsOwner;
         UpdateInteractionState();
+        OnHealthChanged(false);
+    }
 
+    private void OnHealthChanged(bool arg0)
+    {
+        int deadPlayerCount = 0;
+        foreach (var player in Player.Players)
+        {
+            if (player.Value.Health.IsDead == true)
+            {
+                deadPlayerCount++;
+            }
+        }
+        PlayerDeadCount = deadPlayerCount;
     }
 
     private void OnSpectatingChanged(bool isDead)

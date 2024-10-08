@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -53,6 +52,8 @@ public class PlayerMovement : NetworkBehaviour
         Player.Input.Player.Crouch.performed += ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled += ctx => Walk();
         Player.Input.Player.Interact.performed += ctx => InputInteract();
+
+        xRotation = rotate.localRotation.eulerAngles.x;
     }
 
     public override void OnDestroy()

@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Android;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-50)]
@@ -24,6 +22,23 @@ public class LevelManager : NetworkBehaviour
     }
     internal void LoadLevelSceneInternal(LevelScene scene)
     {
+        if (IsHost)
+        {
+            LoadLevelServer(scene);
+        }
+        else
+        {
+            Debug.LogWarning("Only the host can load levels");
+        }
+    }
+
+    public void Reload() {
+        Debug.Log("Reloading level");
+        LoadLevelScene(_loadedScene);
+    }
+
+    private void LoadLevelServer(LevelScene scene)
+    {
         bool isLoaded = _loadedScene == scene;
         if (isLoaded) return;
         StartCoroutine(LoadLevelSceneAsync(scene));
@@ -32,7 +47,7 @@ public class LevelManager : NetworkBehaviour
     public static bool IsLoading { get; private set; }
     IEnumerator LoadLevelSceneAsync(LevelScene scene)
     {
-        if(InstabilityManager.instance) InstabilityManager.instance.currentLevel = scene.ToString();
+        if (InstabilityManager.instance) InstabilityManager.instance.currentLevel = scene.ToString();
         while (IsLoading)
         {
             yield return null;
@@ -106,7 +121,7 @@ public class LevelManager : NetworkBehaviour
     public List<string> GetLevelSceneNames()
     {
         List<string> strings = new List<string>();
-        foreach(var level in _levelScene)
+        foreach (var level in _levelScene)
         {
             strings.Add(level.SceneName);
         }
