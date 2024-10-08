@@ -141,7 +141,7 @@ public abstract class Enemy : NetworkBehaviour
         StartCoroutine(Roaming());
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (debug)
         {

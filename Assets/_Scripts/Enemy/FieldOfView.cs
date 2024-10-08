@@ -126,7 +126,7 @@ public class FieldOfView : NetworkBehaviour
             if (playerCollider == null)
             {
 
-                Vector3 directionToTarget = (target.position - head.position).normalized;
+                Vector3 directionToTarget = ((target.position + Vector3.up * 0.5f) - head.position).normalized;
                 float distanceToTarget = Vector3.Distance(head.position, target.position);
 
                 if (!Physics.Raycast(head.position, directionToTarget, distanceToTarget, obstructionMask))

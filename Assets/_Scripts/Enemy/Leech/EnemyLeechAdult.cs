@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
@@ -88,6 +89,7 @@ public class EnemyLeechAdult : Enemy
         if (player != null) return;
         if (targetItem != null) return;
         targetItem = itemFOV.curtarget.transform;
+        if (itemFOV.curtarget.GetComponent<Item>().ItemData.instabilityCost <= 0) return;
         ResetEnemyToNormal();
         if (state == LeechAdultState.Roaming)
         {
@@ -108,20 +110,21 @@ public class EnemyLeechAdult : Enemy
         } while (distance > 0.5f);
         while (state == LeechAdultState.Patrolling)
         {
-            Debug.Log("Looking");
             float timer = 2;
             float angle = Random.Range(0f, Mathf.PI * 2);
             float x = Mathf.Cos(angle);
             float z = Mathf.Sin(angle);
             Vector3 newPos = new Vector3(x, 0, z);
-            Debug.Log(newPos);
             Quaternion lookPos = Quaternion.LookRotation(newPos);
             while (timer > 0)
             {
-                Debug.Log("Turning");
                 yield return new WaitForEndOfFrame();
                 timer -= Time.deltaTime;
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookPos, Time.deltaTime * 3);
+            }
+            if (enemyFOV.canSeeTarget)
+            {
+                yield break;
             }
         }
         yield return null;
@@ -138,19 +141,16 @@ public class EnemyLeechAdult : Enemy
         float TargetLostTimer = 5;
         float curTargetLostTimer = TargetLostTimer;
 
-        Debug.Log("Chasing Before Loop");
         while (state == LeechAdultState.Chasing)
         {
             yield return null;
             if(!App.IsRunning) yield return null;
             curAttackCooldown -= Time.deltaTime;
-            Debug.Log("In Chasing Loop");
             StareAtPlayer();
             agent.SetDestination(player.transform.position);
 
             if (curRushTime > 0)
             {
-                Debug.Log("Rushing");
                 agent.speed = rushSpeed;
                 curRushTime -= Time.deltaTime;
                 if (curRushTime <= 0)
@@ -161,7 +161,6 @@ public class EnemyLeechAdult : Enemy
 
             if (curRushCooldown > 0)
             {
-                Debug.Log("Rush Cooldown");
                 agent.speed = moveSpeed;
                 curRushCooldown -= Time.deltaTime;
                 if (curRushCooldown <= 0)
@@ -175,7 +174,6 @@ public class EnemyLeechAdult : Enemy
             {
                 if (curAttackCooldown <= 0)
                 {
-                    Debug.Log("Attacking Player");
                     if (IsServer)
                     {
                         playerHealth.TakeDamageServer(attackDamage);
@@ -210,7 +208,6 @@ public class EnemyLeechAdult : Enemy
     public override IEnumerator Searching()
     {
         //yield return base.Searching();
-        Debug.Log("Searching..");
         yield return null;
         SwitchState(LeechAdultState.Roaming);
 

@@ -7,7 +7,9 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
     [SerializeField] Vector3 fallBackPositonIfNoTarget;
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
 
-    [SerializeField] bool toggleFog = false;
+    [SerializeField] bool toggleInside = false;
+
+    private float reflectionIntensity = 1;
 
     public bool Interactible => true;
     public void Interact(Player player)
@@ -17,9 +19,18 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
 
         // We should not do this but fuck you all I'm doing it anywayyyyyyy
         // mostly because its the simplest way to add it.
-        if (toggleFog)
+        if (toggleInside)
         {
             RenderSettings.fog = !RenderSettings.fog;
+            if (RenderSettings.reflectionIntensity != 0)
+            {
+                reflectionIntensity = RenderSettings.reflectionIntensity;
+                RenderSettings.reflectionIntensity = 0;
+            }
+            else
+            {
+                RenderSettings.reflectionIntensity = reflectionIntensity;
+            }
         }
     }
 
