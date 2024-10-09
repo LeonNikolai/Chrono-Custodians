@@ -12,6 +12,11 @@ public class PlayerSpawner : NetworkBehaviour
         if (spawner) return spawner.getSpawnPos().position;
         return new Vector3(0, 0, 0);
     }
+    public static Transform getSpawnPointTransform()
+    {
+        if (spawner) return spawner.getSpawnPos();
+        return null;
+    }
     static PlayerSpawner spawner;
     public override void OnNetworkSpawn()
     {

@@ -14,8 +14,15 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
     public bool Interactible => true;
     public void Interact(Player player)
     {
-        Vector3 position = target ? target.position : fallBackPositonIfNoTarget;
-        player.Movement.ChangePosition(position + teleportOffset);
+        if (target)
+        {
+            player.Movement.ChangePositionAndRotation(target.position + teleportOffset, target.rotation);
+        }
+        else
+        {
+            Vector3 position = target ? target.position : fallBackPositonIfNoTarget;
+            player.Movement.ChangePosition(position + teleportOffset);
+        }
 
         // We should not do this but fuck you all I'm doing it anywayyyyyyy
         // mostly because its the simplest way to add it.

@@ -68,6 +68,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsSpawned) return;
         if (!IsOwner) { return; }
         CheckGround();
         CheckRaycast();
@@ -77,7 +78,7 @@ public class PlayerMovement : NetworkBehaviour
         PlayerCamera();
         if (transform.position.y < -200f)
         {
-            ChangePosition(PlayerSpawner.getSpawnPoint());
+            ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
         }
     }
 
@@ -110,7 +111,8 @@ public class PlayerMovement : NetworkBehaviour
         get => currentInteractible;
         set
         {
-            if (currentInteractible == value) {
+            if (currentInteractible == value)
+            {
                 UpdateHud();
             }
             currentInteractible = value;
@@ -120,7 +122,8 @@ public class PlayerMovement : NetworkBehaviour
 
     private void UpdateHud()
     {
-        if (currentInteractible == null) {
+        if (currentInteractible == null)
+        {
             Hud.CrosshairTooltip = "";
             return;
         }
@@ -298,6 +301,20 @@ public class PlayerMovement : NetworkBehaviour
     {
         characterController.enabled = false;
         transform.position = position;
+        characterController.enabled = true;
+    }
+    public void ChangePositionAndRotation(Transform target)
+    {
+        characterController.enabled = false;
+        transform.position = target.position;
+        transform.rotation = Quaternion.Euler(0f, target.rotation.eulerAngles.y, 0f);
+        characterController.enabled = true;
+    }
+    public void ChangePositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        characterController.enabled = false;
+        transform.position = position;
+        transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
         characterController.enabled = true;
     }
 }
