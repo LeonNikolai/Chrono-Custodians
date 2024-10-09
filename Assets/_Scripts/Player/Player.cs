@@ -168,11 +168,12 @@ public class Player : NetworkBehaviour, IScanable
     }
 
     [SerializeField] LocalizedStringGroup possiblePlayerScanResults;
-    public string ScanTitle => "Player";
+    public string ScanTitle => "Player" + (Health.IsDead ? " (Dead)" : "");
     public string ScanResult
     {
         get
         {
+            if(Health.IsDead) return "Dead worker, less competition :-)";
             var seed = (int)OwnerClientId + NetworkManager.Singleton.ConnectedHostname.GetHashCode();
             return possiblePlayerScanResults.GetString(seed % possiblePlayerScanResults.Length);
         }
