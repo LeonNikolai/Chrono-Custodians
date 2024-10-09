@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEditor;
 
 // Editor
-
 [CustomEditor(typeof(LevelScene))]
 public class LevelSceneEditor : Editor
 {
