@@ -6165,7 +6165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &78339658736068536
 Transform:
   m_ObjectHideFlags: 0
@@ -7314,7 +7314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9173713331006189529
 Transform:
   m_ObjectHideFlags: 0
@@ -14670,7 +14670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7866865654962716372
 Transform:
   m_ObjectHideFlags: 0
@@ -22214,7 +22214,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7508814794564423498
 Transform:
   m_ObjectHideFlags: 0
@@ -25596,7 +25596,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5003512197947980526
 Transform:
   m_ObjectHideFlags: 0
@@ -28980,6 +28980,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item_Phone_1
       objectReference: {fileID: 0}
+    - target: {fileID: 5210718235762905003, guid: c90ecab00916bec4e84de70e362e3cb3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5851239043789264172, guid: c90ecab00916bec4e84de70e362e3cb3, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2471855633
@@ -29553,6 +29557,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sword_SPQR
       objectReference: {fileID: 0}
+    - target: {fileID: 3490616566790255950, guid: a77d633a3c79ad54a8449e42517c5342, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3862717375466711300, guid: a77d633a3c79ad54a8449e42517c5342, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3444560747
@@ -29794,6 +29802,10 @@ PrefabInstance:
     - target: {fileID: 5210718235762905003, guid: d4ae57c12027d8240898f4573543a121, type: 3}
       propertyPath: m_Name
       value: Item_Weights
+      objectReference: {fileID: 0}
+    - target: {fileID: 5210718235762905003, guid: d4ae57c12027d8240898f4573543a121, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851239043789264172, guid: d4ae57c12027d8240898f4573543a121, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -30694,6 +30706,10 @@ PrefabInstance:
     - target: {fileID: 5210718235762905003, guid: 3b5a12c2160b59045b49116deea58fa4, type: 3}
       propertyPath: m_Name
       value: Item_Mug_Plastic
+      objectReference: {fileID: 0}
+    - target: {fileID: 5210718235762905003, guid: 3b5a12c2160b59045b49116deea58fa4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851239043789264172, guid: 3b5a12c2160b59045b49116deea58fa4, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -32050,6 +32066,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item_Scarrab_Faience
       objectReference: {fileID: 0}
+    - target: {fileID: 5210718235762905003, guid: 6c06f7d457d783b4483aed1dd3668a36, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5851239043789264172, guid: 6c06f7d457d783b4483aed1dd3668a36, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 286000356
@@ -32168,7 +32188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8424506856430388398, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: OnTargetFound.m_PersistentCalls.m_Calls.Array.size
@@ -32886,7 +32906,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 57f1dffab8741e544998ecead3218e6b, type: 2}
     - target: {fileID: 2536474666183543437, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4025707179337858707, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
       propertyPath: m_IsActive
@@ -32898,7 +32918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5033324704183572467, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5661605922328153765, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -33095,6 +33115,10 @@ PrefabInstance:
     - target: {fileID: 5210718235762905003, guid: fa8cafd9a01bfe14dac5b363b76068b9, type: 3}
       propertyPath: m_Name
       value: Item_Soapstone_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5210718235762905003, guid: fa8cafd9a01bfe14dac5b363b76068b9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851239043789264172, guid: fa8cafd9a01bfe14dac5b363b76068b9, type: 3}
       propertyPath: GlobalObjectIdHash
