@@ -29,6 +29,14 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
         if (toggleInside)
         {
             RenderSettings.fog = !RenderSettings.fog;
+            if (RenderSettings.fog)
+            {
+                RenderSettings.fogColor = Color.black;
+                RenderSettings.fogMode = FogMode.Linear;
+                RenderSettings.fogEndDistance = 28.17f;
+                RenderSettings.fogStartDistance = 0;
+            }
+
             if (RenderSettings.reflectionIntensity != 0)
             {
                 reflectionIntensity = RenderSettings.reflectionIntensity;
