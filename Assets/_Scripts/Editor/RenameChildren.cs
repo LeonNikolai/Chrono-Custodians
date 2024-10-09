@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Drawing;
 
+#if UNITY_EDITOR
 public class RenameChildren: EditorWindow {
      private static readonly Vector2Int size = new Vector2Int(250, 100);
 private string childrenPrefix;
@@ -27,3 +28,5 @@ private void OnGUI()
          }
      }
  }
+
+#endif

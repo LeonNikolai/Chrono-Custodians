@@ -114,9 +114,10 @@ public class ItemTracker : NetworkBehaviour
             UpdateVisuals();
         }
     }
-
+    public float OldTemporalInstability { get; private set; }
     private void UpdateVisuals()
     {
+        if (OldTemporalInstability == TemporalInstabilityNetworked.Value) return;
         slider.value = TemporalInstabilityNetworked.Value;
         velocityText.text = $"Time Bubble Degradation: ";
         if (temporalInstabilityVelocity < 0.75)
@@ -147,6 +148,7 @@ public class ItemTracker : NetworkBehaviour
         {
             percentageText.text = $"<color=#FF0000>Warning, Time Bubble integrity too low. Leaving time period in <color=#FFFF00>{Mathf.Ceil(curLossCountdown)}</color> seconds";
         }
+        OldTemporalInstability = TemporalInstabilityNetworked.Value;
     }
 
     private void OnItemSent(ItemSendEvent item)
@@ -154,6 +156,7 @@ public class ItemTracker : NetworkBehaviour
         if (item.ItemData.instabilityCost > 0)
         {
             ItemCount.Value--;
+            itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
             int yearStart = item.ItemData.AstronomicalYearStart;
             int yearEnd = item.ItemData.AstronomicalYearEnd;
             if (item.TargetYear >= yearStart && item.TargetYear <= yearEnd)
@@ -162,13 +165,18 @@ public class ItemTracker : NetworkBehaviour
                 temporalInstabilityVelocity -= 0.1f;
                 if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
                 if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-                return;
             }
         }
-        TemporalInstabilityNetworked.Value += 10;
-        temporalInstabilityVelocity += 0.1f;
+        else
+        {
+            TemporalInstabilityNetworked.Value += 10;
+            temporalInstabilityVelocity += 0.1f;
+        }
 
-        itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
+        if (ItemCount.Value <= 0)
+        {
+            GameManager.instance.GameWon();
+        }
     }
 
     public void StartTimer(bool enabled)

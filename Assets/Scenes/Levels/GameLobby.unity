@@ -4623,6 +4623,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2461365823612444978, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: m_text
+      value: This is when you would lose/win and have the ability to restart, this
+        would take to much time to implement because of weird memoryleaks from netcode
+        when Reloading The scene...
+      objectReference: {fileID: 0}
     - target: {fileID: 3127274762803760991, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5610,7 +5616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2028197287
 MeshCollider:
   m_ObjectHideFlags: 0

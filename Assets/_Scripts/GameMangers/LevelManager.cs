@@ -73,7 +73,7 @@ public class LevelManager : NetworkBehaviour
         }
         if (_loadedScene != null)
         {
-            var unloadScene = SceneManager.GetSceneByName(_loadedScene.SceneName);
+            var unloadScene = SceneManager.GetSceneByName(_loadedScene.RandomSceneNames);
             if (unloadScene.IsValid() && unloadScene.isLoaded)
             {
                 SceneEventProgressStatus status = NetworkManager.Singleton.SceneManager.UnloadScene(unloadScene);

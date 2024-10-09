@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor
 {
@@ -32,3 +33,4 @@ public class FieldOfViewEditor : Editor
 
     }
 }
+#endif
