@@ -23,6 +23,11 @@ public class GameManager : NetworkBehaviour
         End_Win,
         End_Lose
     }
+    private void Awake() {
+        if(instance == null) {
+            instance = this;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {

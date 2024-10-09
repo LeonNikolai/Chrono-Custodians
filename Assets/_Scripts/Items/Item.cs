@@ -131,8 +131,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             {
                 if (Character.Inventory.TryAddItem(NetworkObject))
                 {
-                    NetworkObject.ChangeOwnership(clientId);
                     currentSlot.Value = ItemSlotType.PlayerInventory;
+                    NetworkObject.ChangeOwnership(clientId);
                     isPickedUpByPlayer.Value = true;
                 }
             }
