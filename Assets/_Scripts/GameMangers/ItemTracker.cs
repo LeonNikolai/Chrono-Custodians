@@ -114,9 +114,10 @@ public class ItemTracker : NetworkBehaviour
             UpdateVisuals();
         }
     }
-
+    public float OldTemporalInstability { get; private set; }
     private void UpdateVisuals()
     {
+        if (OldTemporalInstability == TemporalInstabilityNetworked.Value) return;
         slider.value = TemporalInstabilityNetworked.Value;
         velocityText.text = $"Time Bubble Degradation: ";
         if (temporalInstabilityVelocity < 0.75)
@@ -147,6 +148,7 @@ public class ItemTracker : NetworkBehaviour
         {
             percentageText.text = $"<color=#FF0000>Warning, Time Bubble integrity too low. Leaving time period in <color=#FFFF00>{Mathf.Ceil(curLossCountdown)}</color> seconds";
         }
+        OldTemporalInstability = TemporalInstabilityNetworked.Value;
     }
 
     private void OnItemSent(ItemSendEvent item)
