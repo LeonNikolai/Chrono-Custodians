@@ -4269,9 +4269,10 @@ MonoBehaviour:
   itemText: {fileID: 1182300533}
   velocityText: {fileID: 745019456}
   percentageText: {fileID: 1983459282}
-  temporalInstability: 0
   TemporalInstabilityNetworked:
     m_InternalValue: 0
+  ItemCount:
+    m_InternalValue: 10
   baseTemporalInstabilityVelocity: 0.2
   temporalInstabilityMax: 100
   hasStarted: 0
@@ -4621,6 +4622,12 @@ PrefabInstance:
     - target: {fileID: 1960502701969198090, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461365823612444978, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: m_text
+      value: This is when you would lose/win and have the ability to restart, this
+        would take to much time to implement because of weird memoryleaks from netcode
+        when Reloading The scene...
       objectReference: {fileID: 0}
     - target: {fileID: 3127274762803760991, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_AnchorMax.y
