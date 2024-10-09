@@ -6,7 +6,7 @@ using UnityEngine.Localization;
 public class LevelScene : ScriptableObject
 {
     [Header("Scene Info (Random Scene picked if multiple)")]
-    [SerializeField, Tooltip("The Scene this level should load")] string[] _sceneNames;
+    [SerializeField, Tooltip("The Scene this level should load")] string _sceneNames;
     [Header("Level Info")]
     [SerializeField, Tooltip("The name that should be displayed in the ui")] LocalizedString _levelName;
     [SerializeField] Sprite _previewImage;
@@ -16,8 +16,7 @@ public class LevelScene : ScriptableObject
 
 
     public Sprite PreviewImage => _previewImage;
-    public string SceneName => _sceneNames != null && _sceneNames.Length > 0 ? _sceneNames[0] : "";
-    public string RandomSceneNames => _sceneNames != null && _sceneNames.Length > 0 ? _sceneNames[UnityEngine.Random.Range(0, _sceneNames.Length)] : "";
+    public string SceneName => _sceneNames != null && _sceneNames.Length > 0 ? _sceneNames : "";
     public string LevelName => _levelName != null ? _levelName.GetLocalizedString() : SceneName != "" ? SceneName : name;
 
 

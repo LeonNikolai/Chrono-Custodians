@@ -4,25 +4,33 @@ using UnityEngine;
 
 public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
 {
-    [SerializeField] private LevelScene _levelScene;
+    [SerializeField] private LevelScene[] _levelScenes;
+    LevelScene levelScene => _levelScenes != null && _levelScenes.Length >= 1 ? _levelScenes[0] : null;
+    LevelScene randomLevel {
+        get {
+            if(_levelScenes == null || _levelScenes.Length == 0) return null;
+            if(_levelScenes.Length == 1) return _levelScenes[0];
+            return _levelScenes[Random.Range(0, _levelScenes.Length)];
+        }
+    }
     [SerializeField] private bool _interactible = true;
     [SerializeField] private bool _onlyHost = false; 
     [SerializeField] private bool _onlyIfNoLevelLoaded = false;
 
     public bool Interactible {
         get {
-            if(_levelScene == null) return false;
+            if(levelScene == null) return false;
             if(_onlyIfNoLevelLoaded) return LevelManager.LoadedScene == null;
             if(_onlyHost) return IsHost;
             return _interactible;
         }
     }
 
-    public string InteractionMessage => "Interact (E) to travel to " + _levelScene.LevelName;
+    public string InteractionMessage => "Interact (E) to travel to " + levelScene.LevelName;
 
     public string CantInteractMessage {
         get {
-            if(_levelScene == null) return "This machine is not set up properly";
+            if(levelScene == null) return "This machine is not set up properly";
             if(_onlyIfNoLevelLoaded) return "The time machine is already in use";
             if(_onlyHost) return "Only the host can interact with this";
             return "You are not authorized to time travel here yet";
@@ -33,8 +41,8 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     public string ScanResult {
         get {
-            if(_levelScene == null) return "With a single interaction, you can make the machine go somewhere.\n\nThis machine is not connected to the TWW (time wide web)";
-            return "With a single interaction, you can make the machine go somewhere.\n\nThis machine is connected to the TWW (time wide web) and can be used to time travel to " + _levelScene.LevelName;
+            if(levelScene == null) return "With a single interaction, you can make the machine go somewhere.\n\nThis machine is not connected to the TWW (time wide web)";
+            return "With a single interaction, you can make the machine go somewhere.\n\nThis machine is connected to the TWW (time wide web) and can be used to time travel to " + levelScene.LevelName;
         }
     }
 
@@ -60,7 +68,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     public void LoadLevel()
     {
-        _levelScene.LoadScene();
+        randomLevel.LoadScene();
     }
 
     public void OnScan(Player player)

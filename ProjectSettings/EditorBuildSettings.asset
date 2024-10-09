@@ -11,48 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/GameLobby.unity
     guid: 24503f1053d9a144aaa0d9a704fbd331
-  - enabled: 0
-    path: Assets/ScenePrototypes/AncientEgyptPrototype.unity
-    guid: c6894993e191848d3818877f754a1690
-  - enabled: 1
-    path: Assets/ScenePrototypes/AncientEgyptPrototype 1.unity
-    guid: 4bad4d058abb7414797153cb9bf68d19
-  - enabled: 1
-    path: Assets/ScenePrototypes/LevelDesigns/RomanEmpire/RomanEmpireVariation01_Scene.unity
-    guid: 0356dee5eae6c43df80cbeb64fc348b8
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/GamePlay.unity
-    guid: e1c403e8696938844a336ad9fd4a3e99
-  - enabled: 0
-    path: Assets/Scenes/Movement.unity
-    guid: a921434ec5e6247b9a075650e7d0be9f
-  - enabled: 0
-    path: Assets/Scenes/Movement_WithJoinLogic.unity
-    guid: 5e97237d6f0d8ad47b5b2e9e2a6591ee
-  - enabled: 0
-    path: Assets/Scenes/Levels/1_Greece.unity
-    guid: a2983912a524f6a4aa799f6695530a19
-  - enabled: 0
-    path: Assets/Scenes/VivoxTest.unity
-    guid: 2fba945916095dd47b422c7fd7f5d4c7
-  - enabled: 0
-    path: Assets/Scenes/Levels/GameLobbyEffect.unity
-    guid: 20a6e7e38a8cf214b8211200a11750fa
-  - enabled: 0
-    path: Assets/Scenes/EnemyTest.unity
-    guid: 25fa5e0478d70a746bcf7740b7c83917
-  - enabled: 0
-    path: Assets/Scenes/ItemLookupTest.unity
-    guid: 0272b9eb722013f49a52ca6857a87afa
-  - enabled: 1
-    path: Assets/Scenes/TemporalInstability.unity
-    guid: c46d46e6a4078f343a15d330542a8aa6
   - enabled: 1
     path: Assets/ScenePrototypes/LevelDesigns/AncientEgypt/AncientEgyptVariation01_Scene.unity
     guid: 14e39814133db4658bb7c6388793db32
+  - enabled: 1
+    path: Assets/ScenePrototypes/LevelDesigns/AncientEgypt/Variation02.unity
+    guid: 3170ae699d32a4313adf044af0be3128
+  - enabled: 1
+    path: Assets/ScenePrototypes/LevelDesigns/RomanEmpire/RomanEmpireVariation02_Scene.unity
+    guid: fc2a219e1b92d46a5b9e0b4021e9b74c
+  - enabled: 1
+    path: Assets/ScenePrototypes/LevelDesigns/RomanEmpire/RomanEmpireVariation01_Scene.unity
+    guid: 0356dee5eae6c43df80cbeb64fc348b8
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: e91b41e4ff25b664baeb4c5d417b43e1, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
