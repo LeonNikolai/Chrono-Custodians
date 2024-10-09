@@ -70,7 +70,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
         TrySendEquippedItemServerRpc();
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = true)]
+    [Rpc(SendTo.Server)]
     internal void TrySendEquippedItemServerRpc(RpcParams rpcParams = default)
     {
         var clientId = rpcParams.Receive.SenderClientId;
