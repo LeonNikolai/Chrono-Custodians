@@ -60,6 +60,7 @@ public class LevelManager : NetworkBehaviour
     {
         bool isLoaded = _loadedScene == scene;
         if (isLoaded) return;
+        if(IsLoading) return;
         StartCoroutine(LoadLevelSceneAsync(scene));
     }
 
