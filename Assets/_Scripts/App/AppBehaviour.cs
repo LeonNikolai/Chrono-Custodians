@@ -22,19 +22,6 @@ public class AppBehaviour : MonoBehaviour
         }
     }
 
-    private IEnumerator Start()
-    {
-        yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
-        // Check microphone permission
-        if (Application.HasUserAuthorization(UserAuthorization.Microphone))
-        {
-            Debug.Log("Microphone found");
-        }
-        else
-        {
-            Debug.Log("Microphone not found");
-        }
-    }
     private void OnApplicationQuit()
     {
         // Because "Application.quitting" is not reliable in the editor
