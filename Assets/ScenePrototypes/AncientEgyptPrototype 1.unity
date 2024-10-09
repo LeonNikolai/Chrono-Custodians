@@ -8124,7 +8124,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 9a4182a9442a64cbd826416ae52e8f33, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 2dcc7ddc3a72d40968ef2ac38942dd0f, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &456333193
 Terrain:
@@ -8135,7 +8135,7 @@ Terrain:
   m_GameObject: {fileID: 456333191}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: 9a4182a9442a64cbd826416ae52e8f33, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 2dcc7ddc3a72d40968ef2ac38942dd0f, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
@@ -10583,6 +10583,10 @@ PrefabInstance:
     - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: m_Name
       value: Enemy_LeechAdult_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8424506856430388398, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: radius
@@ -24838,6 +24842,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_LeechAdult_1
       objectReference: {fileID: 0}
+    - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8424506856430388398, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: radius
       value: 50.12
@@ -25270,7 +25278,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d7cadee9621ce0340b7f050824dba720, type: 2}
     - target: {fileID: 394062732005271296, guid: bdcd052312a64d646ba85ec33eaeff3e, type: 3}
       propertyPath: m_Name
-      value: Test
+      value: InsideLevel
       objectReference: {fileID: 0}
     - target: {fileID: 456769577746822782, guid: bdcd052312a64d646ba85ec33eaeff3e, type: 3}
       propertyPath: m_Mesh
@@ -31573,6 +31581,10 @@ PrefabInstance:
     - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: m_Name
       value: Enemy_LeechAdult_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8424506856430388398, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
       propertyPath: radius

@@ -4269,9 +4269,10 @@ MonoBehaviour:
   itemText: {fileID: 1182300533}
   velocityText: {fileID: 745019456}
   percentageText: {fileID: 1983459282}
-  temporalInstability: 0
   TemporalInstabilityNetworked:
     m_InternalValue: 0
+  ItemCount:
+    m_InternalValue: 10
   baseTemporalInstabilityVelocity: 0.2
   temporalInstabilityMax: 100
   hasStarted: 0
