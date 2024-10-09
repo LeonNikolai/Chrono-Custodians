@@ -78,7 +78,7 @@ public class LookupController : MonoBehaviour, IInteractable
         {
             string textToDisplay = $"<color=#909090>info [search]</color> - Get information on something\n";
             textToDisplay += $"<color=#909090>help</color> - instructions\n";
-            textToDisplay += $"<color=#909090>list</color> - List all attribues\n";
+            textToDisplay += $"<color=#909090>list</color> - List all notable features\n";
             textToDisplay += $"<color=#909090>clear</color> - Clear the screen\n";
             textToDisplay += $"<color=#909090>exit</color> - Close the computer\n";
             ClearDisplay();
@@ -104,11 +104,11 @@ public class LookupController : MonoBehaviour, IInteractable
             textToDisplay += $"Some items are meant to stay in this time period, do not trash those.\n";
             textToDisplay += $"\n";
             textToDisplay += $"Good luck Chrono Custodians\n";
+            textToDisplay += $"...\n";
             ClearDisplay();
             coroutines.Add(DisplayText($"<color=#909090>>{input}</color>"));
             coroutines.Add(AddSpace());
             coroutines.Add(DisplayText(textToDisplay));
-            coroutines.Add(AddSpace());
             StartCoroutine(ProcessCoroutines(coroutines));
             return;
         }
@@ -134,7 +134,8 @@ public class LookupController : MonoBehaviour, IInteractable
             string textToDisplay = $"";
             if (infoQuery.TryGetValue(input, out var info))
             {
-                textToDisplay = $"{info.Name}\n...\n{info.Description}";
+                textToDisplay = $"{info.Name}\n...\n{info.Description}\n";
+                textToDisplay += $"...\n";
 
             }
             else
