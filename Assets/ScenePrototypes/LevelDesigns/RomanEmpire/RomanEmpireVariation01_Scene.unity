@@ -126,6 +126,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 664207503190189304, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: d59784c5ead3144fc9dfb3766430d8f5, type: 2}
     - target: {fileID: 684016089155350667, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: m_Name
       value: RomanEmpireVariation01
@@ -134,9 +138,29 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 830288701415518991, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 971704575832237065, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069629207637258531, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183578497670732616, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: c82456b8646924e7ba6901cb67b8c63a, type: 2}
     - target: {fileID: 2322310991303736387, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2625381772
+      objectReference: {fileID: 0}
+    - target: {fileID: 2651672625744010329, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3203658934039202101, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -169,6 +193,10 @@ PrefabInstance:
     - target: {fileID: 5647493535832012315, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3385349727
+      objectReference: {fileID: 0}
+    - target: {fileID: 6667814030936885012, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6894373356427886789, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -226,6 +254,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8738035089561822892, guid: fbb83536a942948f38d7176173385b41, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 2560932083c8941df9a19469fa115709, type: 2}
     - target: {fileID: 8956428469974708020, guid: fbb83536a942948f38d7176173385b41, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1058736700
