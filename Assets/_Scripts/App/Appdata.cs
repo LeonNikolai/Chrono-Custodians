@@ -1,6 +1,5 @@
 using System;
 
-
 // This class is used to store app data and preferences
 [Serializable]
 public class Appdata
