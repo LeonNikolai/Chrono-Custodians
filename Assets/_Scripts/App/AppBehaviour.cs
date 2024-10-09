@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 // This class is used by the App class to do things that are not possible in a static class
@@ -6,7 +7,8 @@ using UnityEngine;
 public class AppBehaviour : MonoBehaviour
 {
     [Serializable]
-    struct asdasd {
+    struct asdasd
+    {
         public int a;
         public int b;
     }
@@ -17,6 +19,20 @@ public class AppBehaviour : MonoBehaviour
             // Recreate the AppBehaviour if it is destroyed 
             // to make sure the App.OnApplicationQuit is called
             AppBootstraper.CreateAppBehaviour();
+        }
+    }
+
+    private IEnumerator Start()
+    {
+        yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
+        // Check microphone permission
+        if (Application.HasUserAuthorization(UserAuthorization.Microphone))
+        {
+            Debug.Log("Microphone found");
+        }
+        else
+        {
+            Debug.Log("Microphone not found");
         }
     }
     private void OnApplicationQuit()
