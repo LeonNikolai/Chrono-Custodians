@@ -18,6 +18,11 @@ public class PlayerSpawner : NetworkBehaviour
         return null;
     }
     static PlayerSpawner spawner;
+    private void Awake() {
+        if(spawner == null) {
+            spawner = this;
+        }
+    }
     public override void OnNetworkSpawn()
     {
         spawner = this;

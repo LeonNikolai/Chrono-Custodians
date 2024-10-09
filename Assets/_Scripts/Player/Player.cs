@@ -186,7 +186,6 @@ public class Player : NetworkBehaviour, IScanable
         if (_movement == null) _movement = GetComponent<PlayerMovement>();
         if (_health == null) _health = GetComponent<HealthSystem>();
         UpdateInteractionState();
-
     }
 
     private void SpectatePrevious(InputAction.CallbackContext context)
