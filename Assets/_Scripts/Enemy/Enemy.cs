@@ -141,6 +141,7 @@ public abstract class Enemy : NetworkBehaviour
         StartCoroutine(Roaming());
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         if (debug)
@@ -186,6 +187,7 @@ public abstract class Enemy : NetworkBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(targetWaypoint, 1f);
     }
+#endif
 
     public virtual void StareAtPlayer()
     {
