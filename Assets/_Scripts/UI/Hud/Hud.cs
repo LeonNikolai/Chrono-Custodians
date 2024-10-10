@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 /// <summary>
@@ -13,6 +14,8 @@ public class Hud : MonoBehaviour
     [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
+    [SerializeField] ItemSendFeedback _itemSendFeedback;
+
 
     public static bool Hidden
     {
@@ -37,7 +40,7 @@ public class Hud : MonoBehaviour
         set
         {
             instance._crosshairTooltip.text = value;
-            if(value == "") instance._crosshairTooltip.gameObject.SetActive(false);
+            if (value == "") instance._crosshairTooltip.gameObject.SetActive(false);
             else instance._crosshairTooltip.gameObject.SetActive(true);
         }
         get
@@ -76,5 +79,10 @@ public class Hud : MonoBehaviour
     private void OnDestroy()
     {
         if (instance == this) instance = null;
+    }
+
+    internal static void ItemSentFeedback(bool correct, ItemData itemData, int targetYear, float instabilityChange)
+    {
+        instance._itemSendFeedback.SendItem(correct, itemData, targetYear, instabilityChange);
     }
 }

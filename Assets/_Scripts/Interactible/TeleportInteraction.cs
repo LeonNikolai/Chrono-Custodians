@@ -35,6 +35,7 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
                 RenderSettings.fogMode = FogMode.Linear;
                 RenderSettings.fogEndDistance = 28.17f;
                 RenderSettings.fogStartDistance = 0;
+
             }
 
             if (RenderSettings.reflectionIntensity != 0)

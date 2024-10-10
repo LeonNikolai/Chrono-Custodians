@@ -7,12 +7,15 @@ using UnityEngine.UI;
 
 public class ItemTracker : NetworkBehaviour
 {
+    [Header("References")]
+    [SerializeField] private ItemIdProvider _itemIdProvider;
+    [Header("References")]
     [SerializeField] private Slider slider;
     [SerializeField] private TMP_Text itemText;
     [SerializeField] private TMP_Text velocityText;
     [SerializeField] private TMP_Text percentageText;
 
-
+    [Header("Settings")]
     [SerializeField] NetworkVariable<float> TemporalInstabilityNetworked = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] NetworkVariable<int> ItemCount = new NetworkVariable<int>(10, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private float baseTemporalInstabilityVelocity = 0.2f;
@@ -113,10 +116,12 @@ public class ItemTracker : NetworkBehaviour
         {
             UpdateVisuals();
         }
+
     }
     public float OldTemporalInstability { get; private set; }
     private void UpdateVisuals()
     {
+        itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
         if (OldTemporalInstability == TemporalInstabilityNetworked.Value) return;
         slider.value = TemporalInstabilityNetworked.Value;
         velocityText.text = $"Time Bubble Degradation: ";
@@ -151,6 +156,12 @@ public class ItemTracker : NetworkBehaviour
         OldTemporalInstability = TemporalInstabilityNetworked.Value;
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ItemSentClientFeedbackRpc(bool correct, int itemId, int targetYear, float instabilityChange) {
+        ItemData data = _itemIdProvider.GetItemData(itemId);
+        Hud.ItemSentFeedback(correct, data, targetYear, instabilityChange);
+    }
+
     private void OnItemSent(ItemSendEvent item)
     {
         if (item.ItemData.instabilityCost > 0)
@@ -165,12 +176,14 @@ public class ItemTracker : NetworkBehaviour
                 temporalInstabilityVelocity -= 0.1f;
                 if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
                 if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
+                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetYear, -15);
             }
         }
         else
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
+            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetYear, 10);
         }
 
         if (ItemCount.Value <= 0)
