@@ -8,6 +8,7 @@ public class ItemData : ScriptableObject
     [SerializeField] string _id;
     [Header("Tooltip Info")]
     [SerializeField] LocalizedString _name;
+    [SerializeField] LocalizedString[] _scanMinigameResults;
     [SerializeField] LocalizedString _description;
     [SerializeField] Sprite _icon;
     public Sprite Icon => _icon;
@@ -16,6 +17,9 @@ public class ItemData : ScriptableObject
     public int AstronomicalYearEnd => _astronomicalYearEnd;
     public string Name => _name != null && !_name.IsEmpty ? _name.GetLocalizedString() : name ?? "Item Name";
     public string Description => _description != null && !_description.IsEmpty ? _description.GetLocalizedString() : name ?? "Item Description";
+    public LocalizedString[] ScanMinigameResults => _scanMinigameResults;
+    
+
     public int instabilityCostMin = 1;
     public int instabilityCostMax = 2;
     public int instabilityCost = 0;

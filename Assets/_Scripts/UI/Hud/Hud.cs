@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 /// <summary>
@@ -12,6 +13,8 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _shieldBar;
     [SerializeField] TMP_Text _crosshairTooltip;
     [SerializeField] TMP_Text _itemTooltip;
+    [SerializeField] TMP_Text shortScannerNotificationText;
+    [SerializeField] GameObject shortScannerNotification;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
     [SerializeField] ItemSendFeedback _itemSendFeedback;
@@ -58,6 +61,32 @@ public class Hud : MonoBehaviour
         {
             return instance?._itemTooltip?.text ?? "";
         }
+    }
+    public static string ScannerNotification
+    {
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                instance.shortScannerNotification.SetActive(false);
+                instance.shortScannerNotificationText.text = value;
+                return;
+            }
+            instance.shortScannerNotificationText.text = value;
+            instance.shortScannerNotification.SetActive(true);
+            instance.StopAllCoroutines();
+            instance.StartCoroutine(instance.ScannerNotificationRutine(value));
+        }
+        get
+        {
+            return instance?.shortScannerNotificationText?.text ?? "";
+        }
+    }
+    public IEnumerator ScannerNotificationRutine(string value)
+    {
+
+        yield return new WaitForSeconds(3);
+        ScannerNotification = "";
     }
 
     public static void SetInventoryIcon(ItemData itemdata, int index, bool selected)

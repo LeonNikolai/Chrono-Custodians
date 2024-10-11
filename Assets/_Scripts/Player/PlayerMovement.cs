@@ -70,7 +70,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!IsSpawned) return;
         if (!IsOwner) { return; }
-        if(Player.IsSpectating) {
+        if (Player.IsSpectating)
+        {
             transform.rotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 0f);
             return;
         }

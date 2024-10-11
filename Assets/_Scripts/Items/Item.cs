@@ -6,14 +6,21 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 {
 
     [SerializeField] ItemData _itemData;
+    public enum MinigameType
+    {
+        None,
+        PointScanningWorld,
+    }
     [Header("Item Refferences")]
+    [SerializeField] public MinigameType _requiresMinigameToScan = MinigameType.PointScanningWorld;
     [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
     [SerializeField] Collider[] _collider = new Collider[0];
     public Collider[] Collider => _collider;
     public ulong RandomSeed => NetworkObject.NetworkObjectId;
-
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     public bool InInventory
     {
         get
@@ -32,13 +39,15 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         get
         {
-            if(_itemData) {
+            if (_itemData)
+            {
                 string tags = "";
-                if(_itemData.Tags.Length > 0) tags = _itemData.Tags[0].Name;
+                if (_itemData.Tags.Length > 0) tags = _itemData.Tags[0].Name;
                 for (int i = 1; i < _itemData.Tags.Length; i++)
                 {
-                    if(i == _itemData.Tags.Length - 1) {
-                        if(_itemData.Tags.Length > 2) tags += ", ";
+                    if (i == _itemData.Tags.Length - 1)
+                    {
+                        if (_itemData.Tags.Length > 2) tags += ", ";
                         tags += "and ";
                     }
                     else tags += ", ";
@@ -243,9 +252,14 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     }
 
+    [Rpc(SendTo.Server)]
+    public void OnScanRpc()
+    {
+        HasBeenScanned.Value = true;
+    }
     public void OnScan(Player player)
     {
-
+        OnScanRpc();
     }
 }
 
