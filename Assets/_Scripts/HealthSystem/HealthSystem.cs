@@ -1,11 +1,15 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using System.Collections;
+using UnityEngine.Rendering.Universal;
 
 public class HealthSystem : NetworkBehaviour
 {
     public NetworkVariable<int> maxHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private float healthPercentage;
     public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public UnityEvent<bool> onDeath;
 
@@ -80,7 +84,69 @@ public class HealthSystem : NetworkBehaviour
         if (IsServer) isDead.Value = newValue <= 0;
         if (shouldUpdateHud && IsOwner)
         {
-            Hud.Health = (float)currentHealth.Value / (float)maxHealth.Value;
+
+            healthPercentage = (float)currentHealth.Value / (float)maxHealth.Value;
+            Hud.Health = healthPercentage;
+            if (previousValue > newValue)
+            {
+                TriggerDamageEffect(previousValue, newValue);
+            }
         }
+    }
+
+
+    [SerializeField] private Volume playerPostProcessing;
+    private float curIntensity = 0;
+    private float damageEffectDuration = 0.8f;
+    private Coroutine fadeOutRoutine;
+    private Vignette vignette;
+
+
+    private void TriggerDamageEffect(int previousValue, int newValue)
+    {
+        if (!IsOwner) return;
+        if (playerPostProcessing == null)
+        {
+            Debug.Log("No Player volume");
+            return;
+        }
+        float damageAmount = previousValue - newValue;
+        float intensity = damageAmount / (float)currentHealth.Value;
+        float minIntensity = Mathf.Clamp(1 - healthPercentage, 0, 0.6f);
+        intensity = Mathf.Clamp(intensity += minIntensity, 0, 0.8f);
+        EffectFadeIn(intensity, minIntensity);
+    }
+
+    private void EffectFadeIn(float intensity, float minIntensity)
+    {
+        if (fadeOutRoutine != null)
+        {
+            StopCoroutine(fadeOutRoutine);
+        }
+        if (vignette == null)
+        {
+            playerPostProcessing.profile.TryGet<Vignette>(out vignette);
+        }
+        StartCoroutine(DamageEffect(intensity, minIntensity));
+    }
+    private IEnumerator DamageEffect(float intensity, float minIntensity)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < 0.1f)
+        {
+            elapsed += Time.deltaTime;
+            vignette.intensity.Override(Mathf.Lerp(curIntensity, intensity, elapsed * 10));
+            yield return null;
+        }
+        elapsed = 0;
+
+        while (elapsed < damageEffectDuration)
+        {
+            elapsed += Time.deltaTime;
+            vignette.intensity.Override(Mathf.Lerp(curIntensity, minIntensity, elapsed / damageEffectDuration));
+            yield return null;
+        }
+        curIntensity = minIntensity;
     }
 }

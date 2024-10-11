@@ -1,3 +1,4 @@
+using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -11,6 +12,23 @@ public struct ItemSendEvent
     public LevelScene level;
     public int TargetYear;
 
+}
+
+public enum TimePeriods
+{
+    Prehistoric,
+    Ancient_Egypt,
+    Ancient_Maya,
+    Ancient_Greece,
+    Ancient_Rome,
+    Viking,
+    Islamic_Golden_Age,
+    Feudal_Europe,
+    Feudal_Japan,
+    Colonial,
+    Industrial,
+    World_War,
+    Contemporary
 }
 
 public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,IScanable
@@ -65,6 +83,10 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     public string ScanTitle => "Temporal Mailbox";
     public string ScanResult => "Send items to the past or future";
 
+    [SerializeField] private Transform itemDropSpot;
+    private ItemData currentlyHeldItem;
+
+
     public void Interact(Player player)
     {
         TrySendEquippedItemServerRpc();
@@ -82,11 +104,15 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
             if (Character.Inventory.EquippedItemLocalRefference is Item item && item.ItemData?.UnSendable == false)
             {
                 ItemData itemData = item.ItemData;
-                item.Drop(null);
-                item.NetworkObject.Despawn(true);
-                SendItem(itemData);
+                item.Drop(itemDropSpot.position);
+                currentlyHeldItem = itemData;
             }
         }
+    }
+
+    public void PerformSendItem()
+    {
+        SendItem(currentlyHeldItem);
     }
 
     private void SendItem(ItemData itemData)

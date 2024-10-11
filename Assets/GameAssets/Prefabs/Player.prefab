@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4041252940
+  GlobalObjectIdHash: 26464475
   InScenePlacedSourceGlobalObjectIdHash: 4041252940
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -293,6 +293,7 @@ MonoBehaviour:
       m_Calls: []
   alive: {fileID: 0}
   dead: {fileID: 0}
+  playerPostProcessing: {fileID: 7200611879040957282}
 --- !u!114 &5589047502551369903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5563461293891408218}
   - component: {fileID: 3089590618775013198}
+  - component: {fileID: 7200611879040957282}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -447,6 +449,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &7200611879040957282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7145292218947091899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: -1
+  blendDistance: 0
+  weight: 0.7
+  sharedProfile: {fileID: 11400000, guid: 151386920522ad84da1684f3642ae989, type: 2}
 --- !u!1001 &3688755726418997915
 PrefabInstance:
   m_ObjectHideFlags: 0
