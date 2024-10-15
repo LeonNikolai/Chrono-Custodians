@@ -84,8 +84,23 @@ public class Hud : MonoBehaviour
     }
     public IEnumerator ScannerNotificationRutine(string value)
     {
-
-        yield return new WaitForSeconds(3);
+        float timer = 10;
+        while (timer > 0)
+        {
+            if(Player.Input.Player.UseItemPrimary.WasPressedThisFrame()) {
+                ScannerNotification = "";
+                break;
+            }
+            if(Player.Input.Player.UseItemSecondary.WasPressedThisFrame()) {
+                ScannerNotification = "";
+                break;
+            }
+            if(Player.Input.Player.Move.IsPressed()) {
+                timer -= Time.deltaTime;
+            }
+            timer -= Time.deltaTime;
+            yield return null;
+        }
         ScannerNotification = "";
     }
 

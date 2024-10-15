@@ -1,15 +1,17 @@
 using UnityEngine;
 
+public enum LocationType
+{
+    Outside = 0,
+    Inside = 1,
+}
 public class TeleportInteraction : MonoBehaviour, IInteractable
 {
     [Header("Teleport Settings")]
     [SerializeField] Transform target;
     [SerializeField] Vector3 fallBackPositonIfNoTarget;
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
-
-    [SerializeField] bool toggleInside = false;
-
-    private float reflectionIntensity = 1;
+    [SerializeField] LocationType locationType = LocationType.Outside;
 
     public bool Interactible => true;
     public void Interact(Player player)
@@ -23,31 +25,7 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
             Vector3 position = target ? target.position : fallBackPositonIfNoTarget;
             player.Movement.ChangePosition(position + teleportOffset);
         }
-
-        // We should not do this but fuck you all I'm doing it anywayyyyyyy
-        // mostly because its the simplest way to add it.
-        if (toggleInside)
-        {
-            RenderSettings.fog = !RenderSettings.fog;
-            if (RenderSettings.fog)
-            {
-                RenderSettings.fogColor = Color.black;
-                RenderSettings.fogMode = FogMode.Linear;
-                RenderSettings.fogEndDistance = 28.17f;
-                RenderSettings.fogStartDistance = 0;
-
-            }
-
-            if (RenderSettings.reflectionIntensity != 0)
-            {
-                reflectionIntensity = RenderSettings.reflectionIntensity;
-                RenderSettings.reflectionIntensity = 0;
-            }
-            else
-            {
-                RenderSettings.reflectionIntensity = reflectionIntensity;
-            }
-        }
+        player.Location = locationType;
     }
 
 

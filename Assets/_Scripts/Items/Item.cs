@@ -11,6 +11,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         None,
         PointScanningWorld,
     }
+    [Header("Settings")]
+    [SerializeField] public bool Droppable = true;
     [Header("Item Refferences")]
     [SerializeField] public MinigameType _requiresMinigameToScan = MinigameType.PointScanningWorld;
     [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
@@ -149,6 +151,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     public void Drop(Vector3? position)
     {
+        if(!Droppable) return;
         if (IsOwner)
         {
             DropServerRpc();

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +16,7 @@ public class ScannerItem : Item, ItemUseToolTip
 {
     [Header("Scanner Settings")]
     [SerializeField] private float scanRange = 10f;
+    [SerializeField] private bool minigameMustScanInOrder = false;
 
 
     [Header("Scanner Refferences")]
@@ -26,6 +26,9 @@ public class ScannerItem : Item, ItemUseToolTip
     [SerializeField] private TMP_Text lookAtScanableText;
     [SerializeField] private ScrollRect scanResultScrollRect;
     [SerializeField] private LayerMask scanableLayer = ~0;
+    [SerializeField] ScannerLight scannerLight1;
+    [SerializeField] ScannerLight scannerLight2;
+    [SerializeField] ScannerLight scannerLight3;
 
 
 
@@ -72,6 +75,10 @@ public class ScannerItem : Item, ItemUseToolTip
         if (lookAtScanable == null)
         {
             lookAtScanableText.text = "";
+
+            scannerLight1.SetState(false);
+            scannerLight2.SetState(false);
+            scannerLight3.SetState(false);
             scanTitleText.color = new Color(1, 1, 1, 0.2f);
             return;
         }
@@ -79,9 +86,23 @@ public class ScannerItem : Item, ItemUseToolTip
         {
             lookAtScanableText.text = "?";
             scanTitleText.color = new Color(1, 1, 1, 0.05f);
+            scannerLight1.SetState(false);
+            scannerLight2.SetState(true);
+            scannerLight3.SetState(false);
+        }
+        else if (LookAtScanable == previosSuccessfullScannedItem)
+        {
+            scannerLight1.SetState(true);
+            scannerLight2.SetState(true);
+            scannerLight3.SetState(true);
+            lookAtScanableText.text = "";
+            scanTitleText.color = new Color(1, 1, 1, 1);
         }
         else
         {
+            scannerLight1.SetState(false);
+            scannerLight2.SetState(false);
+            scannerLight3.SetState(false);
             lookAtScanableText.text = "";
             scanTitleText.color = new Color(1, 1, 1, 1);
         }
@@ -156,12 +177,19 @@ public class ScannerItem : Item, ItemUseToolTip
                 scanTitleText.text = "Cancelled";
                 scanResultText.text = "Hold ItemAction (Left Mouse) to start scanning";
                 CurrentlyScanning = null;
-
+                scannerLight1.SetState(false);
+                scannerLight2.SetState(false);
+                scannerLight3.SetState(false);
                 Debug.Log("Scanning Cancelled");
                 yield break;
             }
             scanTime -= Time.deltaTime;
             scanTitleText.text = $"Scanning {scanTime.ToString("F1")}s";
+            int dots = Mathf.FloorToInt(scanTime * 4 * 4);
+
+            scannerLight3.SetState(dots % 4 == 0);
+            scannerLight1.SetState(dots % 4 == 1);
+            scannerLight2.SetState(dots % 4 == 2);
             scanResultText.text += ".";
             if (scanResultText.text.Length > 3)
             {
@@ -191,6 +219,10 @@ public class ScannerItem : Item, ItemUseToolTip
             CurrentlyScanning = null;
             yield break;
         }
+
+        scannerLight1.SetState(true);
+        scannerLight2.SetState(true);
+        scannerLight3.SetState(true);
         scanTitleText.text = LookAtScanable.ScanTitle;
         scanResultText.text = LookAtScanable.ScanResult;
 
@@ -233,7 +265,7 @@ public class ScannerItem : Item, ItemUseToolTip
         }
         ItemData data = currentItem.ItemData;
         var results = data.ScanMinigameResults;
-        ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, ItemScannerPoint.ScannerPointGroup.Outside);
+        ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, player?.Location ?? LocationType.Outside);
         int scannedCount = 0;
         foreach (var item in targetPoints)
         {
@@ -245,33 +277,58 @@ public class ScannerItem : Item, ItemUseToolTip
         while (scannedCount < targetPoints.Length)
         {
             float scanTime = 1f;
+            bool isScanning = false;
             while (scanTime > 0)
             {
                 RenderItemMinigameText(results, targetPoints, scannedCount);
-                if (!Player.Input.Player.UseItemPrimary.IsPressed())
+                if (!isScanning)
                 {
-                    scanTime = 1f;
+                    if (Player.Input.Player.UseItemPrimary.WasPressedThisFrame())
+                    {
+                        isScanning = true;
+                    }
                     yield return null;
                     continue;
                 }
+                if (Player.Input.Player.UseItemPrimary.WasReleasedThisFrame())
+                {
+                    scanTime = 1f;
+                    isScanning = false;
+                    scanTitleText.text = currentItem.ScanTitle;
+                    yield return null;
+                    continue;
+                }
+
                 scanTime -= Time.deltaTime;
                 scanTitleText.text = $"Scanning {scanTime.ToString("F1")}s";
+                int dots = Mathf.FloorToInt(scanTime * 4);
+                scanResultText.text += ".";
+                if (scanResultText.text.Length > 3)
+                {
+                    scanResultText.text = "";
+                }
                 yield return null;
             }
 
-            if (LookAtScanable is ItemScannerPoint point)
+            if (targetPoints.Contains(LookAtScanable) && LookAtScanable is ItemScannerPoint point)
             {
-                if (targetPoints[scannedCount] == point)
+                if (minigameMustScanInOrder && targetPoints[scannedCount] != point)
                 {
-                    Debug.Log("Scanned Point");
-                    var resultsCopy = results[scannedCount];
-                    string result = resultsCopy != null ? !resultsCopy.IsEmpty ? resultsCopy.GetLocalizedString() : "?" : "?";
-                    Hud.ScannerNotification = $"Scanned {scannedCount}/{targetPoints.Length} points \n {result}";
-                    scannedCount++;
-                    RenderItemMinigameText(results, targetPoints, scannedCount);
-                    point.Deactivate();
+                    CurrentlyScanning = null;
+                    scanTitleText.text = "Unsuccesfull Scan";
+                    scanResultText.text = "Points need to be scanned in order";
+                    yield break;
                 }
-            } else if( LookAtScanable is not null) {
+                var resultsCopy = results[scannedCount];
+                string result = resultsCopy != null ? !resultsCopy.IsEmpty ? resultsCopy.GetLocalizedString() : "?" : "?";
+                scannedCount++;
+                Hud.ScannerNotification = $"Scanned {scannedCount}/{targetPoints.Length} points \n {result}";
+                RenderItemMinigameText(results, targetPoints, scannedCount);
+                point.Deactivate();
+
+            }
+            else if (LookAtScanable is not null)
+            {
                 CurrentlyScanning = null;
                 scanTitleText.text = "Unsuccesfull Scan";
                 scanResultText.text = "Start scanning something else";
@@ -284,7 +341,8 @@ public class ScannerItem : Item, ItemUseToolTip
         {
             item.Deactivate();
         }
-        
+
+        scanTitleText.text = currentItem.ScanTitle;
         scanResultText.text = "";
         ListScannedMinigameResults(results, scannedCount);
         Hud.ScannerNotification = scanResultText.text;
@@ -294,7 +352,7 @@ public class ScannerItem : Item, ItemUseToolTip
 
     private void RenderItemMinigameText(LocalizedString[] results, ItemScannerPoint[] targetPoints, int scannedCount)
     {
-        scanResultText.text = $"This scan requires more information, scan nearby points {scannedCount}/{targetPoints.Length} points";
+        scanResultText.text = $"This scan requires more information, scan nearby points {scannedCount}/{targetPoints.Length} points\n";
         ListScannedMinigameResults(results, scannedCount);
     }
 
@@ -302,7 +360,7 @@ public class ScannerItem : Item, ItemUseToolTip
     {
         for (int i = 0; i < scannedCount; i++)
         {
-            scanResultText.text += "\n" + results[i] != null ? !results[i].IsEmpty ? results[i].GetLocalizedString() : "?" : "?";
+            scanResultText.text += "\n" + (results[i] != null ? !results[i].IsEmpty ? results[i].GetLocalizedString() : "?" : "?");
         }
     }
 

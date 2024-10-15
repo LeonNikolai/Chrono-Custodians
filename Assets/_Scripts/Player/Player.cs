@@ -1,15 +1,29 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using Unity.Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 [DefaultExecutionOrder(-100)]
 public class Player : NetworkBehaviour, IScanable
 {
     // Static variables
     public static Player LocalPlayer = null;
+    public NetworkVariable<LocationType> _location = new NetworkVariable<LocationType>(LocationType.Outside, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public LocationType Location
+    {
+        get => _location.Value;
+        set
+        {
+            if (IsOwner)
+            {
+                _location.Value = value;
+            }
+        }
+    }
     public static HashSet<Player> AllPlayers = new HashSet<Player>();
     public static Dictionary<ulong, Player> Players = new Dictionary<ulong, Player>();
     public static int PlayerAliveCount => AllPlayers.Count - PlayerDeadCount;
@@ -173,12 +187,14 @@ public class Player : NetworkBehaviour, IScanable
     {
         get
         {
-            if(Health.IsDead) return "Dead worker, less competition :-)";
+            if (Health.IsDead) return "Dead worker, less competition :-)";
             var seed = (int)OwnerClientId + NetworkManager.Singleton.ConnectedHostname.GetHashCode();
             return possiblePlayerScanResults.GetString(seed % possiblePlayerScanResults.Length);
         }
     }
 
+
+    float originalReflection;
     private void Awake()
     {
         if (Camera) Camera.enabled = false;
@@ -186,6 +202,7 @@ public class Player : NetworkBehaviour, IScanable
         if (_inventory == null) _inventory = GetComponent<PlayerInventory>();
         if (_movement == null) _movement = GetComponent<PlayerMovement>();
         if (_health == null) _health = GetComponent<HealthSystem>();
+        originalReflection = RenderSettings.reflectionIntensity;
         UpdateInteractionState();
     }
 
@@ -220,8 +237,39 @@ public class Player : NetworkBehaviour, IScanable
         Players.Add(OwnerClientId, this);
         base.OnNetworkSpawn();
         Camera.enabled = IsOwner;
+        _location.OnValueChanged += LocationChanged;
         UpdateInteractionState();
         OnHealthChanged(false);
+    }
+
+    private void LocationChanged(LocationType previousValue, LocationType newValue)
+    {
+        if (IsOwner)
+        {
+            RenderThisPlayersWorldView();
+        }
+    }
+
+    private void RenderThisPlayersWorldView()
+    {
+        if (Location == LocationType.Inside)
+        {
+            RenderSettings.fog = true;
+            if (RenderSettings.fog)
+            {
+                RenderSettings.fogColor = Color.black;
+                RenderSettings.fogMode = FogMode.Linear;
+                RenderSettings.fogEndDistance = 28.17f;
+                RenderSettings.fogStartDistance = 0;
+
+            }
+            RenderSettings.reflectionIntensity = 0;
+        }
+        if (Location == LocationType.Outside)
+        {
+            RenderSettings.fog = false;
+            RenderSettings.reflectionIntensity = originalReflection;
+        }
     }
 
     private void OnHealthChanged(bool arg0)

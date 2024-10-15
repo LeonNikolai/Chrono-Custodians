@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ItemScannerPoint : MonoBehaviour, IScanable
+public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, IInteractable
 {
     public Collider[] colliders;
     public Renderer[] visuals;
-    public enum ScannerPointGroup
-    {
-        Outside,
-        Inside
-    }
-    public static Dictionary<ScannerPointGroup, List<ItemScannerPoint>> pointGroups = new Dictionary<ScannerPointGroup, List<ItemScannerPoint>>();
+
+    public static Dictionary<LocationType, List<ItemScannerPoint>> pointGroups = new Dictionary<LocationType, List<ItemScannerPoint>>();
     public static Action<ItemScannerPoint> OnPointScan = delegate { };
 
-    public ScannerPointGroup group = ScannerPointGroup.Outside;
+    public LocationType group = LocationType.Outside;
 
     public string ScanTitle => "Scanner Point";
 
     public string ScanResult => "A Scanner Point";
 
-    public static ItemScannerPoint[] GetRandom(int amount, ScannerPointGroup group)
+    public string InteractionMessage => "Scan with Scanner";
+
+    public string CantInteractMessage => "Scan with Scanner";
+    public bool Interactible => false;
+
+    public static ItemScannerPoint[] GetRandom(int amount, LocationType group)
     {
+        if(amount <= 0)
+        {
+            return new ItemScannerPoint[0];
+        }
         if (pointGroups.TryGetValue(group, out List<ItemScannerPoint> points))
         {
             return points.OrderBy(x => UnityEngine.Random.value).Take(amount).ToArray();
@@ -82,5 +87,8 @@ public class ItemScannerPoint : MonoBehaviour, IScanable
         OnPointScan.Invoke(this);
     }
 
-
+    public void Interact(Player player)
+    {
+        
+    }
 }
