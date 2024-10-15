@@ -157,9 +157,9 @@ public class ItemTracker : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void ItemSentClientFeedbackRpc(bool correct, int itemId, int targetYear, float instabilityChange) {
+    public void ItemSentClientFeedbackRpc(bool correct, int itemId, TimePeriod timePeriod, float instabilityChange) {
         ItemData data = _itemIdProvider.GetItemData(itemId);
-        Hud.ItemSentFeedback(correct, data, targetYear, instabilityChange);
+        Hud.ItemSentFeedback(correct, data, timePeriod, instabilityChange);
     }
 
     private void OnItemSent(ItemSendEvent item)
@@ -168,22 +168,30 @@ public class ItemTracker : NetworkBehaviour
         {
             ItemCount.Value--;
             itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
-            int yearStart = item.ItemData.AstronomicalYearStart;
-            int yearEnd = item.ItemData.AstronomicalYearEnd;
-            if (item.TargetYear >= yearStart && item.TargetYear <= yearEnd)
+            bool isCorrectTimePeriod = false;
+            foreach(TimePeriod period in item.ItemData.TimePeriods)
+            {
+                if (item.TargetPeriod.periodName == period.periodName)
+                {
+                    isCorrectTimePeriod = true;
+                    break;
+                }
+            }
+
+            if (isCorrectTimePeriod)
             {
                 TemporalInstabilityNetworked.Value -= 15;
                 temporalInstabilityVelocity -= 0.1f;
                 if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
                 if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetYear, -15);
+                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriod, -15);
             }
         }
         else
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
-            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetYear, 10);
+            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriod, 10);
         }
 
         if (ItemCount.Value <= 0)

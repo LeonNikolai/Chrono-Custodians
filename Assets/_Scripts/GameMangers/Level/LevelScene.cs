@@ -12,7 +12,9 @@ public class LevelScene : ScriptableObject
     [SerializeField] Sprite _previewImage;
     [Header("Time Period")]
     [SerializeField, HideInInspector] int _astronomicalYear;
+    [SerializeField, HideInInspector] TimePeriod _timePeriod;
     public int AstronomicalYear => _astronomicalYear;
+    public TimePeriod TimePeriod => _timePeriod;
 
 
     public Sprite PreviewImage => _previewImage;

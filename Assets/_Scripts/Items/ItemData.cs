@@ -13,8 +13,10 @@ public class ItemData : ScriptableObject
     [SerializeField] Sprite _icon;
     public Sprite Icon => _icon;
     public string Id => _id != null && String.IsNullOrEmpty(_id) ? _id : name;
+    /*
     public int AstronomicalYearStart => _astronomicalYearStart;
-    public int AstronomicalYearEnd => _astronomicalYearEnd;
+    public int AstronomicalYearEnd => _astronomicalYearEnd;*/
+    public TimePeriod[] TimePeriods => _timePeriods;
     public string Name => _name != null && !_name.IsEmpty ? _name.GetLocalizedString() : name ?? "Item Name";
     public string Description => _description != null && !_description.IsEmpty ? _description.GetLocalizedString() : name ?? "Item Description";
     public LocalizedString[] ScanMinigameResults => _scanMinigameResults;
@@ -32,9 +34,13 @@ public class ItemData : ScriptableObject
     [SerializeField] bool _unSendable = false;
     public bool UnSendable => _unSendable;
 
+    /*
     [Header("Valid Years")]
     [SerializeField] int _astronomicalYearStart = 2024;
     [SerializeField] int _astronomicalYearEnd = 2024;
+    */
+    [Header("Time Period")]
+    [SerializeField] TimePeriod[] _timePeriods;
 
     [Header("Hints")]
     [SerializeField] ItemTag[] _tags = new ItemTag[0];

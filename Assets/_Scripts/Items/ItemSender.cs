@@ -10,36 +10,41 @@ public struct ItemSendEvent
 {
     public ItemData ItemData;
     public LevelScene level;
-    public int TargetYear;
+    public TimePeriod TargetPeriod;
 
-}
-
-public enum TimePeriods
-{
-    Prehistoric,
-    Ancient_Egypt,
-    Ancient_Maya,
-    Ancient_Greece,
-    Ancient_Rome,
-    Viking,
-    Islamic_Golden_Age,
-    Feudal_Europe,
-    Feudal_Japan,
-    Colonial,
-    Industrial,
-    World_War,
-    Contemporary
 }
 
 public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,IScanable
 {
-    public NetworkVariable<int> SelectedYear = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    [Rpc(SendTo.Server)]
-    public void SetSelectedYearServerRpc(int year)
+    public NetworkVariable<int> SelectedPeriodID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public void SetSelectedTimePeriod(TimePeriod period)
     {
-        SelectedYear.Value = year;
+        int id = idProvider.GetId(period);
+        SetSelectedYearServerRpc(id);
     }
-    [SerializeField] private TMP_Text _yearText;
+    [Rpc(SendTo.Server)]
+    private void SetSelectedYearServerRpc(int id)
+    {
+        SelectedPeriodID.Value = id;
+        Debug.Log("New value = " + id);
+    }
+
+    private void OnPeriodIDChanged(int previous, int current)
+    {
+        if (current == 0)
+        {
+            sendingItemScreen.SetActive(false);
+            return;
+        }
+        sendingItemScreen.SetActive(true);
+        sendingItemText.text = idProvider.GetPeriodData(current).periodName;
+
+    }
+
+    [SerializeField] private GameObject sendingItemScreen;
+    [SerializeField] private TMP_Text sendingItemText;
+
+    [SerializeField] private ItemIdProvider idProvider;
     [SerializeField] private LocalizedString _interactionMessage;
     public string InteractionMessage => _interactionMessage.GetLocalizedString();
     [SerializeField] private LocalizedString _cantInteractMessage;
@@ -60,9 +65,10 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        SelectedPeriodID.OnValueChanged += OnPeriodIDChanged;
         if (IsServer)
         {
-            SelectedYear.Value = LevelManager.LoadedScene ? LevelManager.LoadedScene.AstronomicalYear : 2000;
+            SelectedPeriodID.Value = LevelManager.LoadedScene ? idProvider.GetId(LevelManager.LoadedScene.TimePeriod) : 0;
         }
     }
     public bool Interactible
@@ -84,6 +90,8 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     public string ScanResult => "Send items to the past or future";
 
     [SerializeField] private Transform itemDropSpot;
+    private float itemSendCooldown;
+    private float curItemSendCooldown;
     private ItemData currentlyHeldItem;
 
 
@@ -108,6 +116,12 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
                 currentlyHeldItem = itemData;
             }
         }
+
+        if (curItemSendCooldown <= 0)
+        {
+
+
+        }
     }
 
     public void PerformSendItem()
@@ -121,7 +135,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
         {
             ItemData = itemData,
             level = LevelManager.LoadedScene,
-            TargetYear = SelectedYear.Value
+            TargetPeriod = idProvider.GetPeriodData(SelectedPeriodID.Value)
         };
         SentItems.Add(item);
         OnItemSendServer.Invoke(item);
