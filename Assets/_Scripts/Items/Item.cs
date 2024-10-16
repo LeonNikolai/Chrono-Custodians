@@ -152,11 +152,11 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public void Drop(Vector3? position)
     {
         if(!Droppable) return;
-        if (IsOwner)
+        if (IsOwner && !IsHost)
         {
             DropServerRpc();
         }
-        else if (IsServer && !IsOwnedByServer)
+        else if (IsServer)
         {
             if (position.HasValue)
             {
@@ -176,6 +176,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             if (player.Inventory.TryRemoveItem(NetworkObject))
             {
                 NetworkObject.RemoveOwnership();
+                currentSlot.Value = ItemSlotType.None;
                 isPickedUpByPlayer.Value = false;
                 transform.position = pos;
                 transform.rotation = rot;

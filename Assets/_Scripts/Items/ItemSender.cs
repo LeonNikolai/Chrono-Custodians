@@ -26,7 +26,6 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     private void SetSelectedYearServerRpc(int id)
     {
         SelectedPeriodID.Value = id;
-        Debug.Log("New value = " + id);
     }
 
     private void OnPeriodIDChanged(int previous, int current)
