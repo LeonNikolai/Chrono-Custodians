@@ -558,43 +558,99 @@ MonoBehaviour:
   _animator: {fileID: 89567511108917663}
   correctItemTitle:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 13223762389086208
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
-    m_LocalVariables: []
+    m_LocalVariables:
+    - name: itemName
+      variable:
+        rid: 5496770204155248815
   incorrectItemTitle:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 13225555139473408
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
-    m_LocalVariables: []
+    m_LocalVariables:
+    - name: itemName
+      variable:
+        rid: 5496770204155248816
   correctItemExplanation:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 13234895271473152
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
-    m_LocalVariables: []
+    m_LocalVariables:
+    - name: itemName
+      variable:
+        rid: 5496770204155248817
+    - name: timePeriodName
+      variable:
+        rid: 5496770204155248818
+    - name: instabilityChange
+      variable:
+        rid: 5496770204155248819
   incorrectItemExplanation:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 13225611913572352
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
-    m_LocalVariables: []
+    m_LocalVariables:
+    - name: itemName
+      variable:
+        rid: 5496770204155248820
+    - name: timePeriodName
+      variable:
+        rid: 5496770204155248821
+    - name: instabilityChange
+      variable:
+        rid: 5496770204155248822
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5496770204155248815
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: item
+    - rid: 5496770204155248816
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: item
+    - rid: 5496770204155248817
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: item
+    - rid: 5496770204155248818
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: time period
+    - rid: 5496770204155248819
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
+    - rid: 5496770204155248820
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: item
+    - rid: 5496770204155248821
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: time period
+    - rid: 5496770204155248822
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables, asm: Unity.Localization}
+      data:
+        m_Value: 0
 --- !u!95 &89567511108917663
 Animator:
   serializedVersion: 7

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
+  m_Name: Copper Chisel
+  m_EditorClassIdentifier: 
+  _id: Copper Chisel
+  _name:
+    m_TableReference:
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
+    m_TableEntryReference:
+      m_KeyId: 10235215348477952
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _scanMinigameResults:
+  - m_TableReference:
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
+    m_TableEntryReference:
+      m_KeyId: 10235245711044608
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
+    m_TableEntryReference:
+      m_KeyId: 10235374853664768
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
+    m_TableEntryReference:
+      m_KeyId: 10235416331137024
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _description:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _icon: {fileID: 21300000, guid: 44f697299c8b443149403d0aca0502f4, type: 3}
+  instabilityCostMin: 1
+  instabilityCostMax: 2
+  instabilityCost: 0
+  _prefab: {fileID: 8083261310286950869, guid: 2484592a535eef942b395d22a925e1ce, type: 3}
+  _unSendable: 0
+  _timePeriods:
+  - {fileID: 11400000, guid: b28d4056ff252ad43baa8cd7606c4aa1, type: 2}
+  _tags: []
+  references:
+    version: 2
+    RefIds: []
