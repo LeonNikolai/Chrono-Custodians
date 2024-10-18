@@ -40,10 +40,12 @@ public class ItemSpawnPoint : MonoBehaviour
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, Mathf.Infinity, NavMesh.AllAreas))
         {
             transform.position = hit.position;
+            transform.rotation = Quaternion.LookRotation(hit.normal);
         }
         else if (NavMesh.FindClosestEdge(transform.position, out hit, NavMesh.AllAreas))
         {
             transform.position = hit.position;
+            transform.rotation = Quaternion.LookRotation(hit.normal);
         }
         else
         {
@@ -55,6 +57,7 @@ public class ItemSpawnPoint : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 100f))
         {
             transform.position = hit.point;
+            transform.rotation = Quaternion.LookRotation(hit.normal);
         }
     }
     void OnDrawGizmosSelected()

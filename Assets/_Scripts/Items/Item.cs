@@ -85,7 +85,6 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
 
 
-
     public virtual void EnableColliders(bool enable = true)
     {
         foreach (var collider in _collider)
@@ -248,16 +247,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         {
             case ItemSlotType.PlayerInventory:
                 EnableColliders(false);
-                if (UseUniqueVisualsWhenInHand && isPickedUpByPlayer && ownerHasEquipped)
-                {
-                    EnableVisuals(false);
-                    EnableVisualsWhenHand(isPickedUpByPlayer);
-                }
-                else
-                {
-                    EnableVisualsWhenHand(false);
-                    EnableVisuals(isPickedUpByPlayer && ownerHasEquipped);
-                }
+                UpdateVisualsWhenInHand(isPickedUpByPlayer, ownerHasEquipped);
                 break;
             case ItemSlotType.Machine:
                 break;
@@ -267,6 +257,20 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
                 EnableVisuals(true);
                 EnableVisualsWhenHand(false);
                 break;
+        }
+    }
+
+    private void UpdateVisualsWhenInHand(bool isPickedUpByPlayer, bool ownerHasEquipped)
+    {
+        if (UseUniqueVisualsWhenInHand && isPickedUpByPlayer && ownerHasEquipped)
+        {
+            EnableVisuals(false);
+            EnableVisualsWhenHand(isPickedUpByPlayer);
+        }
+        else
+        {
+            EnableVisualsWhenHand(false);
+            EnableVisuals(isPickedUpByPlayer && ownerHasEquipped);
         }
     }
 
