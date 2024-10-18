@@ -1217,7 +1217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2043969876
+  GlobalObjectIdHash: 2757730307
   InScenePlacedSourceGlobalObjectIdHash: 2757730307
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1240,6 +1240,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 34c8c15ebb1739041b84ab6ab452c87d, type: 2}
   Droppable: 0
+  UseUniqueVisualsWhenInHand: 0
+  _handMeshRenderers: []
   _requiresMinigameToScan: 0
   _meshRenderers:
   - {fileID: 47548506298183816}

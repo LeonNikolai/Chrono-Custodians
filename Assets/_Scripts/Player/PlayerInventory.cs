@@ -72,12 +72,13 @@ public class PlayerInventory : NetworkBehaviour
         private set
         {
             if (_equippedItemLocalRefference == value) return;
-            if (_equippedItemLocalRefference != null)
-            {
-                Debug.Log("Unequipping: " + _equippedItemLocalRefference);
-                _equippedItemLocalRefference.OnUnequip(_player);
-            }
+            var oldItem = _equippedItemLocalRefference;
             _equippedItemLocalRefference = value;
+            if (oldItem != null)
+            {
+                Debug.Log("Unequipping: " + oldItem);
+                oldItem.OnUnequip(_player);
+            }
             if (_equippedItemLocalRefference != null)
             {
                 Debug.Log("Equipping: " + _equippedItemLocalRefference);

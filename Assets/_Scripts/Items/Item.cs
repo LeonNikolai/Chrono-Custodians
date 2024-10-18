@@ -13,6 +13,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     [Header("Settings")]
     [SerializeField] public bool Droppable = true;
+    [SerializeField] public bool UseUniqueVisualsWhenInHand = false;
+    [SerializeField] Renderer[] _handMeshRenderers = new Renderer[0];
     [Header("Item Refferences")]
     [SerializeField] public MinigameType _requiresMinigameToScan = MinigameType.PointScanningWorld;
     [SerializeField] Renderer[] _meshRenderers = new Renderer[0];
@@ -98,6 +100,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             collider.enabled = enable;
         }
     }
+    public virtual void EnableVisualsWhenHand(bool enable = true)
+    {
+        foreach (var collider in _handMeshRenderers)
+        {
+            collider.enabled = enable;
+        }
+    }
     private void OnPickedUpChanged(bool previousValue, bool newValue)
     {
         HandleReparenting(OwnerClientId);
@@ -151,7 +160,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     public void Drop(Vector3? position)
     {
-        if(!Droppable) return;
+        if (!Droppable) return;
         if (IsOwner && !IsHost)
         {
             DropServerRpc();
@@ -233,12 +242,22 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     private void OnSlotChanged(ItemSlotType previousValue, ItemSlotType newValue)
     {
-        bool isPickedUpByPlayer = this.isPickedUpByPlayer.Value == true;
+        bool isPickedUpByPlayer = this.isPickedUpByPlayer.Value;
+        bool ownerHasEquipped = Player.Players.TryGetValue(OwnerClientId, out Player player) && player.Inventory.EquippedItemLocalRefference == (IEquippable)this;
         switch (newValue)
         {
             case ItemSlotType.PlayerInventory:
                 EnableColliders(false);
-                EnableVisuals(isPickedUpByPlayer);
+                if (UseUniqueVisualsWhenInHand && isPickedUpByPlayer && ownerHasEquipped)
+                {
+                    EnableVisuals(false);
+                    EnableVisualsWhenHand(isPickedUpByPlayer);
+                }
+                else
+                {
+                    EnableVisualsWhenHand(false);
+                    EnableVisuals(isPickedUpByPlayer && ownerHasEquipped);
+                }
                 break;
             case ItemSlotType.Machine:
                 break;
@@ -246,6 +265,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             default:
                 EnableColliders(true);
                 EnableVisuals(true);
+                EnableVisualsWhenHand(false);
                 break;
         }
     }
