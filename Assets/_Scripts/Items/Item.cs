@@ -214,8 +214,6 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public virtual void OnEquip(object character)
     {
         OnSlotChanged(currentSlot.Value, currentSlot.Value);
-        EnableColliders(false);
-        EnableVisuals(true);
     }
 
     public virtual void OnEquipUpdate(object character)
@@ -235,11 +233,12 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     private void OnSlotChanged(ItemSlotType previousValue, ItemSlotType newValue)
     {
+        bool isPickedUpByPlayer = this.isPickedUpByPlayer.Value == true;
         switch (newValue)
         {
             case ItemSlotType.PlayerInventory:
                 EnableColliders(false);
-                EnableVisuals(false);
+                EnableVisuals(isPickedUpByPlayer);
                 break;
             case ItemSlotType.Machine:
                 break;

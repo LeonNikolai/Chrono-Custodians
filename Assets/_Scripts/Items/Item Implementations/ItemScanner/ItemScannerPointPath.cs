@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.VFX;
 
 public class ItemScannerPointPath : MonoBehaviour
 {
@@ -9,6 +8,10 @@ public class ItemScannerPointPath : MonoBehaviour
     [SerializeField] private Transform _followTrail;
 
     Vector3[] _path;
+    void Awake()
+    {
+        Enabled(false);
+    }
     public void Enabled(bool enabled)
     {
         _lineRenderer.enabled = enabled;

@@ -280,12 +280,10 @@ public class ScannerItem : Item, ItemUseToolTip
         {
             float scanTime = 1f;
             bool isScanning = false;
-
             while (scanTime > 0)
             {
                 RenderItemMinigameText(results, targetPoints, scannedCount);
-
-                if (targetVisual?.enabled == true)
+                if (targetVisual.IsActive == true)
                 {
                     _pathRenderer.SetPath(targetVisual.transform.position);
                 }
@@ -293,7 +291,9 @@ public class ScannerItem : Item, ItemUseToolTip
                 {
                     targetVisual = FindNewTargetScanPoint(targetPoints);
                 }
-                
+
+
+
                 if (!isScanning)
                 {
                     if (Player.Input.Player.UseItemPrimary.WasPressedThisFrame())

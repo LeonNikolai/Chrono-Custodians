@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -63,7 +64,7 @@ public class PlayerInventory : NetworkBehaviour
     }
 
     // Equipped Item
-    public NetworkVariable<byte> EquippedNetworkItemIndex = new NetworkVariable<byte>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [NonSerialized] public NetworkVariable<byte> EquippedNetworkItemIndex = new NetworkVariable<byte>(2, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public IEquippable _equippedItemLocalRefference = null;
     public IEquippable EquippedItemLocalRefference
     {
@@ -114,11 +115,11 @@ public class PlayerInventory : NetworkBehaviour
         }
 
         EquippedNetworkItemIndex.OnValueChanged += EquippedItemChange;
+        Inventory.OnListChanged += InventoryChanged;
         if (IsOwner)
         {
             EquippedNetworkItemIndex.Value = 0;
         }
-        Inventory.OnListChanged += InventoryChanged;
         base.OnNetworkSpawn();
     }
     public override void OnDestroy()
