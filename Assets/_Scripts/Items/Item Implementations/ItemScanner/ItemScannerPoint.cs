@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using UnityEngine;
 
 public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, IInteractable
@@ -24,7 +25,7 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
 
     public static ItemScannerPoint[] GetRandom(int amount, LocationType group)
     {
-        if(amount <= 0)
+        if (amount <= 0)
         {
             return new ItemScannerPoint[0];
         }
@@ -34,14 +35,17 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
         }
         return new ItemScannerPoint[0];
     }
-
+    public bool IsActive { get; private set; }
     public void Activate()
     {
+        IsActive = true;
         SetColliders(true);
+
         SetVisuals(true);
     }
     internal void Deactivate()
     {
+        IsActive = false;
         SetColliders(false);
         SetVisuals(false);
     }
@@ -89,6 +93,6 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
 
     public void Interact(Player player)
     {
-        
+
     }
 }

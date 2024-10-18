@@ -255,7 +255,7 @@ public class ScannerItem : Item, ItemUseToolTip
         }
         CurrentlyScanning = null;
     }
-
+    [SerializeField] private ItemScannerPointPath _pathRenderer;
     private IEnumerator ItemMinigame()
     {
         if (CurrentlyScanning is not Item currentItem)
@@ -274,13 +274,26 @@ public class ScannerItem : Item, ItemUseToolTip
         RenderItemMinigameText(results, targetPoints, scannedCount);
         var ray = new Ray(player.HeadTransform.position + player.HeadTransform.forward * 0.25f, player.HeadTransform.forward);
         Hud.ScannerNotification = $"Scanned {scannedCount}/{targetPoints.Length}";
+        _pathRenderer.Enabled(true);
+        ItemScannerPoint targetVisual = targetPoints[0];
         while (scannedCount < targetPoints.Length)
         {
             float scanTime = 1f;
             bool isScanning = false;
+
             while (scanTime > 0)
             {
                 RenderItemMinigameText(results, targetPoints, scannedCount);
+
+                if (targetVisual?.enabled == true)
+                {
+                    _pathRenderer.SetPath(targetVisual.transform.position);
+                }
+                else
+                {
+                    targetVisual = FindNewTargetScanPoint(targetPoints);
+                }
+                
                 if (!isScanning)
                 {
                     if (Player.Input.Player.UseItemPrimary.WasPressedThisFrame())
@@ -336,6 +349,7 @@ public class ScannerItem : Item, ItemUseToolTip
             }
             yield return null;
         }
+        _pathRenderer.Enabled(false);
 
         foreach (var item in targetPoints)
         {
@@ -348,6 +362,19 @@ public class ScannerItem : Item, ItemUseToolTip
         Hud.ScannerNotification = scanResultText.text;
         CurrentlyScanning?.OnScan(player);
         CurrentlyScanning = null;
+    }
+
+    private static ItemScannerPoint FindNewTargetScanPoint(ItemScannerPoint[] targetPoints)
+    {
+        foreach (var item in targetPoints)
+        {
+            if (item.IsActive)
+            {
+                return item;
+            }
+        }
+        return null;
+
     }
 
     private void RenderItemMinigameText(LocalizedString[] results, ItemScannerPoint[] targetPoints, int scannedCount)

@@ -66,6 +66,9 @@ public class Hud : MonoBehaviour
     {
         set
         {
+            if(instance == null) return;
+            if(instance.shortScannerNotificationText == null) return;
+            if(instance.shortScannerNotification == null) return;
             if (string.IsNullOrEmpty(value))
             {
                 instance.shortScannerNotification.SetActive(false);
@@ -82,6 +85,7 @@ public class Hud : MonoBehaviour
             return instance?.shortScannerNotificationText?.text ?? "";
         }
     }
+
     public IEnumerator ScannerNotificationRutine(string value)
     {
         float timer = 10;
