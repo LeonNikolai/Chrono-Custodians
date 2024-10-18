@@ -330,6 +330,7 @@ public class ScannerItem : Item, ItemUseToolTip
                     CurrentlyScanning = null;
                     scanTitleText.text = "Unsuccesfull Scan";
                     scanResultText.text = "Points need to be scanned in order";
+                    CancleScanning(targetPoints);
                     yield break;
                 }
                 var resultsCopy = results[scannedCount];
@@ -345,16 +346,13 @@ public class ScannerItem : Item, ItemUseToolTip
                 CurrentlyScanning = null;
                 scanTitleText.text = "Unsuccesfull Scan";
                 scanResultText.text = "Start scanning something else";
+                CancleScanning(targetPoints);
+
                 yield break;
             }
             yield return null;
         }
-        _pathRenderer.Enabled(false);
-
-        foreach (var item in targetPoints)
-        {
-            item.Deactivate();
-        }
+        CancleScanning(targetPoints);
 
         scanTitleText.text = currentItem.ScanTitle;
         scanResultText.text = "";
@@ -362,6 +360,15 @@ public class ScannerItem : Item, ItemUseToolTip
         Hud.ScannerNotification = scanResultText.text;
         CurrentlyScanning?.OnScan(player);
         CurrentlyScanning = null;
+    }
+
+    private void CancleScanning(ItemScannerPoint[] targetPoints)
+    {
+        _pathRenderer.Enabled(false);
+        foreach (var item in targetPoints)
+        {
+            item.Deactivate();
+        }
     }
 
     private static ItemScannerPoint FindNewTargetScanPoint(ItemScannerPoint[] targetPoints)
