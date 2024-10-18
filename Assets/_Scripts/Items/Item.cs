@@ -22,6 +22,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public bool InInventory
     {
@@ -33,7 +34,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
 
     public ItemData ItemData => _itemData;
 
-    public bool Interactible => true;
+    public bool Interactable => isInteractable.Value;
 
     public virtual string ScanTitle => _itemData ? _itemData.Name : "Unknown Item";
 
@@ -80,7 +81,6 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         isPickedUpByPlayer.OnValueChanged += OnPickedUpChanged;
         base.OnNetworkSpawn();
     }
-
 
 
 

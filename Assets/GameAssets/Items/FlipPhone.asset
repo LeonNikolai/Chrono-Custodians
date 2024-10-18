@@ -62,8 +62,8 @@ MonoBehaviour:
   instabilityCost: 2
   _prefab: {fileID: 5210718235762905003, guid: c90ecab00916bec4e84de70e362e3cb3, type: 3}
   _unSendable: 0
-  _astronomicalYearStart: 1995
-  _astronomicalYearEnd: 10000
+  _timePeriods:
+  - {fileID: 11400000, guid: 99aaafca915b86c4193967a85bb1272c, type: 2}
   _tags:
   - {fileID: 11400000, guid: 8de69960f8097694dbe268cfac5622ab, type: 2}
   - {fileID: 11400000, guid: 42a2d9b54f6904a47bd0c8a42e5cfb80, type: 2}

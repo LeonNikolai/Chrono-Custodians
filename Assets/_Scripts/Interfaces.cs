@@ -10,7 +10,7 @@ public interface IHighlightable
 public interface IInteractable
 {
     void Interact(Player player);
-    public bool Interactible { get; }
+    public bool Interactable { get; }
 }
 interface IInteractionMessage
 {

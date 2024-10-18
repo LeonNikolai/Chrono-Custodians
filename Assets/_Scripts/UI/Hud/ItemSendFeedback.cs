@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.UI;
 
 public class ItemSendFeedback : MonoBehaviour
@@ -17,22 +18,35 @@ public class ItemSendFeedback : MonoBehaviour
     public LocalizedString correctItemExplanation;
     public LocalizedString incorrectItemExplanation;
 
-    public void SendItem(bool correct, ItemData itemData, TimePeriod targetPeriod, float instabilityChange)
+    public void SendItem(bool correct, ItemData itemData, TimePeriod targetPeriod, float instabilityModifyValue)
     {
+        Debug.Log("ItemSendFeedback Received");
         if (correct)
         {
             if (_itemImage) _itemImage.sprite = itemData.Icon;
-            var itemName = itemData.Name;
-            _title.text = correctItemTitle.GetLocalizedString(itemName);
-            _explanation.text = correctItemExplanation.GetLocalizedString(targetPeriod.periodName, instabilityChange.ToString());
+            StringVariable itemName = new StringVariable { Value = itemData.Name };
+            correctItemTitle.Add("itemName", itemName);
+            correctItemExplanation.Add("itemName", itemName);
+            StringVariable timePeriodName = new StringVariable { Value = targetPeriod.periodName };
+            correctItemExplanation.Add("timePeriodName", timePeriodName);
+            StringVariable instabilityChange = new StringVariable { Value = instabilityModifyValue.ToString() };
+            correctItemExplanation.Add("instabilityChange", instabilityChange);
+            _title.text = correctItemTitle.GetLocalizedString();
+            _explanation.text = correctItemExplanation.GetLocalizedString();
             _animator.SetTrigger("Correct");
         }
         else
         {
             if (_itemImage) _itemImage.sprite = itemData.Icon;
-            var itemName = itemData.Name;
-            _title.text = incorrectItemTitle.GetLocalizedString(itemName);
-            _explanation.text = incorrectItemExplanation.GetLocalizedString(targetPeriod.periodName, instabilityChange.ToString());
+            StringVariable itemName = new StringVariable { Value = itemData.Name };
+            incorrectItemTitle.Add("itemName", itemName);
+            incorrectItemExplanation.Add("itemName", itemName);
+            StringVariable timePeriodName = new StringVariable { Value = targetPeriod.periodName };
+            incorrectItemExplanation.Add("timePeriodName", timePeriodName);
+            StringVariable instabilityChange = new StringVariable { Value = instabilityModifyValue.ToString() };
+            incorrectItemExplanation.Add("instabilityChange", instabilityChange);
+            _title.text = incorrectItemTitle.GetLocalizedString();
+            _explanation.text = incorrectItemExplanation.GetLocalizedString();
             _animator.SetTrigger("Incorrect");
         }
     }

@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: no
   m_SharedData: {fileID: 11400000, guid: 34a93b697f6e43f4eaca6440645982f9, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 5496770204155248773
   m_TableData:
   - m_Id: 18389467136
     m_Localized: Ukjent Level
@@ -46,6 +47,17 @@ MonoBehaviour:
     m_Localized: Det Gamle Egypt
     m_Metadata:
       m_Items: []
+  - m_Id: 13234895271473152
+    m_Localized: 
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248773
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5496770204155248773
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 13234895271473152

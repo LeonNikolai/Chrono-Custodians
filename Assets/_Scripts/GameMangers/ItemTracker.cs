@@ -157,9 +157,10 @@ public class ItemTracker : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void ItemSentClientFeedbackRpc(bool correct, int itemId, TimePeriod timePeriod, float instabilityChange) {
+    public void ItemSentClientFeedbackRpc(bool correct, int itemId, int periodID, float instabilityChange) {
+        Debug.Log("Item Tracker Received");
         ItemData data = _itemIdProvider.GetItemData(itemId);
-        Hud.ItemSentFeedback(correct, data, timePeriod, instabilityChange);
+        Hud.ItemSentFeedback(correct, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
     }
 
     private void OnItemSent(ItemSendEvent item)
@@ -171,7 +172,7 @@ public class ItemTracker : NetworkBehaviour
             bool isCorrectTimePeriod = false;
             foreach(TimePeriod period in item.ItemData.TimePeriods)
             {
-                if (item.TargetPeriod.periodName == period.periodName)
+                if (GameManager.instance.idProvider.GetPeriodData(item.TargetPeriodID).periodName == period.periodName)
                 {
                     isCorrectTimePeriod = true;
                     break;
@@ -184,14 +185,20 @@ public class ItemTracker : NetworkBehaviour
                 temporalInstabilityVelocity -= 0.1f;
                 if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
                 if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriod, -15);
+                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, -15);
+            }
+            else
+            {
+                TemporalInstabilityNetworked.Value += 10;
+                temporalInstabilityVelocity += 0.1f;
+                ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
             }
         }
         else
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
-            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriod, 10);
+            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
         }
 
         if (ItemCount.Value <= 0)

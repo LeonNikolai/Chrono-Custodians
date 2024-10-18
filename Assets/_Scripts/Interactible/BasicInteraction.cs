@@ -10,7 +10,7 @@ public class BasicInteraction : MonoBehaviour, IHighlightable, IInteractable
     public UnityEvent OnHighlightEnter => _onHighlightEnter;
     public UnityEvent OnHighlightExit => _onHighlightExit;
 
-    public bool Interactible => true;
+    public bool Interactable => true;
 
     public void HightlightEnter()
     {

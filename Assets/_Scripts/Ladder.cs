@@ -6,7 +6,7 @@ public class Ladder : MonoBehaviour, IInteractable
     [SerializeField] private float rotation;
     [SerializeField] private bool endPoint, rotateAtSpawn;
 
-    public bool Interactible => true;
+    public bool Interactable => true;
 
     public void Interact(Player player) 
     {

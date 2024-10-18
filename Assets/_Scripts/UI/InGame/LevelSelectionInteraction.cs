@@ -17,7 +17,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
     [SerializeField] private bool _onlyHost = false; 
     [SerializeField] private bool _onlyIfNoLevelLoaded = false;
 
-    public bool Interactible {
+    public bool Interactable {
         get {
             if(levelScene == null) return false;
             if(_onlyIfNoLevelLoaded) return LevelManager.LoadedScene == null;
@@ -48,7 +48,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     public void Interact(Player player)
     {
-        if(!Interactible) return;
+        if(!Interactable) return;
         StartCoroutine(ScanCoroutine());
         if (IsHost || IsServer)
         {

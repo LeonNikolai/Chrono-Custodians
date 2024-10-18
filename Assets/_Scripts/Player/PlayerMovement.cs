@@ -134,10 +134,10 @@ public class PlayerMovement : NetworkBehaviour
         }
         if (currentInteractible is IInteractionMessage message)
         {
-            Hud.CrosshairTooltip = currentInteractible.Interactible ? message.InteractionMessage : message.CantInteractMessage;
+            Hud.CrosshairTooltip = currentInteractible.Interactable ? message.InteractionMessage : message.CantInteractMessage;
             return;
         }
-        Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactible ? "Press E to interact" : "Can't interact";
+        Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactable ? "Press E to interact" : "Can't interact";
     }
 
     IHighlightable CurrentHighlightable
@@ -276,7 +276,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InputInteract()
     {
-        if (CurrentInteractible is not null && CurrentInteractible.Interactible)
+        if (CurrentInteractible is not null && CurrentInteractible.Interactable)
         {
             CurrentInteractible.Interact(_player);
         }

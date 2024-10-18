@@ -8,7 +8,7 @@ public class ItemSenderSelectYear : MonoBehaviour, IInteractable, IScanable
     [SerializeField] ItemSender _itemSender;
     [SerializeField] CinemachineCamera _camera;
 
-    public bool Interactible => true;
+    public bool Interactable => true;
 
     public string ScanTitle => "Panel";
 

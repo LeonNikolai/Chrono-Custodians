@@ -20,7 +20,7 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
     public string InteractionMessage => "Scan with Scanner";
 
     public string CantInteractMessage => "Scan with Scanner";
-    public bool Interactible => false;
+    public bool Interactable => false;
 
     public static ItemScannerPoint[] GetRandom(int amount, LocationType group)
     {

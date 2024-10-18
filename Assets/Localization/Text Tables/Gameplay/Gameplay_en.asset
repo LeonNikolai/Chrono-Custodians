@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 34a93b697f6e43f4eaca6440645982f9, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 5496770204155248759
   m_TableData:
   - m_Id: 18389467136
     m_Localized: Unknown Level
@@ -73,6 +74,37 @@ MonoBehaviour:
     m_Localized: Time Bubble De-Stabalized
     m_Metadata:
       m_Items: []
+  - m_Id: 13223762389086208
+    m_Localized: Correct item {itemName}
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248759
+  - m_Id: 13225555139473408
+    m_Localized: Incorrect Item {itemName}
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248759
+  - m_Id: 13225611913572352
+    m_Localized: '{itemName} does not belong in {timePeriodName}. Time bubble integrity
+      loss increased by: {instabilityChange}'
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248759
+  - m_Id: 13234895271473152
+    m_Localized: '{itemName} was sent correctly to {timePeriodName}. Time bubble
+      loss reduced by: {instabilityChange}'
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248759
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5496770204155248759
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 13223762389086208
+        - id: 13225611913572352
+        - id: 13225555139473408
+        - id: 13234895271473152

@@ -13,7 +13,7 @@ public class BasicNetworkedInteraction : NetworkBehaviour, IHighlightable, IInte
     [SerializeField] UnityEvent _onHighlightEnterLocal = new UnityEvent();
     [SerializeField] UnityEvent _onHighlightExitLocal = new UnityEvent();
 
-    public bool Interactible => true;
+    public bool Interactable => true;
 
     public void HightlightEnter()
     {

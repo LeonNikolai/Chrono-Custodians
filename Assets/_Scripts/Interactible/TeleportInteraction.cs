@@ -13,7 +13,7 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
     [SerializeField] LocationType locationType = LocationType.Outside;
 
-    public bool Interactible => true;
+    public bool Interactable => true;
     public void Interact(Player player)
     {
         if (target)

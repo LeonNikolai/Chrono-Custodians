@@ -7,6 +7,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
     public static bool IsGameActive = true;
     public UnityEvent OnGameStart = new UnityEvent();
+    public ItemIdProvider idProvider;
 
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(GameState.InLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LevelState> levelState = new NetworkVariable<LevelState>(LevelState.Playing, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);

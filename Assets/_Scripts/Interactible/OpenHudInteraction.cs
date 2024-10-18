@@ -4,7 +4,7 @@ public class OpenHudInteraction : MonoBehaviour, IInteractable
 {
     [SerializeField] Menu.MenuType _menuType = Menu.MenuType.PauseMenu;
 
-    public bool Interactible => true;
+    public bool Interactable => true;
 
     public void Interact(Player player)
     {
