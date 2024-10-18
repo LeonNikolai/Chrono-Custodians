@@ -10,66 +10,61 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
-  m_Name: FlipPhone
+  m_Name: Macuahuitl
   m_EditorClassIdentifier: 
-  _id: Flipphone
+  _id: Macuahuitl
   _name:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 5068609518714880
+      m_KeyId: 1848647228129280
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   _scanMinigameResults:
   - m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 10210910233407488
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   - m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 10211852005650432
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   - m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 10211893743169536
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   _description:
     m_TableReference:
-      m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 5068334993129472
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  _icon: {fileID: 21300000, guid: 7ee5486e6268149d1b8cb7877044b126, type: 3}
+  _icon: {fileID: 21300000, guid: 44f697299c8b443149403d0aca0502f4, type: 3}
   instabilityCostMin: 1
   instabilityCostMax: 2
-  instabilityCost: 2
-  _prefab: {fileID: 5210718235762905003, guid: c90ecab00916bec4e84de70e362e3cb3, type: 3}
+  instabilityCost: 0
+  _prefab: {fileID: 8083261310286950869, guid: 48067ef56a8f6a143aa9b4eba0a5228c, type: 3}
   _unSendable: 0
   _timePeriods:
-  - {fileID: 11400000, guid: 99aaafca915b86c4193967a85bb1272c, type: 2}
-  _tags:
-  - {fileID: 11400000, guid: 8de69960f8097694dbe268cfac5622ab, type: 2}
-  - {fileID: 11400000, guid: 42a2d9b54f6904a47bd0c8a42e5cfb80, type: 2}
-  - {fileID: 11400000, guid: e69247420a1bd7f4dadfbe94cbadf2d3, type: 2}
-  - {fileID: 11400000, guid: 0c7dc94d24e09d04dbb33ee8a70f7f77, type: 2}
-  - {fileID: 11400000, guid: 3b14a111e8fa88249ae6dc0a98808b2f, type: 2}
+  - {fileID: 11400000, guid: ab7511a09a2396c4e9a41878d534dffa, type: 2}
+  _tags: []
   references:
     version: 2
     RefIds: []
