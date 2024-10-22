@@ -108,6 +108,12 @@ MonoBehaviour:
       as possible."
     m_Metadata:
       m_Items: []
+  - m_Id: 14732851636056064
+    m_Localized: '{itemName} was removed from it''s correct time period! Time bubble
+      integrity loss increased by: {instabilityChange}'
+    m_Metadata:
+      m_Items:
+      - rid: 5496770204155248759
   references:
     version: 2
     RefIds:
@@ -121,3 +127,4 @@ MonoBehaviour:
         - id: 13225555139473408
         - id: 13234895271473152
         - id: 7433203239239680
+        - id: 14732851636056064

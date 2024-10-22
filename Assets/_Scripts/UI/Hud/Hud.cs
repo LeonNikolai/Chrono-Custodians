@@ -129,9 +129,9 @@ public class Hud : MonoBehaviour
         if (instance == this) instance = null;
     }
 
-    internal static void ItemSentFeedback(bool correct, ItemData itemData, TimePeriod targetPeriod, float instabilityChange)
+    internal static void ItemSentFeedback(int type, ItemData itemData, TimePeriod targetPeriod, float instabilityChange)
     {
         Debug.Log("Hud Received");
-        instance._itemSendFeedback.SendItem(correct, itemData, targetPeriod, instabilityChange);
+        instance._itemSendFeedback.SendItem(type, itemData, targetPeriod, instabilityChange);
     }
 }

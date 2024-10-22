@@ -14,6 +14,8 @@ public class LevelManager : NetworkBehaviour
 
     static LevelScene _loadedScene = null;
     public static LevelScene LoadedScene => _loadedScene;
+
+
     public UnityEvent<bool> LevelLoaded;
     public UnityEvent<bool> LevelLoadedInverted;
     public static void LoadLevelScene(LevelScene scene)

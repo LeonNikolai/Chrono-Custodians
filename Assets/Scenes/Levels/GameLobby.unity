@@ -999,7 +999,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 113e491edc3eb4742ba948e86c300abf, type: 2}
     - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
       propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
       propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -5296,6 +5296,50 @@ PrefabInstance:
     - target: {fileID: 592538742239595187, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_Size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: 'managedReferences[5496770204155248976]'
+      value: Unity.Localization UnityEngine.Localization.SmartFormat.PersistentVariables.StringVariable
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: 'managedReferences[5496770204155248977]'
+      value: Unity.Localization UnityEngine.Localization.SmartFormat.PersistentVariables.StringVariable
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: managedReferences[5496770204155248976].m_Value
+      value: item
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: managedReferences[5496770204155248977].m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_LocalVariables.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_TableEntryReference.m_KeyId
+      value: 14732851636056064
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_LocalVariables.Array.data[0].name
+      value: itemName
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_LocalVariables.Array.data[1].name
+      value: instabilityChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_TableReference.m_TableCollectionName
+      value: GUID:34a93b697f6e43f4eaca6440645982f9
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_LocalVariables.Array.data[0].variable
+      value: 5496770204155248976
+      objectReference: {fileID: 0}
+    - target: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: wrongItemExplanation.m_LocalVariables.Array.data[1].variable
+      value: 5496770204155248977
       objectReference: {fileID: 0}
     - target: {fileID: 829930413236834209, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_AnchorMax.y

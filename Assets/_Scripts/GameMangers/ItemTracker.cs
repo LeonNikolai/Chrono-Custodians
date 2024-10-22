@@ -156,11 +156,11 @@ public class ItemTracker : NetworkBehaviour
         OldTemporalInstability = TemporalInstabilityNetworked.Value;
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    public void ItemSentClientFeedbackRpc(bool correct, int itemId, int periodID, float instabilityChange) {
+    [Rpc(SendTo.ClientsAndHost)] // Type - 0 = incorrect | 1 = correct | 2 = item should not have been sent
+    public void ItemSentClientFeedbackRpc(int type, int itemId, int periodID, float instabilityChange) {
         Debug.Log("Item Tracker Received");
         ItemData data = _itemIdProvider.GetItemData(itemId);
-        Hud.ItemSentFeedback(correct, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
+        Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
     }
 
     private void OnItemSent(ItemSendEvent item)
@@ -177,19 +177,28 @@ public class ItemTracker : NetworkBehaviour
             }
         }
 
+        if (item.ItemData.TimePeriods[0] == LevelManager.LoadedScene.TimePeriod)
+        {
+            TemporalInstabilityNetworked.Value += 10;
+            temporalInstabilityVelocity += 0.1f;
+            ItemSentClientFeedbackRpc(2, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
+            return;
+        }
+
         if (isCorrectTimePeriod)
         {
+            ItemCount.Value--;
             TemporalInstabilityNetworked.Value -= 15;
             temporalInstabilityVelocity -= 0.1f;
             if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
             if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-            ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, -15);
+            ItemSentClientFeedbackRpc(1, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, -15);
         }
         else
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
-            ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
+            ItemSentClientFeedbackRpc(0, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
         }
 
 
@@ -213,8 +222,11 @@ public class ItemTracker : NetworkBehaviour
     public void RestartTimer()
     {
         hasStarted = false;
-        TemporalInstabilityNetworked.Value = 0;
-        if (IsServer) ItemCount.Value = 10;
+        if (IsServer)
+        {
+            TemporalInstabilityNetworked.Value = 0;
+            ItemCount.Value = 10;
+        }
         temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
     }
 }
