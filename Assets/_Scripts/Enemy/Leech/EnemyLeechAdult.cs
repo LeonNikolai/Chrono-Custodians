@@ -87,7 +87,12 @@ public class EnemyLeechAdult : Enemy
         if (player != null) return;
         if (targetItem != null) return;
         targetItem = itemFOV.curtarget.transform;
-        if (itemFOV.curtarget.GetComponent<Item>().ItemData.TimePeriods[0].periodName == LevelManager.LoadedScene.TimePeriod.periodName) return;
+        Item a = itemFOV.curtarget.GetComponent<Item>();
+        ItemData b = a.ItemData;
+        TimePeriod c = b.TimePeriods[0];
+        string p = c.periodName;
+        string p2 = LevelManager.LoadedScene.TimePeriod.periodName;
+        if (p == p2) return;
         ResetEnemyToNormal();
         if (state == LeechAdultState.Roaming)
         {

@@ -59,7 +59,11 @@ public class GameManager : NetworkBehaviour
 
     private void OnLevelLoaded(bool levelLoaded)
     {
-        if (levelLoaded) gameState.Value = GameState.InLevel;
+        if (levelLoaded)
+        {
+            gameState.Value = GameState.InLevel;
+            //OnGameStart.Invoke();
+        }
     }
 
     public override void OnDestroy()
