@@ -997,6 +997,38 @@ PrefabInstance:
       propertyPath: idProvider
       value: 
       objectReference: {fileID: 11400000, guid: 113e491edc3eb4742ba948e86c300abf, type: 2}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4796388236799571035}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: OnGameStart.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6741410153415917187, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3732772334
@@ -7814,11 +7846,31 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4086311681065711295, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9527839
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086311681065711295, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.0443599
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086311681065711295, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.17126127
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086311681065711295, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.24678889
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086311681065711295, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -29.043
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2641444429903856205, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
-      insertIndex: 11
+      insertIndex: 12
       addedObject: {fileID: 1645335863}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3831879124414362687, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
@@ -7865,6 +7917,11 @@ MonoBehaviour:
 --- !u!4 &4796388236799571034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2641444429903856205, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
+  m_PrefabInstance: {fileID: 4796388236799571031}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4796388236799571035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5547673290157263640, guid: cdee243eb61cc4f68954e6e7a43f0d1f, type: 3}
   m_PrefabInstance: {fileID: 4796388236799571031}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
