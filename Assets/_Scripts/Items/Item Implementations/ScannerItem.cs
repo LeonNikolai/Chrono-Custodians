@@ -276,6 +276,7 @@ public class ScannerItem : Item, ItemUseToolTip
         Hud.ScannerNotification = $"Scanned {scannedCount}/{targetPoints.Length}";
         _pathRenderer.Enabled(true);
         ItemScannerPoint targetVisual = targetPoints[0];
+        targetVisual.ShowPoint();
         while (scannedCount < targetPoints.Length)
         {
             float scanTime = 1f;
@@ -377,6 +378,7 @@ public class ScannerItem : Item, ItemUseToolTip
         {
             if (item.IsActive)
             {
+                item.ShowPoint();
                 return item;
             }
         }

@@ -92,8 +92,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 308e77590ca2aed41a6615dfaa1ec36a, type: 2}
   Droppable: 1
+  UseUniqueVisualsWhenInHand: 0
+  _handMeshRenderers: []
   _requiresMinigameToScan: 1
-  _meshRenderers: []
+  _meshRenderers:
+  - {fileID: 2026136912121253844}
   _collider:
   - {fileID: 8292361624348565585}
   HasBeenScanned:
@@ -191,5 +194,10 @@ PrefabInstance:
 --- !u!4 &888726546277512379 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
+  m_PrefabInstance: {fileID: 855645895988466512}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &2026136912121253844 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
   m_PrefabInstance: {fileID: 855645895988466512}
   m_PrefabAsset: {fileID: 0}

@@ -39,10 +39,15 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
     public void Activate()
     {
         IsActive = true;
+    }
+
+    public void ShowPoint()
+    {
         SetColliders(true);
 
         SetVisuals(true);
     }
+
     internal void Deactivate()
     {
         IsActive = false;
