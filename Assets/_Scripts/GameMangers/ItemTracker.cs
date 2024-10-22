@@ -165,34 +165,25 @@ public class ItemTracker : NetworkBehaviour
 
     private void OnItemSent(ItemSendEvent item)
     {
-        if (item.ItemData.instabilityCost > 0)
-        {
-            ItemCount.Value--;
-            itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
-            bool isCorrectTimePeriod = false;
-            foreach(TimePeriod period in item.ItemData.TimePeriods)
-            {
-                if (GameManager.instance.idProvider.GetPeriodData(item.TargetPeriodID).periodName == period.periodName)
-                {
-                    isCorrectTimePeriod = true;
-                    break;
-                }
-            }
 
-            if (isCorrectTimePeriod)
+        itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
+        bool isCorrectTimePeriod = false;
+        foreach (TimePeriod period in item.ItemData.TimePeriods)
+        {
+            if (GameManager.instance.idProvider.GetPeriodData(item.TargetPeriodID).periodName == period.periodName)
             {
-                TemporalInstabilityNetworked.Value -= 15;
-                temporalInstabilityVelocity -= 0.1f;
-                if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
-                if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-                ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, -15);
+                isCorrectTimePeriod = true;
+                break;
             }
-            else
-            {
-                TemporalInstabilityNetworked.Value += 10;
-                temporalInstabilityVelocity += 0.1f;
-                ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
-            }
+        }
+
+        if (isCorrectTimePeriod)
+        {
+            TemporalInstabilityNetworked.Value -= 15;
+            temporalInstabilityVelocity -= 0.1f;
+            if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
+            if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
+            ItemSentClientFeedbackRpc(true, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, -15);
         }
         else
         {
@@ -200,6 +191,7 @@ public class ItemTracker : NetworkBehaviour
             temporalInstabilityVelocity += 0.1f;
             ItemSentClientFeedbackRpc(false, _itemIdProvider.GetId(item.ItemData), item.TargetPeriodID, 10);
         }
+
 
         if (ItemCount.Value <= 0)
         {

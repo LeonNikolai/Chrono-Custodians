@@ -55,7 +55,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.45, y: 0.1, z: 0.55}
+  m_Size: {x: 0.73606056, y: 0.1, z: 0.74062735}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7588131192633240402
 MonoBehaviour:
@@ -92,6 +92,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 7a7732a29d997ea419e49c066332be0d, type: 2}
   Droppable: 1
+  UseUniqueVisualsWhenInHand: 0
+  _handMeshRenderers: []
   _requiresMinigameToScan: 1
   _meshRenderers:
   - {fileID: 8499337577619021393}
@@ -141,6 +143,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 397919298130482321}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
@@ -150,7 +164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.25
+      value: -0.45
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c795821a8f3db74bac9e01d350eaf11, type: 3}
       propertyPath: m_LocalRotation.w

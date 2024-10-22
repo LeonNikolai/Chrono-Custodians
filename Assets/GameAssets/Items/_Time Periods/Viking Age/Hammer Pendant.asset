@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
-  m_Name: Arm Rings
+  m_Name: Hammer Pendant
   m_EditorClassIdentifier: 
-  _id: 
+  _id: battleAxe
   _name:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 11614271327416320
+      m_KeyId: 11614624093548544
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   - m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 11614314138677248
+      m_KeyId: 11614670549659648
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
   - m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 11614337995878400
+      m_KeyId: 11614701251964928
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
   - m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 11614343012265984
+      m_KeyId: 11614756604194816
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -60,7 +60,7 @@ MonoBehaviour:
   instabilityCostMin: 1
   instabilityCostMax: 2
   instabilityCost: 0
-  _prefab: {fileID: 8083261310286950869, guid: 3f2e84a362c330a40b5de8a4072a0046, type: 3}
+  _prefab: {fileID: 8083261310286950869, guid: 9fac695972dbbc148aef951bccb9a834, type: 3}
   _unSendable: 0
   _timePeriods:
   - {fileID: 11400000, guid: 501b67ad1e974a249b2cbfab2a331c93, type: 2}

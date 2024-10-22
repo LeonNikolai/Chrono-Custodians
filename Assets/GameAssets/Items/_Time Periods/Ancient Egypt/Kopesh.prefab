@@ -204,7 +204,8 @@ MonoBehaviour:
   UseUniqueVisualsWhenInHand: 0
   _handMeshRenderers: []
   _requiresMinigameToScan: 1
-  _meshRenderers: []
+  _meshRenderers:
+  - {fileID: 514908202446750166}
   _collider:
   - {fileID: 8292361624348565585}
   HasBeenScanned:
