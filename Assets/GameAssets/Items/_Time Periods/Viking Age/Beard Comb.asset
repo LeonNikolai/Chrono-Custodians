@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
   m_Name: Beard Comb
   m_EditorClassIdentifier: 
-  _id: battleAxe
+  _id: BeardComb
   _name:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
@@ -59,7 +59,7 @@ MonoBehaviour:
   _icon: {fileID: 0}
   instabilityCostMin: 1
   instabilityCostMax: 2
-  instabilityCost: 0
+  instabilityCost: 1
   _prefab: {fileID: 8083261310286950869, guid: 2304e14e9729d054e8f0a8a56937302e, type: 3}
   _unSendable: 0
   _timePeriods:
