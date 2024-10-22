@@ -9,21 +9,16 @@ public class PlayerMovement : NetworkBehaviour
     public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
     [SerializeField] private float staminaUseAmount, staminaRegainAmount, interactRadius;
+    [SerializeField] private float slideSpeed, slopeLimit, slideFriction;
     [SerializeField] private TMP_Text staminaText, speedText;
     [SerializeField] private Transform rotate;
     public Transform CameraTransform => rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
-    private Vector3 velocity = Vector3.zero;
-    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 velocity = Vector3.zero, moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
     private bool grounded;
-    [SerializeField] private float slideSpeed = 5f;
-    [SerializeField] private float slopeLimit = 45f; // Angle in degrees
-    [SerializeField] private float slideFriction = 0.3f; // Adjust to control sliding slowdown
-
-
-
+    
     public MovementStateManager movementState = new();
     private MovementModifierManager movementModifier = new();
 
@@ -102,50 +97,28 @@ public class PlayerMovement : NetworkBehaviour
         Vector3 collision = new Vector3(characterController.bounds.center.x, characterController.bounds.min.y, characterController.bounds.center.z)
                             + Vector3.up * characterController.radius;
 
-        // Check if the player is on the ground
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
-            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.2f) && velocity.y < 0f)
+            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.1f) && velocity.y < 0f)
         {
             grounded = true;
             velocity.y = 0f;
-
-            // Calculate the angle of the surface
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
 
-            // If the angle is greater than the slope limit, slide down the slope
             if (slopeAngle > slopeLimit)
             {
                 grounded = false;
-                // Calculate the slide direction (project velocity onto the slope)
                 Vector3 slideDirection = new Vector3(groundHit.normal.x, -groundHit.normal.y, groundHit.normal.z);
                 slideDirection = Vector3.ProjectOnPlane(slideDirection, groundHit.normal).normalized;
-
-                // Apply slide speed
                 velocity += slideDirection * slideSpeed;
-
-                // Gradually reduce the sliding velocity using Lerp
-                velocity.x = Mathf.Lerp(velocity.x, 0, slideFriction * Time.deltaTime);
-                velocity.z = Mathf.Lerp(velocity.z, 0, slideFriction * Time.deltaTime);
             }
-            else
-            {
-                // Stop sliding when the slope angle is less than the slope limit
-                velocity.x = Mathf.Lerp(velocity.x, 0, slideFriction * Time.deltaTime * 2f);
-                velocity.z = Mathf.Lerp(velocity.z, 0, slideFriction * Time.deltaTime * 2f);
-            }
-        }
-        else
-        {
-            // Not grounded, apply gravity
             
+            velocity.x = Mathf.Lerp(velocity.x, 0, slideFriction * Time.deltaTime);
+            velocity.z = Mathf.Lerp(velocity.z, 0, slideFriction * Time.deltaTime);
         }
+        
         velocity.y += gravity * Time.deltaTime;
-        // Apply the resulting velocity
         characterController.Move(velocity * Time.deltaTime);
     }
-
-
-
 
     IInteractable currentInteractible;
     IInteractable CurrentInteractible

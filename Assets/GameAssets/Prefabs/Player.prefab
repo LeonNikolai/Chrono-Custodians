@@ -171,12 +171,12 @@ MonoBehaviour:
   staminaUseAmount: 7.5
   staminaRegainAmount: 12.5
   interactRadius: 3
+  slideSpeed: 1.5
+  slopeLimit: 60
+  slideFriction: 10
   staminaText: {fileID: 0}
   speedText: {fileID: 0}
   rotate: {fileID: 1397814148479679156}
-  slideSpeed: 0.5
-  slopeLimit: 50
-  slideFriction: 20
 --- !u!136 &3805886783288695613
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -194,7 +194,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.35
   m_Height: 1.8
