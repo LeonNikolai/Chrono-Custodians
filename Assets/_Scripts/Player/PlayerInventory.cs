@@ -18,7 +18,7 @@ public class PlayerInventory : NetworkBehaviour
     public NetworkList<NetworkObjectReference> Inventory;
 
     public NetworkObjectReference CurrentEquippedNetworkObject => Inventory[EquippedNetworkItemIndex.Value];
-    public bool TryAddItem(NetworkObject item)
+    public bool TryAddItem(NetworkObject item, bool preferFistSlot = false)
     {
         if (item == null) return false;
         // Prevent adding to slot that is out of bounds
@@ -27,7 +27,7 @@ public class PlayerInventory : NetworkBehaviour
             return false;
         }
         // Prevent replacing item
-        if (Inventory[EquippedNetworkItemIndex.Value].TryGet(out NetworkObject currentItem))
+        if (preferFistSlot || Inventory[EquippedNetworkItemIndex.Value].TryGet(out NetworkObject currentItem))
         {
             // Try find empty slot
             for (int i = 0; i < Inventory.Count; i++)
@@ -84,7 +84,8 @@ public class PlayerInventory : NetworkBehaviour
                 Debug.Log("Equipping: " + _equippedItemLocalRefference);
                 _equippedItemLocalRefference.OnEquip(_player);
             }
-            if(IsOwner) {
+            if (IsOwner)
+            {
                 if (EquippedItemLocalRefference is ItemUseToolTip toolTip)
                 {
                     Hud.ItemTooltip = toolTip?.ItemToolTip;
@@ -92,7 +93,10 @@ public class PlayerInventory : NetworkBehaviour
                 else
                 {
                     Hud.ItemTooltip = "";
+
+
                 }
+                if (EquippedItemLocalRefference == null) Hud.ScannerNotification = "";
             }
         }
     }
@@ -120,6 +124,29 @@ public class PlayerInventory : NetworkBehaviour
         if (IsOwner)
         {
             EquippedNetworkItemIndex.Value = 0;
+        }
+        if (IsServer)
+        {
+            Player.Health.onDeath.AddListener(dead =>
+            {
+                if (dead)
+                {
+                    for (int i = 0; i < Inventory.Count; i++)
+                    {
+                        if (Inventory[i].TryGet(out NetworkObject currentItem))
+                        {
+                            if (currentItem.TryGetComponent<Item>(out var inventoryItem))
+                            {
+                                if (inventoryItem.Droppable)
+                                {
+                                    inventoryItem.Drop(null);
+                                    Inventory[i] = new NetworkObjectReference();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
         base.OnNetworkSpawn();
     }
@@ -202,7 +229,9 @@ public class PlayerInventory : NetworkBehaviour
                 Debug.LogWarning("Unhandled inventory change event: " + changeEvent.Type);
                 break;
         }
+
         UpdateHud();
+
     }
 
     private void EquippedItemChange(byte previousValue, byte newValue)

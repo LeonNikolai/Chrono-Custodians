@@ -1,6 +1,6 @@
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem, IScanable
 {
@@ -44,8 +44,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         get
         {
+     
             if (_itemData)
             {
+                if(_requiresMinigameToScan != MinigameType.None ) {
+                    if(!HasBeenScanned.Value) return "This item needs to be scanned";
+                    return ListScannedMinigameResults(_itemData.ScanMinigameResults, _itemData.ScanMinigameResults.Length);
+                }
                 string tags = "";
                 if (_itemData.Tags.Length > 0) tags = _itemData.Tags[0].Name;
                 for (int i = 1; i < _itemData.Tags.Length; i++)
@@ -63,7 +68,15 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
             return _itemData ? _itemData.Description : "No Description\n\n";
         }
     }
-
+    private string ListScannedMinigameResults(LocalizedString[] results, int scannedCount)
+    {
+        string scanResultText = "";
+        for (int i = 0; i < scannedCount; i++)
+        {
+            scanResultText += "\n\n" + (results[i] != null ? !results[i].IsEmpty ? results[i].GetLocalizedString() : "?" : "?");
+        }
+        return scanResultText;
+    }
     public void Interact(Player player)
     {
         // Do logic on server
@@ -142,13 +155,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         var clientId = rpcParams.Receive.SenderClientId;
         PickupItemServer(clientId);
     }
-    public void PickupItemServer(ulong clientId)
+    public void PickupItemServer(ulong clientId, bool preferFistSlot = false)
     {
         if (IsOwnedByServer && !isPickedUpByPlayer.Value)
         {
             if (Player.Players.TryGetValue(clientId, out Player Character))
             {
-                if (Character.Inventory.TryAddItem(NetworkObject))
+                if (Character.Inventory.TryAddItem(NetworkObject,preferFistSlot))
                 {
                     currentSlot.Value = ItemSlotType.PlayerInventory;
                     NetworkObject.ChangeOwnership(clientId);
@@ -222,6 +235,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public virtual void OnEquip(object character)
     {
         OnSlotChanged(currentSlot.Value, currentSlot.Value);
+        if(IsOwner) {
+            if(_requiresMinigameToScan != MinigameType.None && !HasBeenScanned.Value) {
+                Hud.ScannerNotification = "This item requires a minigame to scan";
+                return;
+            }
+            Hud.ScannerNotification = ScanResult;
+        }
     }
 
     public virtual void OnEquipUpdate(object character)

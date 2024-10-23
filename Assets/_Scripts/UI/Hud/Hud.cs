@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 /// <summary>
@@ -77,8 +75,6 @@ public class Hud : MonoBehaviour
             }
             instance.shortScannerNotificationText.text = value;
             instance.shortScannerNotification.SetActive(true);
-            instance.StopAllCoroutines();
-            instance.StartCoroutine(instance.ScannerNotificationRutine(value));
         }
         get
         {
@@ -86,27 +82,7 @@ public class Hud : MonoBehaviour
         }
     }
 
-    public IEnumerator ScannerNotificationRutine(string value)
-    {
-        float timer = 10;
-        while (timer > 0)
-        {
-            if(Player.Input.Player.UseItemPrimary.WasPressedThisFrame()) {
-                ScannerNotification = "";
-                break;
-            }
-            if(Player.Input.Player.UseItemSecondary.WasPressedThisFrame()) {
-                ScannerNotification = "";
-                break;
-            }
-            if(Player.Input.Player.Move.IsPressed()) {
-                timer -= Time.deltaTime;
-            }
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-        ScannerNotification = "";
-    }
+
 
     public static void SetInventoryIcon(ItemData itemdata, int index, bool selected)
     {

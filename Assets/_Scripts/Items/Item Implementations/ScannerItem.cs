@@ -120,6 +120,7 @@ public class ScannerItem : Item, ItemUseToolTip
     public override void OnEquip(object character)
     {
         base.OnEquip(character);
+        Hud.ScannerNotification = "";
         if (player == null && character is Player playerComponent)
         {
             player = playerComponent;
@@ -169,6 +170,7 @@ public class ScannerItem : Item, ItemUseToolTip
 
     private IEnumerator Scan()
     {
+
         float scanTime = 1f;
         while (scanTime > 0)
         {
@@ -198,6 +200,7 @@ public class ScannerItem : Item, ItemUseToolTip
 
             yield return null;
         }
+        Hud.ScannerNotification = "";
         if (CurrentlyScanning == null)
         {
             scanTitleText.text = "Air";

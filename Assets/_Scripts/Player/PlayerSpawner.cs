@@ -62,7 +62,7 @@ public class PlayerSpawner : NetworkBehaviour
             instacne.GetComponent<NetworkObject>().Spawn();
             if (instacne.TryGetComponent(out Item itemInstance))
             {
-                itemInstance.PickupItemServer(clientId);
+                itemInstance.PickupItemServer(clientId,true);
             }
         }
     }
