@@ -110,7 +110,7 @@ public class EnemyLeechAdult : Enemy
             yield return new WaitForSeconds(0.5f);
 
             distance = (targetItem.position - transform.position).magnitude;
-        } while (distance > 0.5f);
+        } while (distance > 1.1f);
         while (state == LeechAdultState.Patrolling)
         {
             float timer = 2;
