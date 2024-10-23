@@ -11,15 +11,16 @@ public class HealPoint : NetworkBehaviour, IInteractable, IInteractionMessage
 
     public void Interact(Player player)
     {
-        HealToFullServerRPC(player.GetComponent<NetworkObject>().NetworkObjectId);
+        HealToFullServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void HealToFullServerRPC(ulong playerObjectID)
+    [Rpc(SendTo.Server)]
+    private void HealToFullServerRpc(RpcParams rpcParams = default)
     {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerObjectID, out var player))
+        var id = rpcParams.Receive.SenderClientId;
+        if (Player.Players.TryGetValue(id, out Player player))
         {
-            player.GetComponent<HealthSystem>().FullHeal();
+            player.Health.FullHeal();
         }
     }
 }
