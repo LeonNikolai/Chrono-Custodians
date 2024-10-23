@@ -396,7 +396,7 @@ public class ScannerItem : Item, ItemUseToolTip
     {
         for (int i = 0; i < scannedCount; i++)
         {
-            scanResultText.text += "\n" + (results[i] != null ? !results[i].IsEmpty ? results[i].GetLocalizedString() : "?" : "?");
+            scanResultText.text += "\n\n" + (results[i] != null ? !results[i].IsEmpty ? results[i].GetLocalizedString() : "?" : "?");
         }
     }
 

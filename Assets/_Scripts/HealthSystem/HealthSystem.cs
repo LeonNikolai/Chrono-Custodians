@@ -79,6 +79,12 @@ public class HealthSystem : NetworkBehaviour
         currentHealth.Value = Mathf.Max(currentHealth.Value - damage, 0);
     }
 
+    public void FullHeal()
+    {
+        if (!IsServer) return;
+        currentHealth.Value = maxHealth.Value;
+    }
+
     private void OnHealthChanged(int previousValue, int newValue)
     {
         if (IsServer) isDead.Value = newValue <= 0;
