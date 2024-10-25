@@ -268,7 +268,7 @@ public class ScannerItem : Item, ItemUseToolTip
         }
         ItemData data = currentItem.ItemData;
         var results = data.ScanMinigameResults;
-        ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, player?.Location ?? LocationType.Outside);
+        ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, player.transform.position, player?.Location ?? LocationType.Outside);
         int scannedCount = 0;
         foreach (var item in targetPoints)
         {

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
-  m_Name: Scanner
+  m_Name: Teleporter
   m_EditorClassIdentifier: 
   _id: Scanner
   _name:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 5102215565819904
+      m_KeyId: 1848647228129280
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 5102258632933376
+      m_KeyId: 186120028160
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
   instabilityCostMin: 1
   instabilityCostMax: 2
   instabilityCost: 0
-  _prefab: {fileID: 6331263659363231712, guid: d93d69e69b8335149a4124e2e23dbe20, type: 3}
+  _prefab: {fileID: 3490616566790255950, guid: ea1d4cc795f9e91439f1d4a271e3a5f0, type: 3}
   _unSendable: 1
   _timePeriods: []
   _tags: []

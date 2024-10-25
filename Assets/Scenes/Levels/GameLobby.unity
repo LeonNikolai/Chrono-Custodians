@@ -2408,6 +2408,71 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &482897176
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.6228714
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.72329277
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006388026652656947, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770655468899666959, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 301373383
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770655468899666959, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 427680670
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331263659363231712, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+      propertyPath: m_Name
+      value: Teleporter
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
 --- !u!114 &489766312 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 723385936687600730, guid: f07131eef4163f64aaece0c896918c12, type: 3}
@@ -2829,9 +2894,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1500
-  field of view: 60.000004
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -11179,3 +11244,4 @@ SceneRoots:
   - {fileID: 1424910963}
   - {fileID: 51448558}
   - {fileID: 405968672}
+  - {fileID: 482897176}

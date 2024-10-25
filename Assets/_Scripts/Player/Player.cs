@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using Unity.Cinemachine;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -29,6 +30,12 @@ public class Player : NetworkBehaviour, IScanable
     public static int PlayerAliveCount => AllPlayers.Count - PlayerDeadCount;
     public static Action OnPlayerDeadCountChanged = delegate { };
     public static Action AllPlayersDead = delegate { };
+    public FixedString64Bytes playerName = "Player ";
+    public string GetPlayerName()
+    {
+        return playerName.ToString();
+    }
+
     public static bool AllPlayersAreDead => PlayerDeadCount == AllPlayers.Count;
     static int playerDeadCount = -1;
     public static int PlayerDeadCount

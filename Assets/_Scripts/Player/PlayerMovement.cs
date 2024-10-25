@@ -318,6 +318,13 @@ public class PlayerMovement : NetworkBehaviour
         transform.position = position;
         characterController.enabled = true;
     }
+
+    [Rpc(SendTo.Owner)]
+    public void TeleportRpc(Vector3 position)
+    {
+        ChangePosition(position);
+    }
+
     public void ChangePositionAndRotation(Transform target)
     {
         characterController.enabled = false;

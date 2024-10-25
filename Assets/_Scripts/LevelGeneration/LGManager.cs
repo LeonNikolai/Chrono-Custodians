@@ -73,6 +73,7 @@ public class LGManager : NetworkBehaviour
         if (isStartingEntrance)
         {
             room = Instantiate(theme.Entrance);
+            room.GetComponent<NetworkObject>().Spawn();
             room.transform.position = generationPoint.transform.position;
             room.GetComponent<LGRoom>().AddEntryPoints();
             return room;

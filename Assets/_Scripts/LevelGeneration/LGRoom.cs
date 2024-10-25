@@ -1,3 +1,5 @@
+using System.Text;
+using Unity.Netcode;
 using UnityEngine;
 
 public class LGRoom : MonoBehaviour
@@ -11,21 +13,27 @@ public class LGRoom : MonoBehaviour
     {
         foreach (var entryPoint in entryPoints)
         {
+            NetworkObject entry = entryPoint.GetComponent<NetworkObject>();
+            NetworkObject self = GetComponent<NetworkObject>();
+            if (!entry.IsSpawned)
+            {
+                entry.Spawn();
+            }
             // Remove entrypoint from room
-            entryPoint.transform.SetParent(null);
-            
-            // Set this room to be a child of the entry point
-            transform.SetParent(entryPoint.transform);
+            if (entry.TryRemoveParent())
+            {
+                self.TrySetParent(entryPoint.transform);
+            }
 
             // Set entrypoint's rotation and position to be equal to the target Entrypoint
-            entryPoint.transform.rotation = Quaternion.Inverse(targetEntryPoint.transform.rotation);
+            entryPoint.transform.rotation = new Quaternion(0, 0, 0, 0);
             entryPoint.transform.position = targetEntryPoint.transform.position;
 
             // Release room from entrypoint
-            transform.SetParent(null);
+            self.TryRemoveParent();
 
             // put entry point back on room
-            entryPoint.transform.SetParent(ignoreCheck.transform);
+            entry.TrySetParent(ignoreCheck.transform);
             targetEntryPoint.DisableRoomCollision(true);
             if (!isColliding())
             {

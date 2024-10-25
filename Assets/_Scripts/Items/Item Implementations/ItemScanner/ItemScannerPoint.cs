@@ -23,7 +23,7 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
     public string CantInteractMessage => "Scan with Scanner";
     public bool Interactable => false;
 
-    public static ItemScannerPoint[] GetRandom(int amount, LocationType group)
+    public static ItemScannerPoint[] GetRandom(int amount, Vector3 playerLocation, LocationType group)
     {
         if (amount <= 0)
         {
@@ -31,7 +31,7 @@ public class ItemScannerPoint : MonoBehaviour, IScanable, IInteractionMessage, I
         }
         if (pointGroups.TryGetValue(group, out List<ItemScannerPoint> points))
         {
-            return points.OrderBy(x => UnityEngine.Random.value).Take(amount).ToArray();
+            return points.OrderBy(x => Vector3.Distance(x.transform.position, playerLocation)).Take(amount).ToArray();
         }
         return new ItemScannerPoint[0];
     }
