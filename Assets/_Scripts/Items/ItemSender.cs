@@ -94,7 +94,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     private float itemSendCooldown;
     private float curItemSendCooldown;
     private Item currentlyHeldItem;
-    private bool sendingItems;
+    private NetworkVariable<bool> sendingItems = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public void Interact(Player player)
@@ -116,7 +116,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
                 ItemData itemData = item.ItemData;
                 item.Drop(itemDropSpot.position);
                 currentlyHeldItem = item;
-                if (sendingItems)
+                if (sendingItems.Value)
                 {
                     StartCoroutine(SendItem(itemData));
                 }
@@ -132,14 +132,14 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
 
     public void StartSending()
     {
-        if (currentlyHeldItem != null && !sendingItems && currentlyHeldItem.transform.position != itemDropSpot.position)
+        if (currentlyHeldItem != null && !sendingItems.Value && currentlyHeldItem.transform.position != itemDropSpot.position)
         {
             currentlyHeldItem = null;
         }
         if (currentlyHeldItem == null)
         {
             hatchAnim.SetBool("Open", true);
-            sendingItems = true;
+            sendingItems.Value = true;
         }
         else
         {
@@ -149,12 +149,20 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
 
     public void StopSending()
     {
-        if (sendingItems)
+        if (sendingItems.Value)
         {
-            sendingItems = false;
+            StopSendingRPC();
             hatchAnim.SetBool("Open", false);
         }
     }
+
+    [Rpc(SendTo.Server)]
+    private void StopSendingRPC()
+    {
+        sendingItems.Value = false;
+    }
+
+
 
     [SerializeField] private Animator hatchAnim;
     private IEnumerator SendItem(ItemData itemData)
@@ -163,11 +171,11 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
         float timer = 0;
         Vector3 oldPos = currentlyHeldItem.transform.position;
         Vector3 newPos = currentlyHeldItem.transform.position + Vector3.down;
-        if (!sendingItems)
+        if (!sendingItems.Value)
         {
             hatchAnim.SetBool("Open", true);
             yield return new WaitForSeconds(0.5f);
-            sendingItems = true;
+            sendingItems.Value = true;
         }
 
 
