@@ -47,6 +47,7 @@ public class LGManager : NetworkBehaviour
             {
                 iterations = 0;
                 GeneratedRooms.Add(newRoom);
+                RemoveNullEntryPoints();
             }
             if (iterations > 20)
             {
@@ -75,6 +76,10 @@ public class LGManager : NetworkBehaviour
         }
     }
 
+    public void RemoveNullEntryPoints()
+    {
+        entryPoints.RemoveAll(entryPoint => entryPoint == null);
+    }
 
     private void FillRemainingEntryPoints()
     {
@@ -117,14 +122,13 @@ public class LGManager : NetworkBehaviour
             {
                 validRoomGenerated = true;
                 RemoveEntryPoint(selectedPoint);
-                Destroy(selectedPoint);
-                Destroy(roomEntry);
-                roomController.AddEntryPoints();
+                Destroy(selectedPoint.gameObject);
+                Destroy(roomEntry.gameObject);
                 return room;
             }
             else
             {
-                Destroy(room);  // Destroy the invalid room
+                roomController.GetComponent<NetworkObject>().Despawn();
             }
             if (iterationCount > 5)
             {
