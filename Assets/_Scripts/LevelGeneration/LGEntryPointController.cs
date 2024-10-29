@@ -22,4 +22,9 @@ public class LGEntryPointController : MonoBehaviour
         ownerRoom.ignoreCheck.SetActive(disable);
     }
 
+    public void fillPoint()
+    {
+
+    }
+
 }

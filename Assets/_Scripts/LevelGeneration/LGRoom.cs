@@ -9,6 +9,7 @@ public class LGRoom : MonoBehaviour
     [SerializeField] public GameObject ignoreCheck;
     [SerializeField] private LGEntryPointController[] entryPoints;
 
+    /*
     public void AlignRoomToEntryPoint(LGEntryPointController targetEntryPoint)
     {
         foreach (var entryPoint in entryPoints)
@@ -46,7 +47,31 @@ public class LGRoom : MonoBehaviour
                 Debug.Log("Room is not colliding. Placing..");
             }
         }
+    }*/
+
+    public LGEntryPointController AlignRoomToEntryPoint(LGEntryPointController targetEntryPoint)
+    {
+        LGEntryPointController entryPoint = entryPoints[Random.Range(0, entryPoints.Length)];
+        // Calculate the rotation needed to align the entry point with the target entry point
+        Quaternion rotationToMatch = Quaternion.LookRotation(-targetEntryPoint.transform.forward, targetEntryPoint.transform.up);
+        Quaternion entryRotation = Quaternion.LookRotation(entryPoint.transform.forward, entryPoint.transform.up);
+        Quaternion finalRotation = rotationToMatch * Quaternion.Inverse(entryRotation);
+
+        transform.rotation = finalRotation * transform.rotation;
+
+        // Calculate the position offset needed to match entry point to target entry point
+        Vector3 positionOffset = targetEntryPoint.transform.position - entryPoint.transform.position;
+        transform.position += positionOffset;
+
+        // Check if the room is colliding after applying the position and rotation
+        if (!isColliding())
+        {
+            Debug.Log("Room aligned and placed successfully.");
+            return null;
+        }
+        return entryPoint;
     }
+
 
     public bool isColliding()
     {
@@ -56,7 +81,7 @@ public class LGRoom : MonoBehaviour
         {
             ignoreCheck.SetActive(true);
             AddEntryPoints();
-            return false;
+            return true;
         }
         ignoreCheck.SetActive(true);
         return true;

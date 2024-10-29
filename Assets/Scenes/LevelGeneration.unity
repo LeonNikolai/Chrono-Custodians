@@ -346,12 +346,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 55882693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4d112d3a4c97f445a2d552b1df319ca, type: 3}
+  m_Script: {fileID: 11500000, guid: d1eb07e2e837fb9478b0fa439ce07343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomBudget: 10
+  generationPoint: {fileID: 779478050}
   theme: {fileID: 11400000, guid: b89fc3336239d2e4eae326f50a65b55b, type: 2}
-  startLocation: {fileID: 779478050}
+  generationBudget: 10
 --- !u!43 &106576906
 Mesh:
   m_ObjectHideFlags: 0
@@ -20642,6 +20642,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7910309960601025283, guid: f07131eef4163f64aaece0c896918c12, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7910309960601025283, guid: f07131eef4163f64aaece0c896918c12, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7910309960601025283, guid: f07131eef4163f64aaece0c896918c12, type: 3}

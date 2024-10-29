@@ -37,13 +37,20 @@ public class LGManager : NetworkBehaviour
     private IEnumerator GenerateLevel()
     {
         GameObject entrance = GenerateRoom(true);
-
+        int iterations = 0;
         while (GeneratedRooms.Count < generationBudget)
         {
+            iterations++;
             GameObject newRoom = GenerateRoom(false);
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.T));
             if (newRoom != null)
             {
+                iterations = 0;
                 GeneratedRooms.Add(newRoom);
+            }
+            if (iterations > 20)
+            {
+                break;
             }
             yield return null;
         }
@@ -54,6 +61,18 @@ public class LGManager : NetworkBehaviour
     {
         // Add entry point to list for generation
         entryPoints.Add(_entryPoint);
+    }
+
+    public void RemoveEntryPoint(LGEntryPointController _entryPoint)
+    {
+        if (entryPoints.Contains(_entryPoint))
+        {
+            entryPoints.Remove(_entryPoint);
+        }
+        else
+        {
+            Debug.Log("Entry point cannot be removed as it does not exist in this list");
+        }
     }
 
 
@@ -78,24 +97,39 @@ public class LGManager : NetworkBehaviour
             room.GetComponent<LGRoom>().AddEntryPoints();
             return room;
         }
+
+        int iterationCount = 0;
         // Keep trying until a valid room is generated
         while (!validRoomGenerated)
         {
+            iterationCount++;
             room = Instantiate(theme.Rooms[Random.Range(0, theme.Rooms.Count)]);
+            room.GetComponent<NetworkObject>().Spawn();
             LGRoom roomController = room.GetComponent<LGRoom>();
 
             // Align the rooms to entrypoint
-            roomController.AlignRoomToEntryPoint(entryPoints[Random.Range(0, entryPoints.Count)]);
+            LGEntryPointController selectedPoint = entryPoints[Random.Range(0, entryPoints.Count)];
+            LGEntryPointController roomEntry = null;
+            roomEntry = roomController.AlignRoomToEntryPoint(selectedPoint);
 
             // Check if it is colliding
-            if (!roomController.isColliding())
+            if (roomEntry != null)
             {
                 validRoomGenerated = true;
+                RemoveEntryPoint(selectedPoint);
+                Destroy(selectedPoint);
+                Destroy(roomEntry);
+                roomController.AddEntryPoints();
                 return room;
             }
             else
             {
                 Destroy(room);  // Destroy the invalid room
+            }
+            if (iterationCount > 5)
+            {
+                Debug.Log("Can't spawn room");
+                return null;
             }
         }
 

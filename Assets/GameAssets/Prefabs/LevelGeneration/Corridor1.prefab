@@ -42,6 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8164250288678502604}
+  - component: {fileID: 6973420129158355109}
   m_Layer: 10
   m_Name: Entry1
   m_TagString: Untagged
@@ -65,6 +66,22 @@ Transform:
   - {fileID: 7813121835791013798}
   m_Father: {fileID: 8930730711081760418}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &6973420129158355109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838260432440795506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34461aa90636e0c4eb9bfef9e309357a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entryPoint:
+    serializedVersion: 2
+    m_Bits: 1024
+  ownerRoom: {fileID: 2124567226238285240}
 --- !u!1 &1039914394821856895
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6547359935455886879}
+  - component: {fileID: 8170286440659666178}
   m_Layer: 10
   m_Name: Entry1_1
   m_TagString: Untagged
@@ -205,6 +223,22 @@ Transform:
   - {fileID: 5187042467299666293}
   m_Father: {fileID: 8930730711081760418}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8170286440659666178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2320411682759696289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34461aa90636e0c4eb9bfef9e309357a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entryPoint:
+    serializedVersion: 2
+    m_Bits: 1024
+  ownerRoom: {fileID: 2124567226238285240}
 --- !u!1 &3642813302389791942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5522519069430236440}
   - component: {fileID: 1524895858559027983}
-  - component: {fileID: 7553252444978150416}
+  - component: {fileID: 2124567226238285240}
   m_Layer: 0
   m_Name: Corridor1
   m_TagString: Untagged
@@ -1260,7 +1294,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &7553252444978150416
+--- !u!114 &2124567226238285240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1269,12 +1303,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8368449482876562709}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e50a55f2fb4d27b40ab3df3b9efa3b77, type: 3}
+  m_Script: {fileID: 11500000, guid: 385a10f9f2e1eb9468c3c20c64018035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExitPoints:
-  - {fileID: 8164250288678502604}
-  - {fileID: 6547359935455886879}
+  roomSize: {x: 5.94, y: -7, z: 15.48}
+  transformOffset: {x: 0, y: 3, z: 0}
+  ignoreCheck: {fileID: 514767409051803488}
+  entryPoints:
+  - {fileID: 6973420129158355109}
+  - {fileID: 8170286440659666178}
 --- !u!1 &8877865158049068345
 GameObject:
   m_ObjectHideFlags: 0
