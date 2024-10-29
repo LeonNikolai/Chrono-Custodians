@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField] Player _player;
+    [SerializeField] Animator _animator;
     public float stamina;
     public float xRotation;
     [SerializeField] private float moveSpeed, jumpForce, gravity, mouseSensitivity;
@@ -17,6 +18,15 @@ public class PlayerMovement : NetworkBehaviour
     private IHighlightable currentHighlightable;
     private Vector3 velocity = Vector3.zero, moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
+    private bool Grounded { 
+        get => grounded;
+        set
+        {
+            if (grounded == value) return;
+            grounded = value;
+            if(_animator) _animator.SetBool("Grounded", grounded);
+        }
+    }
     private bool grounded;
     
     public MovementStateManager movementState = new();
@@ -100,13 +110,13 @@ public class PlayerMovement : NetworkBehaviour
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
             characterController.radius, Vector3.down, out RaycastHit groundHit, 0.1f) && velocity.y < 0f)
         {
-            grounded = true;
+            Grounded = true;
             velocity.y = 0f;
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
 
             if (slopeAngle > slopeLimit)
             {
-                grounded = false;
+                Grounded = false;
                 Vector3 slideDirection = new Vector3(groundHit.normal.x, -groundHit.normal.y, groundHit.normal.z);
                 slideDirection = Vector3.ProjectOnPlane(slideDirection, groundHit.normal).normalized;
                 velocity += slideDirection * slideSpeed;
@@ -245,6 +255,8 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         if (speedText) speedText.text = $"Speed: {moveSpeedCurrent:F2}";
+
+        _animator.SetFloat("Speed", moveSpeedCurrent);
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
 
@@ -262,10 +274,11 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InputJump()
     {
-        if (grounded)
+        if (Grounded)
         {
             velocity.y = Mathf.Sqrt(-jumpForce * gravity);
-            grounded = false;
+            Grounded = false;
+            _animator.SetTrigger("Jump");
         }
 
         else if (movementState.currentState == MovementState.Jetpack && stamina > 0f)
@@ -278,7 +291,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InputCrouch()
     {
-        if (grounded)
+        if (Grounded)
         {
             ChangeState(MovementState.Crouching, 1f);
         }
