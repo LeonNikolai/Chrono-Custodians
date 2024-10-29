@@ -11,6 +11,8 @@ public class LGManager : NetworkBehaviour
     [SerializeField] private LGTheme theme;
     [SerializeField] private int generationBudget = 10;
     private int numberOfRooms = 0;
+    [SerializeField] private float overlapThreshold = 1;
+    [SerializeField] private float influenceRadius = 10;
 
     private List<GameObject> GeneratedRooms = new List<GameObject>();
 
@@ -42,12 +44,11 @@ public class LGManager : NetworkBehaviour
         {
             iterations++;
             GameObject newRoom = GenerateRoom(false);
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.T));
+            //yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.T));
             if (newRoom != null)
             {
                 iterations = 0;
                 GeneratedRooms.Add(newRoom);
-                RemoveNullEntryPoints();
             }
             if (iterations > 20)
             {
@@ -100,6 +101,7 @@ public class LGManager : NetworkBehaviour
             room.GetComponent<NetworkObject>().Spawn();
             room.transform.position = generationPoint.transform.position;
             room.GetComponent<LGRoom>().AddEntryPoints();
+            GeneratedRooms.Add(room);
             return room;
         }
 
@@ -113,17 +115,19 @@ public class LGManager : NetworkBehaviour
             LGRoom roomController = room.GetComponent<LGRoom>();
 
             // Align the rooms to entrypoint
+            RemoveNullEntryPoints();
             LGEntryPointController selectedPoint = entryPoints[Random.Range(0, entryPoints.Count)];
             LGEntryPointController roomEntry = null;
             roomEntry = roomController.AlignRoomToEntryPoint(selectedPoint);
 
             // Check if it is colliding
-            if (roomEntry != null)
+            if (roomEntry != null && !IsRoomOverlappingNearby(roomController))
             {
                 validRoomGenerated = true;
                 RemoveEntryPoint(selectedPoint);
                 Destroy(selectedPoint.gameObject);
                 Destroy(roomEntry.gameObject);
+                roomController.AddEntryPoints();
                 return room;
             }
             else
@@ -138,5 +142,31 @@ public class LGManager : NetworkBehaviour
         }
 
         return null;
+    }
+
+    private bool IsRoomOverlappingNearby(LGRoom newRoom)
+    {
+        // Use OverlapSphere to find nearby rooms within the influence radius
+        Collider[] nearbyColliders = Physics.OverlapSphere(newRoom.transform.position, influenceRadius);
+
+        foreach (Collider col in nearbyColliders)
+        {
+            LGRoom nearbyRoom = col.GetComponent<LGRoom>();
+            if (nearbyRoom != null && nearbyRoom != newRoom && newRoom.IsOverlapping(nearbyRoom, overlapThreshold))
+            {
+                Debug.Log("Room overlap detected with a nearby room.");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach(var entryPoint in entryPoints)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(entryPoint.transform.position, 1f);
+        }
     }
 }

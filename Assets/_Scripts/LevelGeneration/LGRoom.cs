@@ -9,6 +9,8 @@ public class LGRoom : MonoBehaviour
     [SerializeField] public GameObject ignoreCheck;
     [SerializeField] private LGEntryPointController[] entryPoints;
 
+    private Bounds roomBounds;
+
     /*
     public void AlignRoomToEntryPoint(LGEntryPointController targetEntryPoint)
     {
@@ -75,15 +77,15 @@ public class LGRoom : MonoBehaviour
 
     public bool isColliding()
     {
-        ignoreCheck.SetActive(false);
+        //ignoreCheck?.SetActive(false);
         Collider[] hitColliders = Physics.OverlapBox(transform.position + transformOffset, roomSize / 2, Quaternion.identity);
         if (hitColliders.Length <= 0)
         {
-            ignoreCheck.SetActive(true);
-            AddEntryPoints();
+            //ignoreCheck?.SetActive(true);
+            //AddEntryPoints();
             return true;
         }
-        ignoreCheck.SetActive(true);
+        //ignoreCheck?.SetActive(true);
         return true;
     }
 
@@ -95,10 +97,90 @@ public class LGRoom : MonoBehaviour
         }
     }
 
+    public void SetRoomBounds()
+    {
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer != null)
+        {
+            // Set roomSize based on the size of the MeshRenderer's bounds
+            roomSize = meshRenderer.bounds.size;
+
+            // Set transformOffset based on the center offset of the bounds
+            transformOffset = meshRenderer.bounds.center - transform.position;
+        }
+        else
+        {
+            Debug.LogWarning("No MeshRenderer found on the room. Please add one or set bounds manually.");
+        }
+    }
+
+    public Bounds GetOrientedBounds()
+    {
+        Vector3[] corners = new Vector3[8];
+        Vector3 halfSize = roomSize / 2;
+
+        // Define the 8 corners of the box in local space
+        corners[0] = new Vector3(-halfSize.x, -halfSize.y, -halfSize.z);
+        corners[1] = new Vector3(halfSize.x, -halfSize.y, -halfSize.z);
+        corners[2] = new Vector3(-halfSize.x, halfSize.y, -halfSize.z);
+        corners[3] = new Vector3(halfSize.x, halfSize.y, -halfSize.z);
+        corners[4] = new Vector3(-halfSize.x, -halfSize.y, halfSize.z);
+        corners[5] = new Vector3(halfSize.x, -halfSize.y, halfSize.z);
+        corners[6] = new Vector3(-halfSize.x, halfSize.y, halfSize.z);
+        corners[7] = new Vector3(halfSize.x, halfSize.y, halfSize.z);
+
+        // Transform corners to world space
+        for (int i = 0; i < corners.Length; i++)
+        {
+            corners[i] = transform.TransformPoint(corners[i] + transformOffset);
+        }
+
+        // Calculate the axis-aligned bounds of the rotated box
+        Vector3 min = corners[0];
+        Vector3 max = corners[0];
+        foreach (Vector3 corner in corners)
+        {
+            min = Vector3.Min(min, corner);
+            max = Vector3.Max(max, corner);
+        }
+
+        return new Bounds((min + max) / 2, max - min);
+    }
+
+    public bool IsOverlapping(LGRoom otherRoom, float overlapThreshold)
+    {
+        Bounds thisBounds = GetOrientedBounds();
+        Bounds otherBounds = otherRoom.GetOrientedBounds();
+
+        if (thisBounds.Intersects(otherBounds))
+        {
+            Bounds intersection = GetIntersectionBounds(thisBounds, otherBounds);
+            float overlapVolume = intersection.size.x * intersection.size.y * intersection.size.z;
+            return overlapVolume > overlapThreshold;
+        }
+        return false;
+    }
+
+    private Bounds GetIntersectionBounds(Bounds a, Bounds b)
+    {
+        Vector3 min = Vector3.Max(a.min, b.min);
+        Vector3 max = Vector3.Min(a.max, b.max);
+        return new Bounds((min + max) / 2, max - min);
+    }
+
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position + transformOffset, roomSize);
+
+        // Set the matrix to match the transform's position, rotation, and scale
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+
+        // Draw the wire cube with rotation applied
+        Gizmos.DrawWireCube(transformOffset, roomSize);
+
+        // Reset the matrix to avoid affecting other gizmos
+        Gizmos.matrix = Matrix4x4.identity;
     }
+
 }
