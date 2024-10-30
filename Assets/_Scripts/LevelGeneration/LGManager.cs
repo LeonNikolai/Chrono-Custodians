@@ -38,6 +38,7 @@ public class LGManager : NetworkBehaviour
 
     private IEnumerator GenerateLevel()
     {
+        float time = Time.time;
         GameObject entrance = GenerateRoom(true);
         int iterations = 0;
         while (GeneratedRooms.Count < generationBudget)
@@ -56,7 +57,11 @@ public class LGManager : NetworkBehaviour
             }
             yield return null;
         }
+        
         FillRemainingEntryPoints();
+        Debug.Log("Level generation took " + (Time.time - time) + " seconds");
+        // Its done
+        NavmeshManager.Instance.BuildNavMesh();
     }
 
     public void AddEntryPoint(LGEntryPointController _entryPoint)
@@ -87,8 +92,17 @@ public class LGManager : NetworkBehaviour
         // Fill each entry point with a wall prefab
         foreach(LGEntryPointController _entryPoint in entryPoints)
         {
-
+            FillEntryPoint(_entryPoint);
         }
+        entryPoints.Clear();
+    }
+
+    private void FillEntryPoint(LGEntryPointController _entryPoint)
+    {
+        GameObject wall = Instantiate(theme.Wall);
+        wall.transform.position = _entryPoint.transform.position;
+        wall.transform.rotation = _entryPoint.transform.rotation;
+        Destroy(_entryPoint.gameObject);
     }
 
     private GameObject GenerateRoom(bool isStartingEntrance)
