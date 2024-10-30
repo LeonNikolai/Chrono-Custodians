@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3114914696814491947}
   - component: {fileID: 6131840324419878813}
   - component: {fileID: 1320575054039000724}
+  - component: {fileID: 2435579784212141396}
   m_Layer: 0
   m_Name: 3WayCorridor
   m_TagString: Untagged
@@ -4592,13 +4593,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385a10f9f2e1eb9468c3c20c64018035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomSize: {x: 9.5, y: 6, z: 14.5}
-  transformOffset: {x: -2.5, y: 2, z: -0.5}
+  roomSize: {x: 10.000004, y: 6, z: 15.000048}
+  transformOffset: {x: -2.500002, y: 2.5, z: -0.4999857}
   ignoreCheck: {fileID: 0}
   entryPoints:
   - {fileID: 7271049425214711483}
   - {fileID: 8379814781161858235}
   - {fileID: 9063474112024531696}
+--- !u!114 &2435579784212141396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2642137364199360585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 493537891
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &3502480735469027609
 PrefabInstance:
   m_ObjectHideFlags: 0
