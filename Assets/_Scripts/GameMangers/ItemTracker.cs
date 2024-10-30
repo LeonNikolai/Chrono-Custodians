@@ -204,7 +204,7 @@ public class ItemTracker : NetworkBehaviour
 
         if (ItemCount.Value <= 0)
         {
-            GameManager.instance.GameWon();
+            GameManager.instance.NoMoreItemsInLevel();
         }
     }
 

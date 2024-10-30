@@ -18,13 +18,14 @@ public class PlayerMovement : NetworkBehaviour
     private IHighlightable currentHighlightable;
     private Vector3 velocity = Vector3.zero, moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
-    private bool Grounded { 
+    private bool Grounded
+    {
         get => grounded;
         set
         {
             if (grounded == value) return;
             grounded = value;
-            if(_animator) _animator.SetBool("Grounded", grounded);
+            if (_animator) _animator.SetBool("Grounded", grounded);
         }
     }
     private bool grounded;
@@ -110,7 +111,6 @@ public class PlayerMovement : NetworkBehaviour
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
             characterController.radius, Vector3.down, out RaycastHit groundHit, 0.1f) && velocity.y < 0f)
         {
-            Grounded = true;
             velocity.y = 0f;
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
 
@@ -121,11 +121,15 @@ public class PlayerMovement : NetworkBehaviour
                 slideDirection = Vector3.ProjectOnPlane(slideDirection, groundHit.normal).normalized;
                 velocity += slideDirection * slideSpeed;
             }
-            
+            else
+            {
+                Grounded = true;
+            }
+
             velocity.x = Mathf.Lerp(velocity.x, 0, slideFriction * Time.deltaTime);
             velocity.z = Mathf.Lerp(velocity.z, 0, slideFriction * Time.deltaTime);
         }
-        
+
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
@@ -325,6 +329,7 @@ public class PlayerMovement : NetworkBehaviour
         gravity *= gravityModifier;
     }
 
+
     public void ChangePosition(Vector3 position)
     {
         characterController.enabled = false;
@@ -336,6 +341,21 @@ public class PlayerMovement : NetworkBehaviour
     public void TeleportRpc(Vector3 position)
     {
         ChangePosition(position);
+    }
+    [Rpc(SendTo.Owner)]
+    public void TeleportAndRotateRpc(Vector3 position, Quaternion rotation)
+    {
+        ChangePositionAndRotation(position, rotation);
+    }
+
+    public void TeleportToSpawn()
+    {
+        ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
+    }
+    [Rpc(SendTo.Owner)]
+    public void TeleportToSpawnRpc()
+    {
+        TeleportToSpawn();
     }
 
     public void ChangePositionAndRotation(Transform target)

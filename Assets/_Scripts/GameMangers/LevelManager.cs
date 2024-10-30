@@ -12,12 +12,68 @@ public class LevelManager : NetworkBehaviour
     static LevelScene autoEnterScene = null;
     [SerializeField] LevelScene _autoEnterScene = null;
 
+    public LevelScene[] LevelScenes => _levelScene;
+
     static LevelScene _loadedScene = null;
-    public static LevelScene LoadedScene => _loadedScene;
+    public static LevelScene LoadedScene
+    {
+        get
+        {
+            return _loadedScene;
+        }
+        set
+        {
+            if (_loadedScene == value) return;
+            _loadedScene = value;
+            if (instance)
+            {
+                instance.LoadedSceneID.Value = GetSceneID(value);
+                instance.LevelLoaded?.Invoke(_loadedScene);
+            }
+        }
+    }
+    public NetworkVariable<int> LoadedSceneID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
-    public UnityEvent<bool> LevelLoaded;
-    public UnityEvent<bool> LevelLoadedInverted;
+    public UnityEvent<LevelScene> LevelLoaded;
+
+    public static HashSet<LevelScene> AllScenes = new HashSet<LevelScene>();
+    static List<LevelScene> SceneById = new List<LevelScene>();
+    public static LevelScene GetSceneById(int id)
+    {
+        if (id < 0 || id >= SceneById.Count) return null;
+        return SceneById[id];
+    }
+    public static int GetSceneID(LevelScene scene)
+    {
+        if (scene == null) return -1;
+        if (!SceneById.Contains(scene))
+        {
+            return -1;
+        }
+        return SceneById.IndexOf(scene);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        List<LevelScene> scenes = new List<LevelScene>();
+        foreach (var level in _levelScene)
+        {
+            scenes.Add(level);
+        }
+        scenes.Sort((a, b) => string.Compare(a.SceneName, b.SceneName));
+        SceneById.Clear();
+        if (!IsHost)
+        {
+            LoadedSceneID.OnValueChanged += (previous, current) =>
+               {
+                   LevelScene scene = GetSceneById(current);
+                   LoadedScene = scene ?? null;
+               };
+        }
+
+
+    }
     public static void LoadLevelScene(LevelScene scene)
     {
         if (IsLoading) return;
@@ -31,12 +87,20 @@ public class LevelManager : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("Only the host can load levels");
+            LoadLevelRpc(GetSceneID(scene));
         }
     }
+    [Rpc(SendTo.Server)]
+    private void LoadLevelRpc(int sceneID)
+    {
+        LevelScene scene = GetSceneById(sceneID);
+        LoadLevelServer(scene);
+    }
 
-    public void Reload() {
-        if(IsHost) {
+    public void Reload()
+    {
+        if (IsHost)
+        {
             StartCoroutine(ReloadCoroutine());
             return;
         }
@@ -62,11 +126,12 @@ public class LevelManager : NetworkBehaviour
     {
         bool isLoaded = _loadedScene == scene;
         if (isLoaded) return;
-        if(IsLoading) return;
+        if (IsLoading) return;
         StartCoroutine(LoadLevelSceneAsync(scene));
     }
 
     public static bool IsLoading { get; private set; }
+
     IEnumerator LoadLevelSceneAsync(LevelScene scene)
     {
         if (InstabilityManager.instance) InstabilityManager.instance.currentLevel = scene.ToString();
@@ -74,9 +139,10 @@ public class LevelManager : NetworkBehaviour
         {
             yield return null;
         }
-        if (_loadedScene != null)
+        LevelScene newScene = LoadedScene;
+        if (newScene != null)
         {
-            var unloadScene = SceneManager.GetSceneByName(_loadedScene.SceneName);
+            var unloadScene = SceneManager.GetSceneByName(newScene.SceneName);
             if (unloadScene.IsValid() && unloadScene.isLoaded)
             {
                 SceneEventProgressStatus status = NetworkManager.Singleton.SceneManager.UnloadScene(unloadScene);
@@ -93,17 +159,16 @@ public class LevelManager : NetworkBehaviour
                 }
             }
         }
-        _loadedScene = scene;
-        if (_loadedScene != null)
+        newScene = scene;
+        if (newScene != null)
         {
-            var status = NetworkManager.Singleton.SceneManager.LoadScene(_loadedScene.SceneName, LoadSceneMode.Additive);
+            var status = NetworkManager.Singleton.SceneManager.LoadScene(newScene.SceneName, LoadSceneMode.Additive);
             if (status != SceneEventProgressStatus.Started)
             {
-                Debug.LogWarning($"Failed to load {_loadedScene.SceneName} " + $"with a {nameof(SceneEventProgressStatus)}: {status}");
+                Debug.LogWarning($"Failed to load {newScene.SceneName} " + $"with a {nameof(SceneEventProgressStatus)}: {status}");
             }
         }
-        if (instance) instance.LevelLoaded?.Invoke(_loadedScene != null);
-        if (instance) instance.LevelLoadedInverted?.Invoke(_loadedScene == null);
+        LoadedScene = newScene;
     }
 
     private void OnSceneUnloaded(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
@@ -116,8 +181,11 @@ public class LevelManager : NetworkBehaviour
     public static LevelManager instance;
     private void Awake()
     {
-        if (LevelLoaded == null) LevelLoaded = new UnityEvent<bool>();
-        if (LevelLoaded == null) LevelLoadedInverted = new UnityEvent<bool>();
+        foreach (var level in _levelScene)
+        {
+            AllScenes.Add(level);
+        }
+        if (LevelLoaded == null) LevelLoaded = new UnityEvent<LevelScene>();
         instance = this;
         _loadedScene = null;
         if (autoEnterScene == null) autoEnterScene = _autoEnterScene;
@@ -133,11 +201,6 @@ public class LevelManager : NetworkBehaviour
         {
             NetworkManager.Singleton.SceneManager.UnloadScene(scene);
         }
-    }
-
-    public override void OnNetworkSpawn()
-    {
-
     }
 
     public List<string> GetLevelSceneNames()

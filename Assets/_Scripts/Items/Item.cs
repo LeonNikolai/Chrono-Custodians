@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -44,11 +46,12 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         get
         {
-     
+
             if (_itemData)
             {
-                if(_requiresMinigameToScan != MinigameType.None ) {
-                    if(!HasBeenScanned.Value) return "This item needs to be scanned";
+                if (_requiresMinigameToScan != MinigameType.None)
+                {
+                    if (!HasBeenScanned.Value) return "This item needs to be scanned";
                     return ListScannedMinigameResults(_itemData.ScanMinigameResults, _itemData.ScanMinigameResults.Length);
                 }
                 string tags = "";
@@ -82,7 +85,37 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         // Do logic on server
         PickupItemServerRpc();
     }
+    public static HashSet<Item> AllItems => new HashSet<Item>();
 
+    public static int ValidItems()
+    {
+        int count = 0;
+        foreach (var item in AllItems)
+        {
+            if (item != null && item.NetworkObject != null && item.NetworkObject.IsSpawned)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+    public static void DespawnAllItems()
+    {
+        foreach (var item in AllItems)
+        {
+            item.NetworkObject.Despawn(true);
+        }
+    }
+    public static void DespawnAllDroppableAndSendable()
+    {
+        foreach (var item in AllItems)
+        {
+            if (item.Droppable && item.ItemData.UnSendable == false)
+            {
+                item.NetworkObject.Despawn(true);
+            }
+        }
+    }
     private void Awake()
     {
         if (TryGetComponent<ClientNetworkTransform>(out var clientTransform))
@@ -92,9 +125,16 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     }
     public override void OnNetworkSpawn()
     {
+        AllItems.Add(this);
         currentSlot.OnValueChanged += OnSlotChanged;
         isPickedUpByPlayer.OnValueChanged += OnPickedUpChanged;
         base.OnNetworkSpawn();
+    }
+
+    public override void OnDestroy()
+    {
+        AllItems.Remove(this);
+        base.OnDestroy();
     }
 
 
@@ -161,7 +201,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         {
             if (Player.Players.TryGetValue(clientId, out Player Character))
             {
-                if (Character.Inventory.TryAddItem(NetworkObject,preferFistSlot))
+                if (Character.Inventory.TryAddItem(NetworkObject, preferFistSlot))
                 {
                     currentSlot.Value = ItemSlotType.PlayerInventory;
                     NetworkObject.ChangeOwnership(clientId);
@@ -235,8 +275,10 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public virtual void OnEquip(object character)
     {
         OnSlotChanged(currentSlot.Value, currentSlot.Value);
-        if(IsOwner) {
-            if(_requiresMinigameToScan != MinigameType.None && !HasBeenScanned.Value) {
+        if (IsOwner)
+        {
+            if (_requiresMinigameToScan != MinigameType.None && !HasBeenScanned.Value)
+            {
                 Hud.ScannerNotification = "This item requires a minigame to scan";
                 return;
             }
@@ -308,9 +350,13 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         OnScanRpc();
     }
+
+
+
 }
 
 public interface ItemUseToolTip
 {
     string ItemToolTip { get; }
 }
+

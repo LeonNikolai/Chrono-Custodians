@@ -14,6 +14,13 @@ public class LevelSelection : MonoBehaviour
     public void LoadLevel() {
         _levelScene.LoadScene();
     }
+
+    void Awake()
+    {
+        if(_levelScene != null) {
+            LevelManager.AllScenes.Add(_levelScene);
+        }
+    }
     void Start()
     {
         if(NetworkManager.Singleton.IsHost) {
