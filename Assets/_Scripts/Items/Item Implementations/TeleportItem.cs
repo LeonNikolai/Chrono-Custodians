@@ -36,7 +36,7 @@ public class TeleportItem : Item, ItemUseToolTip
     [SerializeField] private float cooldown;
 
 
-    public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to scan objects, Mouse Wheel to scroll between players";
+    public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to teleport the selected (blue) player, Mouse Wheel to scroll between players";
 
     public override void OnEquip(object character)
     {
