@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13023a3853c4cdd4a8359ed85431de08, type: 3}
-  m_Name: Teleporter
+  m_Name: Flashlight
   m_EditorClassIdentifier: 
-  _id: Teleporter
+  _id: Flashlight
   _name:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 1848647228129280
+      m_KeyId: 5068795347353600
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     m_TableReference:
       m_TableCollectionName: GUID:007b520e0664dac4aa98f6f102d81fb5
     m_TableEntryReference:
-      m_KeyId: 186120028160
+      m_KeyId: 5079016367079424
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
   instabilityCostMin: 1
   instabilityCostMax: 2
   instabilityCost: 0
-  _prefab: {fileID: 6331263659363231712, guid: 8818feab9d8c75d41ad7de5e4c26aa4f, type: 3}
+  _prefab: {fileID: 6331263659363231712, guid: c123dda82c6a0dd449858165d3207ea8, type: 3}
   _unSendable: 1
   _timePeriods: []
   _tags: []

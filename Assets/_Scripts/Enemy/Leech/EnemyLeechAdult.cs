@@ -17,6 +17,7 @@ public class EnemyLeechAdult : Enemy
     [SerializeField] private FieldOfView itemFOV;
 
     [Header("Leech Adult Specific")]
+    [SerializeField] private float stareTime = 2;
     [SerializeField] private float rushCooldown = 5;
     [SerializeField] private float rushCooldownRandomModifier = 5;
     [SerializeField] private float rushSpeed = 10;
@@ -144,10 +145,23 @@ public class EnemyLeechAdult : Enemy
         float TargetLostTimer = 5;
         float curTargetLostTimer = TargetLostTimer;
 
+        float curStareTime = stareTime;
         while (state == LeechAdultState.Chasing)
         {
             yield return null;
             if(!App.IsRunning) yield return null;
+            while (curStareTime > 0)
+            {
+                yield return null;
+                agent.isStopped = true;
+                curStareTime -= Time.deltaTime;
+                StareAtPlayer();
+                if (enemyFOV.canSeeTarget == false)
+                {
+                    curStareTime = 0;
+                }
+            }
+            agent.isStopped = false;
             curAttackCooldown -= Time.deltaTime;
             StareAtPlayer();
             agent.SetDestination(player.transform.position);

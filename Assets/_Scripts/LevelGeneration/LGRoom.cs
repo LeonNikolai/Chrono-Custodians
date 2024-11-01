@@ -2,12 +2,19 @@ using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
+public enum RoomType
+{
+    Corridor,
+    Room
+}
+
 public class LGRoom : MonoBehaviour
 {
     [SerializeField] private Vector3 roomSize;
     [SerializeField] private Vector3 transformOffset;
     [SerializeField] public GameObject ignoreCheck;
     [SerializeField] private LGEntryPointController[] entryPoints;
+    [SerializeField] public RoomType roomType;
 
     private Bounds roomBounds;
 

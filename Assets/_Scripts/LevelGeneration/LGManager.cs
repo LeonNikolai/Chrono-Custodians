@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.Netcode;
+using UnityEditor.AI;
 using UnityEngine;
 
 public class LGManager : NetworkBehaviour
@@ -46,6 +48,8 @@ public class LGManager : NetworkBehaviour
         }
     }
 
+    private Transform currentEntrypoint;
+
     private IEnumerator GenerateLevel()
     {
         float time = Time.time;
@@ -67,8 +71,8 @@ public class LGManager : NetworkBehaviour
             }
             yield return null;
         }
-
         FillRemainingEntryPoints();
+        entryPoints.Clear();
         Debug.Log("Level generation took " + (Time.time - time) + " seconds");
         // Its done
         NavmeshManager.Instance.BuildNavMesh();
@@ -102,7 +106,7 @@ public class LGManager : NetworkBehaviour
         // Fill each entry point with a wall prefab
         foreach (LGEntryPointController _entryPoint in entryPoints)
         {
-            FillEntryPoint(_entryPoint);
+            AddDeadEnd(_entryPoint);
         }
         entryPoints.Clear();
     }
@@ -119,6 +123,34 @@ public class LGManager : NetworkBehaviour
         Destroy(_entryPoint.gameObject);
     }
 
+    private void AddDeadEnd(LGEntryPointController _entryPoint)
+    {
+        GameObject deadEnd = Instantiate(theme.Deadend);
+        LGRoom deadEndRoom = deadEnd.GetComponent<LGRoom>();
+        LGEntryPointController deadEndEntry = deadEndRoom.AlignRoomToEntryPoint(_entryPoint);
+        if (IsRoomOverlappingNearby(deadEndRoom))
+        {
+            Debug.Log("Overlap!");
+            Destroy(deadEnd.gameObject);
+            if (Physics.Raycast(_entryPoint.transform.position + _entryPoint.transform.forward, Vector3.down, 5))
+            {
+                Destroy(_entryPoint);
+                return;
+            }
+            else
+            {
+                FillEntryPoint(_entryPoint);
+            }
+        }
+        else
+        {
+            Destroy(_entryPoint.gameObject);
+            Destroy(deadEndEntry.gameObject);
+            deadEnd.GetComponent<NetworkObject>().Spawn(true);
+        }
+
+    }
+
     private GameObject GenerateRoom(bool isStartingEntrance)
     {
         GameObject room;
@@ -127,7 +159,7 @@ public class LGManager : NetworkBehaviour
         {
             room = Instantiate(theme.Entrance);
 
-            room.transform.position = generationPoint.transform.position;
+            room.transform.position = generationPoint.transform.position + room.transform.position;
             room.GetComponent<NetworkObject>()?.Spawn(true);
             room.GetComponent<LGRoom>().AddEntryPoints();
             GeneratedRooms.Add(room);
@@ -139,12 +171,30 @@ public class LGManager : NetworkBehaviour
         while (!validRoomGenerated)
         {
             iterationCount++;
-            room = Instantiate(theme.Rooms[Random.Range(0, theme.Rooms.Count)]);
+            RemoveNullEntryPoints();
+            LGEntryPointController selectedPoint = entryPoints[Random.Range(0, entryPoints.Count)];
+            RoomType previousRoom = selectedPoint.GetRoomType();
+            switch (previousRoom)
+            {
+                default:
+                    int randomChoice = Random.Range(0, 2);
+                    if (randomChoice == 0)
+                    {
+                        room = Instantiate(theme.Corridors[Random.Range(0, theme.Corridors.Count)]);
+                    }
+                    else
+                    {
+                        room = Instantiate(theme.Rooms[Random.Range(0, theme.Rooms.Count)]);
+                    }
+                    break;
+
+                case RoomType.Room:
+                    room = Instantiate(theme.Corridors[Random.Range(0, theme.Corridors.Count)]);
+                    break;
+            }
             LGRoom roomController = room.GetComponent<LGRoom>();
 
             // Align the rooms to entrypoint
-            RemoveNullEntryPoints();
-            LGEntryPointController selectedPoint = entryPoints[Random.Range(0, entryPoints.Count)];
             LGEntryPointController roomEntry = null;
             roomEntry = roomController.AlignRoomToEntryPoint(selectedPoint);
 
@@ -192,10 +242,8 @@ public class LGManager : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        foreach (var entryPoint in entryPoints)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(entryPoint.transform.position, 1f);
-        }
+        Gizmos.color = Color.red;
+        if (currentEntrypoint == null) return;  
+        Gizmos.DrawSphere(currentEntrypoint.position, 1f);
     }
 }

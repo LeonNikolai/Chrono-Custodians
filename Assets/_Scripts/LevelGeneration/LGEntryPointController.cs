@@ -15,6 +15,12 @@ public class LGEntryPointController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public RoomType GetRoomType()
+    {
+        return ownerRoom.roomType;
+    }
+
     public void CheckNear()
     {
         Collider[] hit = Physics.OverlapSphere(transform.position, 0.5f, entryPoint);
