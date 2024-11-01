@@ -11,6 +11,7 @@ public class LGRoom : MonoBehaviour
 
     private Bounds roomBounds;
 
+
     /*
     public void AlignRoomToEntryPoint(LGEntryPointController targetEntryPoint)
     {

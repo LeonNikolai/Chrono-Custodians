@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -18,6 +19,8 @@ public class PlayerMovement : NetworkBehaviour
     private IHighlightable currentHighlightable;
     private Vector3 velocity = Vector3.zero, moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
+    private NetworkVariable<float> MoveSpeedCurrent = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<bool> IsGrounded = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private bool Grounded
     {
         get => grounded;
@@ -25,11 +28,12 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (grounded == value) return;
             grounded = value;
-            if (_animator) _animator.SetBool("Grounded", grounded);
+            IsGrounded.Value = grounded;
+
         }
     }
     private bool grounded;
-    
+
     public MovementStateManager movementState = new();
     private MovementModifierManager movementModifier = new();
 
@@ -38,6 +42,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (characterController == null) characterController = GetComponent<CharacterController>();
         if (_player == null) _player = GetComponent<Player>();
+
     }
     private void Start()
     {
@@ -56,6 +61,10 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        MoveSpeedCurrent.OnValueChanged += MoveSpeedCurrent_OnValueChanged;
+        IsGrounded.OnValueChanged += IsGrounded_OnValueChanged;
+        IsGrounded_OnValueChanged(IsGrounded.Value,IsGrounded.Value);
         if (!IsOwner) return;
         Debug.Log("PlayerMovement OnNetworkSpawn : " + transform.position);
         InitalizeMovement();
@@ -65,6 +74,17 @@ public class PlayerMovement : NetworkBehaviour
         Player.Input.Player.Interact.performed += ctx => InputInteract();
         xRotation = rotate.localRotation.eulerAngles.x;
         ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
+
+    }
+
+    private void IsGrounded_OnValueChanged(bool previousValue, bool newValue)
+    {
+        if (_animator) _animator.SetBool("Grounded", newValue);
+    }
+
+    private void MoveSpeedCurrent_OnValueChanged(float previousValue, float newValue)
+    {
+        if(_animator) _animator.SetFloat("Speed", newValue);
     }
 
     public override void OnDestroy()
@@ -80,14 +100,18 @@ public class PlayerMovement : NetworkBehaviour
     private void Update()
     {
         if (!IsSpawned) return;
-        if (!IsOwner) { return; }
+        if (!IsOwner)
+        {
+            return;
+        }
         if (Player.IsSpectating)
         {
             transform.rotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 0f);
             return;
         }
         CheckGround();
-        CheckRaycast();
+        characterController.Move(velocity * Time.deltaTime);
+        InteractionRaycast();
         CheckSprint();
         PlayerStamina();
         PlayerMove();
@@ -131,7 +155,7 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+
     }
 
     IInteractable currentInteractible;
@@ -175,7 +199,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    private void CheckRaycast()
+    private void InteractionRaycast()
     {
         Ray ray = new(rotate.transform.position, rotate.transform.forward);
 
@@ -260,7 +284,8 @@ public class PlayerMovement : NetworkBehaviour
 
         if (speedText) speedText.text = $"Speed: {moveSpeedCurrent:F2}";
 
-        _animator.SetFloat("Speed", moveSpeedCurrent);
+
+        MoveSpeedCurrent.Value = moveSpeedCurrent;
         characterController.Move(moveSpeedCurrent * Time.deltaTime * moveDirection);
     }
 

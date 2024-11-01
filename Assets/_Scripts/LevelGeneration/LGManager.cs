@@ -29,11 +29,21 @@ public class LGManager : NetworkBehaviour
             Instance = this;
         }
     }
+    public override void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        StartCoroutine(GenerateLevel());
+        if (IsHost)
+        {
+            StartCoroutine(GenerateLevel());
+        }
     }
 
     private IEnumerator GenerateLevel()
@@ -57,7 +67,7 @@ public class LGManager : NetworkBehaviour
             }
             yield return null;
         }
-        
+
         FillRemainingEntryPoints();
         Debug.Log("Level generation took " + (Time.time - time) + " seconds");
         // Its done
@@ -90,7 +100,7 @@ public class LGManager : NetworkBehaviour
     private void FillRemainingEntryPoints()
     {
         // Fill each entry point with a wall prefab
-        foreach(LGEntryPointController _entryPoint in entryPoints)
+        foreach (LGEntryPointController _entryPoint in entryPoints)
         {
             FillEntryPoint(_entryPoint);
         }
@@ -102,6 +112,10 @@ public class LGManager : NetworkBehaviour
         GameObject wall = Instantiate(theme.Wall);
         wall.transform.position = _entryPoint.transform.position;
         wall.transform.rotation = _entryPoint.transform.rotation;
+        if (wall.TryGetComponent<NetworkObject>(out var wallobj))
+        {
+            wallobj.Spawn(true);
+        }
         Destroy(_entryPoint.gameObject);
     }
 
@@ -112,8 +126,9 @@ public class LGManager : NetworkBehaviour
         if (isStartingEntrance)
         {
             room = Instantiate(theme.Entrance);
-            room.GetComponent<NetworkObject>().Spawn();
+
             room.transform.position = generationPoint.transform.position;
+            room.GetComponent<NetworkObject>()?.Spawn(true);
             room.GetComponent<LGRoom>().AddEntryPoints();
             GeneratedRooms.Add(room);
             return room;
@@ -125,7 +140,6 @@ public class LGManager : NetworkBehaviour
         {
             iterationCount++;
             room = Instantiate(theme.Rooms[Random.Range(0, theme.Rooms.Count)]);
-            room.GetComponent<NetworkObject>().Spawn();
             LGRoom roomController = room.GetComponent<LGRoom>();
 
             // Align the rooms to entrypoint
@@ -142,11 +156,12 @@ public class LGManager : NetworkBehaviour
                 Destroy(selectedPoint.gameObject);
                 Destroy(roomEntry.gameObject);
                 roomController.AddEntryPoints();
+                room.GetComponent<NetworkObject>().Spawn(true);
                 return room;
             }
             else
             {
-                roomController.GetComponent<NetworkObject>().Despawn();
+                Destroy(roomController.gameObject);
             }
             if (iterationCount > 5)
             {
@@ -177,7 +192,7 @@ public class LGManager : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        foreach(var entryPoint in entryPoints)
+        foreach (var entryPoint in entryPoints)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(entryPoint.transform.position, 1f);

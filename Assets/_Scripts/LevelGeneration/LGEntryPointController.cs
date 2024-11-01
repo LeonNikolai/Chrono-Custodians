@@ -1,12 +1,23 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class LGEntryPointController : MonoBehaviour
 {
     [SerializeField] private LayerMask entryPoint;
     [SerializeField] private LGRoom ownerRoom;
+
+    void Awake()
+    {
+        bool isClient = NetworkManager.Singleton.IsClient;
+        bool isHost = NetworkManager.Singleton.IsHost;
+        if (isClient && !isHost)
+        {
+            Destroy(gameObject);
+        }
+    }
     public void CheckNear()
     {
-        Collider[] hit = Physics.OverlapSphere(transform.position, 0.5f, entryPoint); 
+        Collider[] hit = Physics.OverlapSphere(transform.position, 0.5f, entryPoint);
         if (hit.Length > 0)
         {
             Destroy(gameObject);

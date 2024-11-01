@@ -134,7 +134,10 @@ public class GameManager : NetworkBehaviour
         float rand1 = Mathf.Sin(day) * Mathf.Exp(day * 0.1f);
         float rand2 = 3 + Mathf.Sin(day * 3) * Mathf.Exp(day * 0.15f);
         int instabilityToDistribute = day + Mathf.FloorToInt(UnityEngine.Random.Range(rand1, rand2));
-
+        if (_levelStabilities == null || _levelStabilities.Length == 0)
+        {
+            return;
+        }
         // Distribute some random instability to all levels
         while (instabilityToDistribute > 0)
         {

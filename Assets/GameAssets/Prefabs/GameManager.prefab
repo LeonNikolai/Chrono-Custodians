@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6741410153415917187}
   - component: {fileID: 2572403033002825379}
   - component: {fileID: 4179746406386876445}
+  - component: {fileID: 6666325217295144958}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1172113757
+  GlobalObjectIdHash: 3732772334
   InScenePlacedSourceGlobalObjectIdHash: 2609375325
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -68,13 +69,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelScene:
+  - {fileID: 11400000, guid: 91b37493903c64944b47193d26475d35, type: 2}
+  - {fileID: 11400000, guid: c3364b3f895fc674585c43bbc13ac12f, type: 2}
+  - {fileID: 11400000, guid: 488a1a21c8b54fb4e8abd43fa45ab6d6, type: 2}
+  - {fileID: 11400000, guid: a2f88c44806c83646bd983b83ccf4c04, type: 2}
   - {fileID: 11400000, guid: 19080c0b5bb440448b260530189a97cc, type: 2}
   - {fileID: 11400000, guid: d07b1baf854141045920cd5410687203, type: 2}
   _autoEnterScene: {fileID: 0}
+  LoadedSceneID:
+    m_InternalValue: -1
   LevelLoaded:
-    m_PersistentCalls:
-      m_Calls: []
-  LevelLoadedInverted:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &4179746406386876445
@@ -89,11 +93,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518f598c1c786fa44aaa974e1a13a359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnGameStart:
-    m_PersistentCalls:
-      m_Calls: []
   idProvider: {fileID: 11400000, guid: 113e491edc3eb4742ba948e86c300abf, type: 2}
+  _timeStability:
+    m_InternalValue: 100
+  DayProgression:
+    m_InternalValue: 0
   gameState:
     m_InternalValue: 0
   levelState:
+    m_InternalValue: 0
+  _levelStabilities:
+  - {fileID: 6666325217295144958}
+--- !u!114 &6666325217295144958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8045071641048442111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd315e6421f03e43bfb3a52efa8c2bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scene: {fileID: 11400000, guid: 488a1a21c8b54fb4e8abd43fa45ab6d6, type: 2}
+  itemCountCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 10
+      inSlope: 0
+      outSlope: -9
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -9
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _stability:
+    m_InternalValue: 100
+  _visitCount:
     m_InternalValue: 0

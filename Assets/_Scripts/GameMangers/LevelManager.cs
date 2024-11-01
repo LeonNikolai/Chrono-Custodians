@@ -42,7 +42,7 @@ public class LevelManager : NetworkBehaviour
     public static LevelScene GetSceneById(int id)
     {
         if (id < 0 || id >= SceneById.Count) return null;
-        return SceneById[id];
+        return SceneById[id] ?? null;
     }
     public static int GetSceneID(LevelScene scene)
     {
@@ -134,7 +134,7 @@ public class LevelManager : NetworkBehaviour
 
     IEnumerator LoadLevelSceneAsync(LevelScene scene)
     {
-        if (InstabilityManager.instance) InstabilityManager.instance.currentLevel = scene.ToString();
+        if (InstabilityManager.instance && scene) InstabilityManager.instance.currentLevel = scene.ToString();
         while (IsLoading)
         {
             yield return null;

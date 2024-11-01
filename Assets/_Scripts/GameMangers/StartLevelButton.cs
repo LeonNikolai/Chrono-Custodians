@@ -5,7 +5,7 @@ using UnityEngine;
 public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMessage
 {
     public bool Interactable => true;
-    public string InteractionMessage => "";
+    public string InteractionMessage => SelectedLevel ? GameManager.instance.gameState.Value == GameManager.GameState.InLevel ? "Leave Level (buggy) ;)" : "Start Level" : "Select A Level";
 
     public string CantInteractMessage => "";
     LevelScene SelectedLevel;
@@ -23,7 +23,7 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
     {
         InteractRpc();
     }
-    
+
     [Rpc(SendTo.Server)]
     public void InteractRpc()
     {
@@ -43,6 +43,7 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
         {
             LevelScene level = LevelManager.LoadedScene;
             GameManager.instance.LevelEnd(level);
+            LevelManager.LoadLevelScene(null);
         }
     }
 }
