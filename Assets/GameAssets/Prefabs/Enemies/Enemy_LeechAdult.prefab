@@ -254,6 +254,7 @@ MonoBehaviour:
   state: 0
   enemyFOV: {fileID: 8424506856430388398}
   itemFOV: {fileID: 2587220341275888067}
+  stareTime: 2
   rushCooldown: 7
   rushCooldownRandomModifier: 2
   rushSpeed: 12
@@ -704,6 +705,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 8.389
       objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99463505
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.103446685
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.00000020116563
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.00000076158886
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -11.875
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3711823943682052573, guid: 031a594267418a1449aec83134909b94, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -2827873731504850022, guid: 031a594267418a1449aec83134909b94, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -944,6 +973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fov: {fileID: 8424506856430388398}
+  isGlitchy: 1
   rotationLimit: {x: 20, y: 60, z: 80}
   rotationDuration: 1
   rotationInterval: 5

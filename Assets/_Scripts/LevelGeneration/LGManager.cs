@@ -15,6 +15,7 @@ public class LGManager : NetworkBehaviour
     private int numberOfRooms = 0;
     [SerializeField] private float overlapThreshold = 1;
     [SerializeField] private float influenceRadius = 10;
+    private bool isDone = false;
 
     private List<GameObject> GeneratedRooms = new List<GameObject>();
 
@@ -73,6 +74,7 @@ public class LGManager : NetworkBehaviour
         }
         FillRemainingEntryPoints();
         entryPoints.Clear();
+        yield return new WaitUntil(() => isDone);
         Debug.Log("Level generation took " + (Time.time - time) + " seconds");
         // Its done
         NavmeshManager.Instance.BuildNavMesh();
@@ -108,6 +110,7 @@ public class LGManager : NetworkBehaviour
         {
             AddDeadEnd(_entryPoint);
         }
+        isDone = true;
         entryPoints.Clear();
     }
 
