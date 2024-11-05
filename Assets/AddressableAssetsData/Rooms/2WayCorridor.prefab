@@ -1966,6 +1966,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7830017521680661332}
     m_Modifications:
+    - target: {fileID: 308769082223320399, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1162327730483860282, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2005,6 +2009,10 @@ PrefabInstance:
     - target: {fileID: 1162327730483860282, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1301325831321647571, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1301325831321647571, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
       propertyPath: ownerRoom

@@ -26,7 +26,7 @@ public class PlayerMovement : NetworkBehaviour
         get => grounded;
         set
         {
-            if (grounded == value) return;
+            if (_animator) _animator.SetBool("Grounded", value);
             grounded = value;
             IsGrounded.Value = grounded;
 
@@ -133,7 +133,7 @@ public class PlayerMovement : NetworkBehaviour
                             + Vector3.up * characterController.radius;
 
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
-            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.1f) && velocity.y < 0f)
+            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.25f) && velocity.y < 0f)
         {
             velocity.y = 0f;
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
@@ -152,6 +152,11 @@ public class PlayerMovement : NetworkBehaviour
 
             velocity.x = Mathf.Lerp(velocity.x, 0, slideFriction * Time.deltaTime);
             velocity.z = Mathf.Lerp(velocity.z, 0, slideFriction * Time.deltaTime);
+        }
+        
+        else 
+        {
+            Grounded = false;
         }
 
         velocity.y += gravity * Time.deltaTime;
