@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3791970851
+  GlobalObjectIdHash: 2095765970
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generationPoint: {fileID: 0}
   theme: {fileID: 11400000, guid: b89fc3336239d2e4eae326f50a65b55b, type: 2}
-  generationBudget: 200
+  generationBudget: 50
   overlapThreshold: 1
   influenceRadius: 20
 --- !u!114 &5346676515211094612
@@ -84,6 +84,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64fb9e78ec3f3f941b54dbe80e8c4f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navmeshBuildLayer:
+    serializedVersion: 2
+    m_Bits: 0
   agentTypesToBuild:
   - {fileID: 11400000, guid: f986392c2115c68488e79c6d0f9c59c9, type: 2}
   - {fileID: 11400000, guid: f177ac06be29d1b4a82e99ffa16b5cb3, type: 2}

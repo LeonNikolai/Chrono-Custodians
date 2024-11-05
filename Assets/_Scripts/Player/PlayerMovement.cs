@@ -133,7 +133,7 @@ public class PlayerMovement : NetworkBehaviour
                             + Vector3.up * characterController.radius;
 
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
-            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.25f) && velocity.y < 0f)
+            characterController.radius, Vector3.down, out RaycastHit groundHit, 0.15f) && velocity.y < 0f)
         {
             velocity.y = 0f;
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
