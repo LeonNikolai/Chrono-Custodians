@@ -448,94 +448,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &74041490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 74041493}
-  - component: {fileID: 74041492}
-  - component: {fileID: 74041491}
-  - component: {fileID: 74041494}
-  m_Layer: 0
-  m_Name: LevelGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &74041491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74041490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1eb07e2e837fb9478b0fa439ce07343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  generationPoint: {fileID: 1075211802}
-  theme: {fileID: 11400000, guid: b89fc3336239d2e4eae326f50a65b55b, type: 2}
-  generationBudget: 200
-  overlapThreshold: 1
-  influenceRadius: 20
---- !u!114 &74041492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74041490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3791970851
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!4 &74041493
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74041490}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 159.497, y: -108.955, z: 47.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &74041494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74041490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64fb9e78ec3f3f941b54dbe80e8c4f13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  navmeshBuildLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  agentTypesToBuild: []
 --- !u!1 &117459792
 GameObject:
   m_ObjectHideFlags: 0
@@ -9469,7 +9381,7 @@ PrefabInstance:
       objectReference: {fileID: 138485428}
     - target: {fileID: 2372595754294260145, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: generationBudget
-      value: 50
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 5346676515211094612, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: navmeshBuildLayer.m_Bits
@@ -9485,19 +9397,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7974341444120622021, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_Name
-      value: LevelGenerator_1
+      value: LevelGenerator
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 159.497
+      value: 96.8
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -108.955
+      value: -203.2
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 47.36
+      value: 46.8
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11597,5 +11509,4 @@ SceneRoots:
   - {fileID: 4687520335185732641}
   - {fileID: 1370598971}
   - {fileID: 1838371748}
-  - {fileID: 74041493}
   - {fileID: 2497218269395417584}
