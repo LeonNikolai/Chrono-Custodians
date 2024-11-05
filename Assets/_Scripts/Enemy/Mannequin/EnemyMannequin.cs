@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,6 +19,10 @@ public class EnemyMannequin : Enemy
 
     private NetworkVariable<bool> isBeingLookedAt = new NetworkVariable<bool>(false);
     private HashSet<ulong> playersLooking = new HashSet<ulong>();
+
+    [Header("Mannequin Specific Parameters")]
+    [SerializeField] private Animator anim;
+    [SerializeField] private AnimationClip[] poses;
 
     public override void OnNetworkSpawn()
     {
@@ -70,6 +75,7 @@ public class EnemyMannequin : Enemy
         state = MannequinState.Chasing;
         float lookTime = 0;
         bool isRotating = false;
+        int currentPoseIndex = 0;
         while (state == MannequinState.Chasing)
         {
             yield return null;
@@ -83,6 +89,7 @@ public class EnemyMannequin : Enemy
                     {
                         agent.isStopped = false;
                         lookTime = 0;
+                        GetComponentInChildren<MannequinHead>().StartRotating(false);
                     }
                     isRotating = false;
                 }
@@ -91,6 +98,16 @@ public class EnemyMannequin : Enemy
                     Debug.Log("Started");
                     if (!agent.isStopped)
                     {
+                        anim.enabled = true;
+                        int randomPoseIndex = Random.Range(0, poses.Length);
+                        while (randomPoseIndex == currentPoseIndex)
+                        {
+                            randomPoseIndex = Random.Range(0, poses.Length);
+                        }
+                        string poseName = poses[Random.Range(0, poses.Length)].name;
+                        currentPoseIndex = randomPoseIndex;
+                        anim.enabled = false;
+                        anim.CrossFade(poseName, 0, 0);
                         agent.SetDestination(transform.position);
                         agent.velocity = Vector3.zero;
                         agent.isStopped = true;
