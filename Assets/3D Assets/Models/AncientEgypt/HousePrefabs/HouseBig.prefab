@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HouseBig
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1446759615687221530, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -68,12 +72,18 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3725124472526959548}
     - targetCorrespondingSourceObject: {fileID: -2671685436839380297, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 353544236372618989}
     - targetCorrespondingSourceObject: {fileID: -5129945498980185729, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8560099856143849978}
+    - targetCorrespondingSourceObject: {fileID: -5129945498980185729, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7156529590128775806}
   m_SourcePrefab: {fileID: 100100000, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
 --- !u!1 &4345280532835611698 stripped
 GameObject:
@@ -129,3 +139,46 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5447219599670839640, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
+--- !u!114 &7156529590128775806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6804666774024390650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_Size: {x: 9, y: 20, z: 18}
+  m_Center: {x: -0.1, y: 4, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
+--- !u!1 &7665306948715262932 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ee9e5efcc3d3b4793bc9a914b35ee6e7, type: 3}
+  m_PrefabInstance: {fileID: 7395418421997637253}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3725124472526959548
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665306948715262932}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 9, y: 20, z: 18}
+  m_Center: {x: -0.1, y: 10, z: 0}
