@@ -58,7 +58,6 @@ public class LookupController : MonoBehaviour, IInteractable
 
             }
             string entryName = "info " + name;
-            Debug.Log(entryName);
             entryName = entryName.ToLower();
             infoQuery.Add(entryName, entry);
         }

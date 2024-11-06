@@ -12,7 +12,7 @@ public class LevelSelection : MonoBehaviour
     [SerializeField] private TMP_Text _Name;
     [SerializeField] private TMP_Text _Year;
     public void LoadLevel() {
-        _levelScene.LoadScene();
+        _levelScene.LoadRandomScene();
     }
 
     void Awake()

@@ -2,22 +2,15 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
 {
+    public UnityEvent<bool> ThisLevelSelected = new UnityEvent<bool>();
 
-    public static event Action<LevelScene> OnSelectLevelServer = delegate { };
-    [SerializeField] private LevelScene[] _levelScenes;
-    LevelScene levelScene => _levelScenes != null && _levelScenes.Length >= 1 ? _levelScenes[0] : null;
-    LevelScene randomLevel
-    {
-        get
-        {
-            if (_levelScenes == null || _levelScenes.Length == 0) return null;
-            if (_levelScenes.Length == 1) return _levelScenes[0];
-            return _levelScenes[UnityEngine.Random.Range(0, _levelScenes.Length)];
-        }
-    }
+    [SerializeField] private LevelScene _levelScenes;
+    LevelScene levelScene => _levelScenes != null ? _levelScenes : null;
+    [SerializeField, Tooltip("-1 == Random, other = index % scene.length")] private int _sceneIndex = -1;
     [SerializeField] private bool _interactible = true;
     [SerializeField] private bool _onlyHost = false;
     [SerializeField] private bool _onlyIfNoLevelLoaded = false;
@@ -56,6 +49,32 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
             return "With a single interaction, you can make the machine go somewhere.\n\nThis machine is connected to the TWW (time wide web) and can be used to time travel to " + levelScene.LevelName;
         }
     }
+    void Awake()
+    {
+        if (levelScene != null)
+        {
+            LevelManager.AllScenes.Add(levelScene);
+        }
+        StartLevelButton.OnSelectLevel += OnLevelSelect;
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+    }
+    public override void OnDestroy()
+    {
+        StartLevelButton.OnSelectLevel -= OnLevelSelect;
+        base.OnDestroy();
+    }
+
+
+    private void OnLevelSelect(LevelScene scene, int arg2)
+    {
+        bool rightIndex = _sceneIndex == -1 || _sceneIndex == arg2;
+        bool rightScene = levelScene == scene;
+        ThisLevelSelected.Invoke(scene == levelScene && rightIndex);
+    }
 
     public void Interact(Player player)
     {
@@ -63,23 +82,23 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
         StartCoroutine(ScanCoroutine());
         if (IsHost || IsServer)
         {
-            LoadLevel();
+            SelectLevel();
         }
         else
         {
             if (_onlyHost) return;
-            LoadLevelServerRpc();
+            SelectLevelServerRpc();
         }
     }
     [Rpc(SendTo.Server)]
-    private void LoadLevelServerRpc()
+    private void SelectLevelServerRpc()
     {
-        LoadLevel();
+        SelectLevel();
     }
 
-    public void LoadLevel()
+    public void SelectLevel()
     {
-        OnSelectLevelServer.Invoke(randomLevel);
+        StartLevelButton.SelectLevel(levelScene, _sceneIndex);
     }
 
     public void OnScan(Player player)

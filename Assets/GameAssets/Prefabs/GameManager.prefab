@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3732772334
+  GlobalObjectIdHash: 2609375325
   InScenePlacedSourceGlobalObjectIdHash: 2609375325
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelScene:
   - {fileID: 11400000, guid: 91b37493903c64944b47193d26475d35, type: 2}
-  - {fileID: 11400000, guid: c3364b3f895fc674585c43bbc13ac12f, type: 2}
+  - {fileID: 11400000, guid: 488a1a21c8b54fb4e8abd43fa45ab6d6, type: 2}
   - {fileID: 11400000, guid: 488a1a21c8b54fb4e8abd43fa45ab6d6, type: 2}
   - {fileID: 11400000, guid: a2f88c44806c83646bd983b83ccf4c04, type: 2}
   - {fileID: 11400000, guid: 19080c0b5bb440448b260530189a97cc, type: 2}
@@ -81,6 +81,7 @@ MonoBehaviour:
   LevelLoaded:
     m_PersistentCalls:
       m_Calls: []
+  lastLoadedSceneName: 
 --- !u!114 &4179746406386876445
 MonoBehaviour:
   m_ObjectHideFlags: 0

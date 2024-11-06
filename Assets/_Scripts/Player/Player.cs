@@ -30,6 +30,7 @@ public class Player : NetworkBehaviour, IScanable
     public static int PlayerAliveCount => AllPlayers.Count - PlayerDeadCount;
     public static Action OnPlayerDeadCountChanged = delegate { };
     public static Action AllPlayersDead = delegate { };
+
     public FixedString64Bytes playerName = "Player ";
     public string GetPlayerName()
     {
@@ -174,7 +175,6 @@ public class Player : NetworkBehaviour, IScanable
             {
                 Input.Player.Enable();
                 Input.Spectator.Disable();
-                Debug.Log("IS NOT Spectating");
             }
         }
     }
@@ -301,7 +301,13 @@ public class Player : NetworkBehaviour, IScanable
         IsSpectating = isDead;
         UpdateInteractionState();
     }
-
+    public static void RespawnAll()
+    {
+        foreach (var player in AllPlayers)
+        {
+            player.Movement.TeleportToSpawnRpc();
+        }
+    }
     public override void OnDestroy()
     {
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId || IsLocalPlayer)

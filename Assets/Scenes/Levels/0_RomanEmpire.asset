@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a175c69111434744493e5aac84f4131b, type: 3}
   m_Name: 0_RomanEmpire
   m_EditorClassIdentifier: 
-  _sceneNames: RomanEmpireVariation01_Scene
+  _sceneNames:
+  - RomanEmpireVariation01_Scene
+  - RomanEmpireVariation02_Scene
   _levelName:
     m_TableReference:
       m_TableCollectionName: GUID:34a93b697f6e43f4eaca6440645982f9

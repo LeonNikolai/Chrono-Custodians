@@ -16,7 +16,7 @@ public struct ItemSendEvent
 
 }
 
-public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,IScanable
+public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
 {
     public NetworkVariable<int> SelectedPeriodID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void SetSelectedTimePeriod(TimePeriod period)
@@ -96,7 +96,6 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     private Item currentlyHeldItem;
     private NetworkVariable<bool> sendingItems = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-
     public void Interact(Player player)
     {
         TrySendEquippedItemServerRpc();
@@ -168,9 +167,11 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
     private IEnumerator SendItem(ItemData itemData)
     {
         currentlyHeldItem.isInteractable.Value = false;
+
         float timer = 0;
         Vector3 oldPos = currentlyHeldItem.transform.position;
         Vector3 newPos = currentlyHeldItem.transform.position + Vector3.down;
+
         if (!sendingItems.Value)
         {
             hatchAnim.SetBool("Open", true);
@@ -178,17 +179,17 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage,I
             sendingItems.Value = true;
         }
 
-
         while (timer < 1)
         {
             yield return null;
             timer += Time.deltaTime * 2;
             currentlyHeldItem.transform.position = Vector3.Lerp(oldPos, newPos, timer);
         }
+
         currentlyHeldItem.GetComponent<NetworkObject>().Despawn();
         currentlyHeldItem = null;
 
-        ItemSendEvent item = new ItemSendEvent 
+        ItemSendEvent item = new ItemSendEvent
         {
             ItemData = itemData,
             level = LevelManager.LoadedScene,

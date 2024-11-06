@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 [DefaultExecutionOrder(-100)]
 public class GameManager : NetworkBehaviour
 {
@@ -23,6 +25,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> DayProgression = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(GameState.InLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LevelState> levelState = new NetworkVariable<LevelState>(LevelState.Playing, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<LevelEndClientFeedback> levelEndData = new NetworkVariable<LevelEndClientFeedback>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public enum GameState
     {
@@ -63,11 +66,17 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
-            LevelManager.instance.LevelLoaded.AddListener(OnLevelLoaded);
+            LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
         }
         IsGameActive = true;
         Player.AllPlayersDead += GameLost;
         levelState.OnValueChanged += LevelStateChanged;
+        DayProgression.OnValueChanged += (previousValue, newValue) =>
+        {
+            Menu.ActiveMenu = Menu.MenuType.LevelStability;
+        };
+
+        _levelStabilities[UnityEngine.Random.Range(0, _levelStabilities.Length)].Stability = 60;
     }
 
     private void LevelStateChanged(LevelState previousValue, LevelState newValue)
@@ -91,8 +100,35 @@ public class GameManager : NetworkBehaviour
     [SerializeField] public LevelStability[] _levelStabilities;
 
     // Triggeres before the actual scene is loaded
-    public void LevelStart(LevelScene sceneStart = null)
+
+    public LevelStability GetLevelStability(LevelScene scene)
     {
+        return _levelStabilities.GetLevelStability(scene);
+    }
+    internal LevelStability GetCurrentLevelStability()
+    {
+        return GetLevelStability(LevelManager.LoadedScene);
+    }
+
+
+
+
+    public static int LevelUnstableItemSpawnCount;
+    public void LevelStart(LevelScene sceneStart = null, int sceneIndex = 0)
+    {
+        LevelStability levelStability = GetLevelStability(sceneStart);
+        if (levelStability == null)
+        {
+            Debug.LogError("Level stability not found for " + sceneStart.LevelName);
+            return;
+        }
+
+        LevelUnstableItemSpawnCount = 0;
+        int stabilityPerItem = 5;
+        for (int i = 0; i < levelStability.Stability; i += stabilityPerItem)
+        {
+            LevelUnstableItemSpawnCount += 1;
+        }
         // Increase visit count of level
         foreach (var item in _levelStabilities)
         {
@@ -102,13 +138,39 @@ public class GameManager : NetworkBehaviour
                 break;
             }
         }
-
+        sceneStart.LoadScene(sceneIndex);
     }
+
 
     public void LevelEnd(LevelScene sceneEnd)
     {
-        RespawnAllPlayers();
-        ProgressStability(sceneEnd);
+        int RemainingUnstableItems = Item.CalculateRemainingItems(sceneEnd.TimePeriod, true);
+        int WrongSendCount = 0;
+        int CorrectSendCount = 0;
+
+        foreach (var item in ItemSender.SentItems)
+        {
+            if (item.ItemData.TimePeriods.Contains(sceneEnd.TimePeriod))
+            {
+                CorrectSendCount++;
+                continue;
+            }
+            WrongSendCount++;
+        }
+
+        ItemSender.SentItems.Clear();
+        LevelEndData result = new LevelEndData(sceneEnd)
+        {
+            RemainingUnstableItems = RemainingUnstableItems,
+            WrongSendCount = WrongSendCount,
+            CorrectSendCount = CorrectSendCount,
+            Dayprogression = DayProgression.Value
+        };
+
+        Player.RespawnAll();
+        _levelStabilities.ProgressStability(sceneEnd, result);
+        TimeStability = _levelStabilities.TotalStability();
+
         if (TimeStability <= 0)
         {
             GameLost();
@@ -117,72 +179,11 @@ public class GameManager : NetworkBehaviour
         {
             DayProgression.Value++;
         }
+
+        LevelManager.LoadLevelScene(null);
     }
 
-    private void RespawnAllPlayers()
-    {
-        foreach (var player in Player.AllPlayers)
-        {
-            player.Movement.TeleportToSpawnRpc();
-        }
-    }
 
-    private void ProgressStability(LevelScene completedScene)
-    {
-        int day = DayProgression.Value;
-
-        float rand1 = Mathf.Sin(day) * Mathf.Exp(day * 0.1f);
-        float rand2 = 3 + Mathf.Sin(day * 3) * Mathf.Exp(day * 0.15f);
-        int instabilityToDistribute = day + Mathf.FloorToInt(UnityEngine.Random.Range(rand1, rand2));
-        if (_levelStabilities == null || _levelStabilities.Length == 0)
-        {
-            return;
-        }
-        // Distribute some random instability to all levels
-        while (instabilityToDistribute > 0)
-        {
-            int randomLevel = UnityEngine.Random.Range(0, _levelStabilities.Length);
-            LevelStability scene = _levelStabilities[randomLevel];
-            if (scene.scene == completedScene) continue;
-
-            // reduce the amount of instability to distribute to levels with more visits
-            int max = instabilityToDistribute - Mathf.FloorToInt(scene.Visits);
-
-            // Random amount of instability to distribute
-            int amount = UnityEngine.Random.Range(1, Math.Max(max, 1));
-
-            // Distribute the instability
-            instabilityToDistribute -= randomLevel;
-            scene.Stability -= amount;
-        }
-
-        // Flat instability scaling with day for one level
-        var randomWithMoreIncrese = _levelStabilities[UnityEngine.Random.Range(0, _levelStabilities.Length)];
-        randomWithMoreIncrese.Stability -= 1 + day - randomWithMoreIncrese.Visits;
-
-        // Flat, Exponential instability scaling with day for all levels
-        int dayClamped = Mathf.Max(DayProgression.Value - 2, 0);
-        float exponentiaDecrese = Mathf.Exp(dayClamped / 5) - Mathf.Exp(dayClamped / 10);
-        foreach (var levelStability in _levelStabilities)
-        {
-            // If the level was just completed, reset it's stability if
-            if (completedScene == levelStability.scene)
-            {
-                levelStability.Stability = 100;
-                continue;
-            }
-            levelStability.Stability -= exponentiaDecrese;
-        }
-
-        int count = _levelStabilities.Length;
-        float totalStability = 0;
-        foreach (var levelStability in _levelStabilities)
-        {
-            totalStability += levelStability.Stability;
-        }
-        totalStability /= count;
-        TimeStability = Mathf.FloorToInt(totalStability);
-    }
 
     private void OnLevelLoaded(LevelScene levelLoaded)
     {
@@ -221,4 +222,6 @@ public class GameManager : NetworkBehaviour
     {
         GameLost();
     }
+
+
 }

@@ -13,6 +13,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _levelSelection;
     [SerializeField] private GameObject _levelEndScreen;
+    [SerializeField] private GameObject _levelInstabilityScreen;
     public static UnityEvent CustomMenuCloseAttempt;
     public enum MenuType
     {
@@ -20,6 +21,7 @@ public class Menu : MonoBehaviour
         PauseMenu,
         LevelSelection,
         LevelEnd,
+        LevelStability,
         Custom
     }
 
@@ -58,6 +60,9 @@ public class Menu : MonoBehaviour
             case MenuType.LevelEnd:
                 _levelEndScreen?.SetActive(true);
                 break;
+            case MenuType.LevelStability:
+                _levelInstabilityScreen?.SetActive(true);
+                break;
             case MenuType.Custom:
                 break;
         }
@@ -69,6 +74,7 @@ public class Menu : MonoBehaviour
         _pauseMenu.SetActive(false);
         _levelSelection.SetActive(false);
         _levelEndScreen.SetActive(false);
+        _levelInstabilityScreen.SetActive(false);
     }
 
     static public Menu instance;
@@ -99,6 +105,19 @@ public class Menu : MonoBehaviour
     }
     private void Update()
     {
+        if (Keyboard.current.tabKey.wasPressedThisFrame)
+        {
+            if (currentMenu == MenuType.Closed)
+            {
+                ActiveMenu = MenuType.LevelStability;
+                return;
+            }
+            if (currentMenu == MenuType.LevelStability)
+            {
+                CloseAttempt();
+                return;
+            }
+        }
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (currentMenu == MenuType.Closed)

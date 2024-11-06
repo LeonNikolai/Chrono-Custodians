@@ -154,7 +154,6 @@ public class ScannerItem : Item, ItemUseToolTip
                         CurrentlyScanning = LookAtScanable;
                         if (activeScanCoroutine != null)
                         {
-                            Debug.Log("Stopping Coroutine");
                             StopCoroutine(activeScanCoroutine);
                         }
                         activeScanCoroutine = StartCoroutine(Scan());
@@ -182,7 +181,6 @@ public class ScannerItem : Item, ItemUseToolTip
                 scannerLight1.SetState(false);
                 scannerLight2.SetState(false);
                 scannerLight3.SetState(false);
-                Debug.Log("Scanning Cancelled");
                 yield break;
             }
             scanTime -= Time.deltaTime;

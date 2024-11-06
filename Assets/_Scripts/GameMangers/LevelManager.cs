@@ -21,37 +21,35 @@ public class LevelManager : NetworkBehaviour
         {
             return _loadedScene;
         }
-        set
+        private set
         {
             if (_loadedScene == value) return;
             _loadedScene = value;
             if (instance)
             {
-                instance.LoadedSceneID.Value = GetSceneID(value);
-                instance.LevelLoaded?.Invoke(_loadedScene);
+                instance.LoadedLevel.Value = _loadedScene.GetNetworklevel();
+                instance.OnLevelLoaded?.Invoke(_loadedScene);
             }
         }
     }
-    public NetworkVariable<int> LoadedSceneID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
-
-    public UnityEvent<LevelScene> LevelLoaded;
+    public NetworkVariable<NetworkLevel> LoadedLevel = new NetworkVariable<NetworkLevel>(NetworkLevel.Default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public UnityEvent<LevelScene> OnLevelLoaded;
 
     public static HashSet<LevelScene> AllScenes = new HashSet<LevelScene>();
-    static List<LevelScene> SceneById = new List<LevelScene>();
+    static List<LevelScene> sceneById = new List<LevelScene>();
     public static LevelScene GetSceneById(int id)
     {
-        if (id < 0 || id >= SceneById.Count) return null;
-        return SceneById[id] ?? null;
+        if (id < 0 || id >= sceneById.Count) return null;
+        return sceneById[id] ?? null;
     }
     public static int GetSceneID(LevelScene scene)
     {
         if (scene == null) return -1;
-        if (!SceneById.Contains(scene))
+        if (!sceneById.Contains(scene))
         {
             return -1;
         }
-        return SceneById.IndexOf(scene);
+        return sceneById.IndexOf(scene);
     }
 
     public override void OnNetworkSpawn()
@@ -61,40 +59,36 @@ public class LevelManager : NetworkBehaviour
         {
             scenes.Add(level);
         }
-        scenes.Sort((a, b) => string.Compare(a.SceneName, b.SceneName));
-        SceneById.Clear();
+        scenes.Sort((a, b) => string.Compare(a.FirstSceneName, b.FirstSceneName));
+        sceneById.Clear();
         if (!IsHost)
         {
-            LoadedSceneID.OnValueChanged += (previous, current) =>
-               {
-                   LevelScene scene = GetSceneById(current);
-                   LoadedScene = scene ?? null;
-               };
+            LoadedLevel.OnValueChanged += (previous, current) => LoadedScene = current.Level;
         }
 
 
     }
-    public static void LoadLevelScene(LevelScene scene)
+    public static void LoadLevelScene(LevelScene scene, int index = -1)
     {
         if (IsLoading) return;
-        if (instance) instance.LoadLevelSceneInternal(scene);
+        if (instance) instance.LoadLevelSceneInternal(scene, index);
     }
-    internal void LoadLevelSceneInternal(LevelScene scene)
+    internal void LoadLevelSceneInternal(LevelScene scene, int index = -1)
     {
         if (IsHost)
         {
-            LoadLevelServer(scene);
+            LoadLevelServer(scene, index);
         }
         else
         {
-            LoadLevelRpc(GetSceneID(scene));
+            LoadLevelRpc(GetSceneID(scene), index);
         }
     }
     [Rpc(SendTo.Server)]
-    private void LoadLevelRpc(int sceneID)
+    private void LoadLevelRpc(int sceneID, int index)
     {
         LevelScene scene = GetSceneById(sceneID);
-        LoadLevelServer(scene);
+        LoadLevelServer(scene, index);
     }
 
     public void Reload()
@@ -122,19 +116,18 @@ public class LevelManager : NetworkBehaviour
         StartCoroutine(ReloadCoroutine());
     }
 
-    private void LoadLevelServer(LevelScene scene)
+    private void LoadLevelServer(LevelScene scene, int index = -1)
     {
         bool isLoaded = _loadedScene == scene;
         if (isLoaded) return;
         if (IsLoading) return;
-        StartCoroutine(LoadLevelSceneAsync(scene));
+        StartCoroutine(LoadLevelSceneAsync(scene, index));
     }
 
     public static bool IsLoading { get; private set; }
-
-    IEnumerator LoadLevelSceneAsync(LevelScene scene)
+    public string lastLoadedSceneName = "";
+    IEnumerator LoadLevelSceneAsync(LevelScene scene, int index = -1)
     {
-        if (InstabilityManager.instance && scene) InstabilityManager.instance.currentLevel = scene.ToString();
         while (IsLoading)
         {
             yield return null;
@@ -142,7 +135,8 @@ public class LevelManager : NetworkBehaviour
         LevelScene newScene = LoadedScene;
         if (newScene != null)
         {
-            var unloadScene = SceneManager.GetSceneByName(newScene.SceneName);
+            var sceneName = lastLoadedSceneName == "" ? newScene.FirstSceneName : lastLoadedSceneName;
+            var unloadScene = SceneManager.GetSceneByName(sceneName);
             if (unloadScene.IsValid() && unloadScene.isLoaded)
             {
                 SceneEventProgressStatus status = NetworkManager.Singleton.SceneManager.UnloadScene(unloadScene);
@@ -162,11 +156,17 @@ public class LevelManager : NetworkBehaviour
         newScene = scene;
         if (newScene != null)
         {
-            var status = NetworkManager.Singleton.SceneManager.LoadScene(newScene.SceneName, LoadSceneMode.Additive);
+            lastLoadedSceneName = newScene.SceneNameFromIndex(index);
+            var status = NetworkManager.Singleton.SceneManager.LoadScene(lastLoadedSceneName, LoadSceneMode.Additive);
+
             if (status != SceneEventProgressStatus.Started)
             {
-                Debug.LogWarning($"Failed to load {newScene.SceneName} " + $"with a {nameof(SceneEventProgressStatus)}: {status}");
+                Debug.LogWarning($"Failed to load {lastLoadedSceneName} with a {nameof(SceneEventProgressStatus)}: {status}");
             }
+        }
+        else
+        {
+            lastLoadedSceneName = "";
         }
         LoadedScene = newScene;
     }
@@ -183,9 +183,10 @@ public class LevelManager : NetworkBehaviour
     {
         foreach (var level in _levelScene)
         {
+            if (level == null) continue;
             AllScenes.Add(level);
         }
-        if (LevelLoaded == null) LevelLoaded = new UnityEvent<LevelScene>();
+        if (OnLevelLoaded == null) OnLevelLoaded = new UnityEvent<LevelScene>();
         instance = this;
         _loadedScene = null;
         if (autoEnterScene == null) autoEnterScene = _autoEnterScene;
@@ -208,7 +209,7 @@ public class LevelManager : NetworkBehaviour
         List<string> strings = new List<string>();
         foreach (var level in _levelScene)
         {
-            strings.Add(level.SceneName);
+            strings.Add(level.FirstSceneName);
         }
         return strings;
     }

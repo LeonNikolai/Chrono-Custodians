@@ -28,11 +28,11 @@ public class AppBehaviour : MonoBehaviour
         // Check microphone permission
         if (Application.HasUserAuthorization(UserAuthorization.Microphone))
         {
-            Debug.Log("Microphone found");
+            // Debug.Log("Microphone found");
         }
         else
         {
-            Debug.Log("Microphone not found");
+            Debug.LogWarning("Microphone not found");
         }
     }
 

@@ -41,8 +41,6 @@ public class Hud : MonoBehaviour
         set
         {
             instance._crosshairTooltip.text = value;
-            if (value == "") instance._crosshairTooltip.gameObject.SetActive(false);
-            else instance._crosshairTooltip.gameObject.SetActive(true);
         }
         get
         {

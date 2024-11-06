@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
@@ -27,7 +28,25 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public static int CalculateRemainingItems(TimePeriod currentTimePeriod, bool despawnItems = false)
+    {
+        int itemsRemaining = 0;
+        foreach (var item in Item.AllItems)
+        {
+            bool itemBellongsInPeriod = item.ItemData.TimePeriods.Contains(currentTimePeriod);
+            bool sendable = item.ItemData.UnSendable;
 
+            if (sendable)
+            {
+                if (itemBellongsInPeriod)
+                {
+                    itemsRemaining++;
+                }
+                if (despawnItems) item.NetworkObject.Despawn();
+            }
+        }
+        return itemsRemaining;
+    }
     public bool InInventory
     {
         get

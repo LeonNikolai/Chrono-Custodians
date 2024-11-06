@@ -10,7 +10,7 @@ public class MaterialReplacer : MonoBehaviour
 
     void Awake()
     {
-        _material = _renderer.material;
+        if(_material == null) _material = _renderer.material;
         _originalMaterials = _renderer.materials;
         _applyMaterials = new Material[_originalMaterials.Length];
         for (int i = 0; i < _originalMaterials.Length; i++)

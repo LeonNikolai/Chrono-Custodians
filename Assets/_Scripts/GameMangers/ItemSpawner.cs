@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,11 +8,6 @@ public class ItemSpawner : NetworkBehaviour
 {
     public ItemData[] _normalItems;
     public ItemData[] _forignItems;
-    List<ItemData> objectSpawnList = new List<ItemData>();
-    private int levelInstability;
-    private int curInstabilityBudget;
-    private int currentInstability;
-
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -25,116 +22,63 @@ public class ItemSpawner : NetworkBehaviour
                 Debug.LogError("No forign items assigned to ItemManager");
                 return;
             }
-            GetInstability();
-            SpawnItems();
         }
+    }
+
+    public static ItemData[] Shuffle(ItemData[] items)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            ItemData temp = items[i];
+            int randomIndex = Random.Range(i, items.Length);
+            items[i] = items[randomIndex];
+            items[randomIndex] = temp;
+        }
+        return items;
     }
 
     private void SpawnItems()
     {
-        int foreignItemCount = 0;
-        int foreignItemIndex = 0;
+        float unstableItemCount = GameManager.LevelUnstableItemSpawnCount;
+
         var spawnpoints = ItemSpawnPoint.GetShuffledSpawnPoints();
+        var currentTimePeriod = GameManager.instance.GetCurrentLevelStability().scene.TimePeriod;
+
+        // remove items that dont fit its designated time period
+        var unstableItems = Shuffle(_forignItems).TakeWhile(item => item.TimePeriods.Contains(currentTimePeriod)).ToArray();
+        var normalItems = Shuffle(_normalItems).TakeWhile(item => !item.TimePeriods.Contains(currentTimePeriod)).ToArray();
+
         int maxItems = spawnpoints.Count;
-
-        while (curInstabilityBudget > 0)
+        int i = 0;
+        while (unstableItemCount > 0)
         {
-            // code to be modified
-            if (currentInstability <= 0)
-            {
-                Debug.Log("Not enough tokens remaining to spawn an enemy");
-                return;
-            }
-            ItemData itemToSpawn = ChooseObjectToSpawn();
-            if (itemToSpawn == null)
-            {
-                Debug.LogWarning($"No enemies in spawnList");
-                return;
-            }
-            int instabilityCost = UnityEngine.Random.Range(itemToSpawn.instabilityCostMin, itemToSpawn.instabilityCostMax);
+            var item = unstableItems[i % unstableItems.Length];
+            var spawnpoint = spawnpoints[i % spawnpoints.Count];
+            SpawnItem(item, spawnpoint);
+            unstableItemCount--;
+            i++;
+        }
 
-            SpawnItem(itemToSpawn, spawnpoints[foreignItemIndex], instabilityCost);
-
-            curInstabilityBudget -= instabilityCost;
-
-            foreignItemIndex++;
-            if (curInstabilityBudget == 0)
-            {
-                int normalItemsToSpawn = maxItems - foreignItemCount;
-                int normalItemIndex = foreignItemIndex;
-                for ( int i = 0; i < normalItemsToSpawn; i++ )
-                {
-                    SpawnItem(_normalItems[UnityEngine.Random.Range(0, _normalItems.Length)], spawnpoints[normalItemIndex], 0);
-                    normalItemIndex++;
-                }
-            }
+        while (i < maxItems)
+        {
+            var item = normalItems[i % normalItems.Length];
+            var spawnpoint = spawnpoints[i % spawnpoints.Count];
+            SpawnItem(item, spawnpoint);
+            i++;
         }
     }
 
-    private ItemData ChooseObjectToSpawn()
-    {
-        if (curInstabilityBudget == 0)
-        {
-            Debug.Log("No budget remaining");
-            return null;
-        }
-        UpdateObjectList();
 
-        if (objectSpawnList.Count == 0)
-        {
-            Debug.Log("No items can be spawned");
-            return null;
-        }
-
-        int random = UnityEngine.Random.Range(0, objectSpawnList.Count);
-        return objectSpawnList[random];
-    }
-
-    private void UpdateObjectList()
-    {
-        if (objectSpawnList.Count == 0 && curInstabilityBudget > 0)
-        {
-            objectSpawnList = new List<ItemData>();
-            foreach (ItemData item in _forignItems)
-            {
-                ItemData newItem = item;
-                if (newItem.instabilityCostMin <= curInstabilityBudget)
-                {
-                    if (newItem.instabilityCostMax > curInstabilityBudget)
-                    {
-                        newItem.instabilityCostMax = curInstabilityBudget;
-                    }
-                    objectSpawnList.Add(newItem);
-                }
-            }
-            return;
-        }
-
-        foreach(ItemData item in objectSpawnList)
-        {
-            if (item.instabilityCostMin > curInstabilityBudget)
-            {
-                objectSpawnList.Remove(item);
-                return;
-            }
-
-            if (item.instabilityCostMax > curInstabilityBudget)
-            {
-                item.instabilityCostMax = curInstabilityBudget;
-            }
-        }
-    }
-
-    private void GetItem()
+    private ItemData GetItem()
     {
         int randomIndex = UnityEngine.Random.Range(0, _forignItems.Length);
         ItemData item = _forignItems[randomIndex];
+        return item;
     }
 
-    private void SpawnItem(ItemData itemData, Transform spawnpoint, int instability)
+    private void SpawnItem(ItemData itemData, Transform spawnpoint)
     {
         var item = Instantiate(itemData.Prefab, spawnpoint.position, spawnpoint.transform.rotation);
-        item.GetComponent<ItemData>().instabilityCost = instability;
         if (item.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Spawn(true);
@@ -143,14 +87,5 @@ public class ItemSpawner : NetworkBehaviour
         {
             Debug.LogError("Item prefab does not have a NetworkObject component");
         }
-    }
-
-
-
-    private void GetInstability()
-    {
-        levelInstability = InstabilityManager.instance.GetLevelInstability(InstabilityManager.instance.currentLevel);
-        currentInstability = levelInstability;
-        curInstabilityBudget = levelInstability;
     }
 }

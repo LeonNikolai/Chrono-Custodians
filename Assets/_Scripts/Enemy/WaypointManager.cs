@@ -34,7 +34,6 @@ public class WaypointManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("WaypointManager is ready");
         if (instance == null || instance == this)
         {
             instance = this;

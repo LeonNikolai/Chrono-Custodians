@@ -10,7 +10,8 @@ using UnityEngine.Events;
 // A scripts that remimplements the unity button class.
 // More events and properties are added to the button class.
 // Refferences to the image and text are added to the button class.
-public class BetterButton : Selectable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, ISubmitHandler, IPointerDownHandler, IPointerUpHandler {
+public class BetterButton : Selectable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, ISubmitHandler, IPointerDownHandler, IPointerUpHandler
+{
     [SerializeField] Image _iconRefference;
     [SerializeField] TMP_Text _textRefference;
     [SerializeField] ButtonClickedEvent _OnClick = new ButtonClickedEvent();
@@ -22,71 +23,87 @@ public class BetterButton : Selectable, IPointerClickHandler, IPointerEnterHandl
     // [SerializeField] AudioSource HoverEnterSound;
     // [SerializeField] AudioSource HoverExitSound;
 
-    public Sprite Image {
+    public Sprite Image
+    {
         get { return _iconRefference?.sprite; }
-        set {
+        set
+        {
             if (_iconRefference) _iconRefference.sprite = value;
         }
     }
-    public string Text {
+    public string Text
+    {
         get { return _textRefference?.text; }
-        set {
+        set
+        {
             if (_textRefference) _textRefference.text = value;
         }
     }
-    public ButtonClickedEvent onClick {
+    public ButtonClickedEvent onClick
+    {
         get { return _OnClick; }
         set { _OnClick = value; }
     }
-    public UnityEvent onEnter {
+    public UnityEvent onEnter
+    {
         get { return _onHoverEnter; }
         set { _onHoverEnter = value; }
     }
-    public UnityEvent onExit {
+    public UnityEvent onExit
+    {
         get { return _onHoverExit; }
         set { _onHoverExit = value; }
     }
-    public UnityEvent onClickDown {
+    public UnityEvent onClickDown
+    {
         get { return _onClickDown; }
         set { _onClickDown = value; }
     }
-    public UnityEvent onClickUp {
+    public UnityEvent onClickUp
+    {
         get { return _onClickUp; }
         set { _onClickUp = value; }
     }
 
-    private void Press() {
+    private void Press()
+    {
         if (!IsActive() || !IsInteractable())
             return;
         UISystemProfilerApi.AddMarker("Button.onClick", this);
         onClick.Invoke();
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData) {
+    public virtual void OnPointerClick(PointerEventData eventData)
+    {
         if (eventData.button != PointerEventData.InputButton.Left)
             return;
         Press();
     }
 
-    public override void OnPointerExit(PointerEventData eventData) {
+    public override void OnPointerExit(PointerEventData eventData)
+    {
         onEnter?.Invoke();
         base.OnPointerExit(eventData);
     }
-    public override void OnPointerEnter(PointerEventData eventData) {
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
 
         onExit?.Invoke();
         base.OnPointerEnter(eventData);
     }
-    public override void OnPointerDown(PointerEventData eventData) {
+    public override void OnPointerDown(PointerEventData eventData)
+    {
         onClickDown?.Invoke();
         base.OnPointerDown(eventData);
     }
-    public override void OnPointerUp(PointerEventData eventData) {
+    public override void OnPointerUp(PointerEventData eventData)
+    {
         onClickUp?.Invoke();
         base.OnPointerUp(eventData);
     }
 
-    public virtual void OnSubmit(BaseEventData eventData) {
+    public virtual void OnSubmit(BaseEventData eventData)
+    {
         Press();
         if (!IsActive() || !IsInteractable())
             return;
@@ -95,11 +112,13 @@ public class BetterButton : Selectable, IPointerClickHandler, IPointerEnterHandl
         StartCoroutine(OnFinishSubmit());
     }
 
-    private IEnumerator OnFinishSubmit() {
+    private IEnumerator OnFinishSubmit()
+    {
         var fadeTime = colors.fadeDuration;
         var elapsedTime = 0f;
 
-        while (elapsedTime < fadeTime) {
+        while (elapsedTime < fadeTime)
+        {
             elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }

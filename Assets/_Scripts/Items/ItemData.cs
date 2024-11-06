@@ -20,11 +20,6 @@ public class ItemData : ScriptableObject
     public string Name => _name != null && !_name.IsEmpty ? _name.GetLocalizedString() : name ?? "Item Name";
     public string Description => _description != null && !_description.IsEmpty ? _description.GetLocalizedString() : name ?? "Item Description";
     public LocalizedString[] ScanMinigameResults => _scanMinigameResults;
-    
-
-    public int instabilityCostMin = 1;
-    public int instabilityCostMax = 2;
-    public int instabilityCost = 0;
 
     [Header("Item Spawn")]
     [SerializeField] GameObject _prefab;

@@ -157,7 +157,8 @@ public class ItemTracker : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)] // Type - 0 = incorrect | 1 = correct | 2 = item should not have been sent
-    public void ItemSentClientFeedbackRpc(int type, int itemId, int periodID, float instabilityChange) {
+    public void ItemSentClientFeedbackRpc(int type, int itemId, int periodID, float instabilityChange)
+    {
         Debug.Log("Item Tracker Received");
         ItemData data = _itemIdProvider.GetItemData(itemId);
         Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
