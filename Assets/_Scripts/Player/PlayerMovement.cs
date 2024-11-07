@@ -76,6 +76,21 @@ public class PlayerMovement : NetworkBehaviour
 
     }
 
+    [Rpc(SendTo.Owner)]
+    public void DisableInputsRPC(bool disable)
+    {
+        if (!IsLocalPlayer) return;
+        if (disable)
+        {
+            Player.Input.Player.Disable();
+        }
+        else
+        {
+            Player.Input.Player.Enable();
+        }
+        
+    }
+
     private void IsGrounded_OnValueChanged(bool previousValue, bool newValue)
     {
         if (_animator) _animator.SetBool("Grounded", newValue);

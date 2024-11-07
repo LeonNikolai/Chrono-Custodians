@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -7,6 +8,7 @@ public enum MannequinState
 {
     Roaming,
     Chasing,
+    Killing,
     Searching
 }
 
@@ -20,8 +22,12 @@ public class EnemyMannequin : Enemy
     private HashSet<ulong> playersLooking = new HashSet<ulong>();
 
     [Header("Mannequin Specific Parameters")]
+    [SerializeField] private float timeToKill = 1f;
     [SerializeField] private Animator anim;
     [SerializeField] private AnimationClip[] poses;
+    [SerializeField] private AnimationClip killPose;
+    [SerializeField] private AudioSource crunch;
+    [SerializeField] private AudioClip crunchClip;
 
     public override void OnNetworkSpawn()
     {
@@ -53,6 +59,10 @@ public class EnemyMannequin : Enemy
                 StartCoroutine(Chasing());
                 break;
 
+            case MannequinState.Killing:
+                StartCoroutine(Killing());
+                break;
+
         }
     }
 
@@ -73,7 +83,10 @@ public class EnemyMannequin : Enemy
     {
         state = MannequinState.Chasing;
         float lookTime = 0;
+        float killTime = 0;
         bool isRotating = false;
+        bool isSeen = false;
+        bool isKilling = false;
         int currentPoseIndex = 0;
         while (state == MannequinState.Chasing)
         {
@@ -89,6 +102,7 @@ public class EnemyMannequin : Enemy
                         agent.isStopped = false;
                         lookTime = 0;
                         GetComponentInChildren<MannequinHead>().StartRotating(false);
+                        isSeen = false;
                     }
                     isRotating = false;
                 }
@@ -105,26 +119,70 @@ public class EnemyMannequin : Enemy
                         }
                         string poseName = poses[Random.Range(0, poses.Length)].name;
                         currentPoseIndex = randomPoseIndex;
-                        anim.enabled = false;
                         anim.CrossFade(poseName, 0, 0);
                         agent.SetDestination(transform.position);
                         agent.velocity = Vector3.zero;
                         agent.isStopped = true;
+                        isSeen = true;
                     }
                     lookTime += Time.deltaTime;
                     if (lookTime > 5 && !isRotating)
                     {
+                        anim.enabled = false;
                         isRotating = true;
                         GetComponentInChildren<MannequinHead>().StartRotating(true);
                     }
                 }
-
-            }
-            else
-            {
-
+                if ((enemyFOV.curtarget.transform.position - transform.position).magnitude < 2f && !isSeen)
+                {
+                    if (!isKilling)
+                    {
+                        isKilling = true;
+                        killTime = timeToKill;
+                    }
+                    killTime -= Time.deltaTime;
+                    if (killTime < 0)
+                    {
+                        SwitchState(MannequinState.Killing);
+                    }
+                }
             }
         }
+    }
+
+    private IEnumerator Killing()
+    {
+        var target = enemyFOV.curtarget;
+        var targetHealth = target.GetComponent<HealthSystem>();
+        if (target == null)
+        {
+            Debug.Log("No target.. this shouldn't have happened");
+        }
+        state = MannequinState.Killing;
+        CapsuleCollider collider = GetComponent<CapsuleCollider>();
+        collider.enabled = false;
+        transform.position = target.transform.position - (target.transform.forward * 0.64f);
+        target.GetComponent<PlayerMovement>().DisableInputsRPC(true);
+        anim.CrossFade(killPose.name, 0, 0);
+
+        yield return null;
+        // Start playing head crunching sound and kill animation local to the player
+        crunch.PlayOneShot(crunchClip);
+        targetHealth.TakeDamageServer((int)Mathf.Ceil(targetHealth.currentHealth.Value * 0.5f));
+        yield return new WaitForSeconds(1);
+        targetHealth.TakeDamageServer((int)Mathf.Ceil(targetHealth.currentHealth.Value * 0.5f));
+        yield return new WaitForSeconds(1.25f);
+        targetHealth.TakeDamageServer((int)Mathf.Ceil(targetHealth.currentHealth.Value * 0.5f));
+        yield return new WaitForSeconds(1.5f);
+        targetHealth.TakeDamageServer((int)Mathf.Ceil(targetHealth.currentHealth.Value * 0.5f));
+        yield return new WaitForSeconds(0.1f);
+        targetHealth.TakeDamageServer(1000);
+        // Kill player
+
+        collider.enabled = true;
+        SwitchState(MannequinState.Roaming);
+        yield return null;
+
     }
 
     [Rpc(SendTo.Server)]
