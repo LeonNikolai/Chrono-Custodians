@@ -4,7 +4,9 @@ using UnityEngine;
 public class ItemIdProvider : ScriptableObject
 {
     [SerializeField] private ItemData[] _itemData;
+    public ItemData[] ItemDatas => _itemData;
     [SerializeField] private TimePeriod[] _timePeriod;
+    public TimePeriod[] TimePeriods => _timePeriod;
     public int GetId(ItemData itemData)
     {
         for (int i = 0; i < _itemData.Length; i++)

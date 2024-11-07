@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine.Events;
 
 public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
 {
-    public UnityEvent<bool> ThisLevelSelected = new UnityEvent<bool>();
+    public UnityEvent<int> ThisLevelSelected = new UnityEvent<int>();
 
     [SerializeField] private LevelScene _levelScenes;
     LevelScene levelScene => _levelScenes != null ? _levelScenes : null;
@@ -55,25 +54,45 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
         {
             LevelManager.AllScenes.Add(levelScene);
         }
-        StartLevelButton.OnSelectLevel += OnLevelSelect;
     }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
+        StartLevelButton.OnSelectLevel += OnLevelSelect;
+        LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
     }
+
+    private void OnLevelLoaded(LevelScene arg0)
+    {
+        OnLevelSelect(arg0, -1);
+    }
+
     public override void OnDestroy()
     {
         StartLevelButton.OnSelectLevel -= OnLevelSelect;
         base.OnDestroy();
     }
 
+    const int UnSelectedLightIndex = 0;
+    const int SelectedLightIndex = 1;
+    const int FullStabilityIndex = 2;
+    const int LowStabilityLightIndex = 3;
 
-    private void OnLevelSelect(LevelScene scene, int arg2)
+    private void OnLevelSelect(LevelScene scene, int index)
     {
-        bool rightIndex = _sceneIndex == -1 || _sceneIndex == arg2;
+        Debug.Log("OnLevelSelect");
+        bool rightIndex = _sceneIndex == -1 || _sceneIndex == index;
         bool rightScene = levelScene == scene;
-        ThisLevelSelected.Invoke(scene == levelScene && rightIndex);
+        
+        float stability = _levelScenes != null ? Stability.GetLevelStability(_levelScenes).Stability : 0;
+        bool lowStability = stability < 50;
+        bool fullStability = stability == 100;
+
+        if (rightIndex && rightScene) ThisLevelSelected.Invoke(SelectedLightIndex);
+        else if (fullStability) ThisLevelSelected.Invoke(FullStabilityIndex);
+        else if (lowStability) ThisLevelSelected.Invoke(LowStabilityLightIndex);
+        else ThisLevelSelected.Invoke(UnSelectedLightIndex);
     }
 
     public void Interact(Player player)

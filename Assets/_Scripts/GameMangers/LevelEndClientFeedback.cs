@@ -1,7 +1,5 @@
 using System;
-using Unity.Collections;
 using Unity.Netcode;
-using UnityEngine;
 
 [Serializable]
 public struct NetworkLevelStabilty : INetworkSerializable, IEquatable<NetworkLevelStabilty>
@@ -25,7 +23,6 @@ public struct NetworkLevelStabilty : INetworkSerializable, IEquatable<NetworkLev
 public class LevelEndClientFeedback : INetworkSerializable, IEquatable<LevelEndClientFeedback>
 {
     public LevelEndData LevelEndData;
-    public NativeArray<NetworkLevelStabilty> LevelStabilities;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {

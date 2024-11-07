@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 
 public class ItemSpawner : NetworkBehaviour
 {
+    public LevelScene level;
+    public ItemIdProvider idProvider;
     public ItemData[] _normalItems;
     public ItemData[] _forignItems;
     public override void OnNetworkSpawn()
@@ -68,7 +68,21 @@ public class ItemSpawner : NetworkBehaviour
         }
     }
 
-
+    [ContextMenu("Autofill")]
+    private void Autofill()
+    {
+        if(idProvider == null)
+        {
+            Debug.LogError("No ItemIdProvider assigned to ItemManager");
+        }
+        if(level == null)
+        {
+            Debug.LogError("No TimePeriod assigned to ItemManager");
+        }
+        var periods = level.TimePeriod;
+        _normalItems = idProvider.ItemDatas.Where(item => !item.TimePeriods.Contains(periods)).ToArray();
+        _forignItems = idProvider.ItemDatas.Where(item => item.TimePeriods.Contains(periods)).ToArray();
+    }
     private ItemData GetItem()
     {
         int randomIndex = UnityEngine.Random.Range(0, _forignItems.Length);

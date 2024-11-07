@@ -56,25 +56,47 @@ public static class Stability
     }
     static void DistributeInstabilityRandomly(this LevelStability[] levels, int instabilityToDistribute)
     {
+        if(levels.Length == 0)
+        {
+            Debug.LogError("No levels to distribute instability to");
+            return;
+        }
         // Distribute some random instability to all levels
         while (instabilityToDistribute > 0)
         {
             int randomLevel = UnityEngine.Random.Range(0, levels.Length);
             LevelStability scene = levels[randomLevel];
+            if(scene == null)
+            {
+                Debug.LogWarning("Scene is null");
+                instabilityToDistribute -= 1;
+                continue;
+            }
 
             // reduce the amount of instability to distribute to levels with more visits
-            int max = instabilityToDistribute - Mathf.FloorToInt(scene.Visits);
+            int max = instabilityToDistribute - Mathf.FloorToInt(scene?.Visits ?? 1);
 
             // Random amount of instability to distribute
             int amount = UnityEngine.Random.Range(1, Math.Max(max, 1));
 
             // Distribute the instability
-            instabilityToDistribute -= randomLevel;
+            instabilityToDistribute -= amount;
             scene.Stability -= amount;
         }
     }
 
 
+    public static LevelStability GetLevelStability(LevelScene scene)
+    {
+        foreach (var item in GameManager.instance.levelStabilities)
+        {
+            if (item.scene == scene)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
     public static LevelStability GetLevelStability(this LevelStability[] levels, LevelScene scene)
     {
         foreach (var item in levels)

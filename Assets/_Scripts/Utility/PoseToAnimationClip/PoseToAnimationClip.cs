@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class PoseToAnimationClip : MonoBehaviour
 {
@@ -38,11 +40,12 @@ public class PoseToAnimationClip : MonoBehaviour
             animationClip.SetCurve(bonePath, typeof(Transform), "localRotation.w", curveW);
         }
 
+        #if UNITY_EDITOR
         // Save the animation clip as an asset
         AssetDatabase.CreateAsset(animationClip, animationSavePath + prefix + animationName + subfix +".anim");
         AssetDatabase.SaveAssets();
-
         Debug.Log("Animation clip created and saved at: " + animationSavePath);
+        #endif
     }
 
     private string GetBonePath(Transform root, Transform bone)

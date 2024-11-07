@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Constraints;
 using Unity.Cinemachine;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 [DefaultExecutionOrder(-100)]
 public class Player : NetworkBehaviour, IScanable

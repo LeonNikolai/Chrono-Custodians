@@ -1,7 +1,5 @@
 using System;
 using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.Localization;
 
 
 public struct NetworkLevel : INetworkSerializable, IEquatable<NetworkLevel>

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -43,7 +42,7 @@ public class TimePeriodStabilityUI : MonoBehaviour
         {
             _levelStability._stability.OnValueChanged -= OnStabilityChange;
         }
-        _levelStability = GameManager.instance.GetLevelStability(scene);
+        _levelStability = Stability.GetLevelStability(scene);
         _levelStability._stability.OnValueChanged += OnStabilityChange;
     }
 

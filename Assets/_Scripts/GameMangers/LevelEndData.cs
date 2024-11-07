@@ -1,6 +1,5 @@
 using System;
 using Unity.Netcode;
-using UnityEngine;
 
 [System.Serializable]
 public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>

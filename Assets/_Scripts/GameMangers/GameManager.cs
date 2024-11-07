@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 [DefaultExecutionOrder(-100)]
 public class GameManager : NetworkBehaviour
 {
@@ -25,7 +24,6 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> DayProgression = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(GameState.InLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LevelState> levelState = new NetworkVariable<LevelState>(LevelState.Playing, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<LevelEndClientFeedback> levelEndData = new NetworkVariable<LevelEndClientFeedback>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public enum GameState
     {
@@ -76,7 +74,7 @@ public class GameManager : NetworkBehaviour
             Menu.ActiveMenu = Menu.MenuType.LevelStability;
         };
 
-        _levelStabilities[UnityEngine.Random.Range(0, _levelStabilities.Length)].Stability = 60;
+        levelStabilities[UnityEngine.Random.Range(0, levelStabilities.Length)].Stability = 60;
     }
 
     private void LevelStateChanged(LevelState previousValue, LevelState newValue)
@@ -97,13 +95,13 @@ public class GameManager : NetworkBehaviour
             }
         }
     }
-    [SerializeField] public LevelStability[] _levelStabilities;
+    [SerializeField] public LevelStability[] levelStabilities;
 
     // Triggeres before the actual scene is loaded
 
     public LevelStability GetLevelStability(LevelScene scene)
     {
-        return _levelStabilities.GetLevelStability(scene);
+        return levelStabilities.GetLevelStability(scene);
     }
     internal LevelStability GetCurrentLevelStability()
     {
@@ -130,7 +128,7 @@ public class GameManager : NetworkBehaviour
             LevelUnstableItemSpawnCount += 1;
         }
         // Increase visit count of level
-        foreach (var item in _levelStabilities)
+        foreach (var item in levelStabilities)
         {
             if (item.scene == sceneStart)
             {
@@ -168,8 +166,8 @@ public class GameManager : NetworkBehaviour
         };
 
         Player.RespawnAll();
-        _levelStabilities.ProgressStability(sceneEnd, result);
-        TimeStability = _levelStabilities.TotalStability();
+        levelStabilities.ProgressStability(sceneEnd, result);
+        TimeStability = levelStabilities.TotalStability();
 
         if (TimeStability <= 0)
         {

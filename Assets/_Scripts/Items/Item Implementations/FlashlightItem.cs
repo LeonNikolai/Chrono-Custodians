@@ -1,13 +1,5 @@
-using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.InputSystem;
-using TMPro;
 using Unity.Netcode;
-using UnityEngine.UI;
-using System.Collections;
-using UnityEngine.VFX;
 
 public class FlashlightItem : Item, ItemUseToolTip
 {

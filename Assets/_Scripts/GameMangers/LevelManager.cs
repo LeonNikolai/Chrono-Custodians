@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -27,13 +26,13 @@ public class LevelManager : NetworkBehaviour
             _loadedScene = value;
             if (instance)
             {
-                instance.LoadedLevel.Value = _loadedScene.GetNetworklevel();
+                instance.LoadedLevel.Value = _loadedScene?.GetNetworklevel() ?? NetworkLevel.Default;
                 instance.OnLevelLoaded?.Invoke(_loadedScene);
             }
         }
     }
     public NetworkVariable<NetworkLevel> LoadedLevel = new NetworkVariable<NetworkLevel>(NetworkLevel.Default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public UnityEvent<LevelScene> OnLevelLoaded;
+    public UnityEvent<LevelScene> OnLevelLoaded = new UnityEvent<LevelScene>();
 
     public static HashSet<LevelScene> AllScenes = new HashSet<LevelScene>();
     static List<LevelScene> sceneById = new List<LevelScene>();
