@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -32,6 +33,7 @@ public class LGManager : NetworkBehaviour
     }
     public override void OnDestroy()
     {
+        GameManager.DestroyCurrentLevel -= DestroyLevel;
         if (Instance == this)
         {
             Instance = null;
@@ -41,14 +43,26 @@ public class LGManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
         if (IsHost)
         {
+            GameManager.DestroyCurrentLevel += DestroyLevel;
             StartCoroutine(GenerateLevel());
         }
     }
 
-    private Transform currentEntrypoint;
+    public HashSet<NetworkObject> SpawnedNetworkObjects = new HashSet<NetworkObject>();
+    private void DestroyLevel()
+    {
+        foreach (var obj in SpawnedNetworkObjects)
+        {
+            obj?.Despawn(true);
+        }
+        SpawnedNetworkObjects.Clear();
+    }
 
+    private Transform currentEntrypoint;
+    public static event Action OnLevelGenerated = delegate { };
     private IEnumerator GenerateLevel()
     {
         float time = Time.time;
@@ -70,12 +84,14 @@ public class LGManager : NetworkBehaviour
             }
             yield return null;
         }
+        RemoveNullEntryPoints();
         FillRemainingEntryPoints();
         entryPoints.Clear();
         yield return new WaitUntil(() => isDone);
         Debug.Log("Level generation took " + (Time.time - time) + " seconds");
         // Its done
         NavmeshManager.Instance.BuildNavMesh();
+        OnLevelGenerated?.Invoke();
     }
 
     public void AddEntryPoint(LGEntryPointController _entryPoint)
@@ -120,6 +136,7 @@ public class LGManager : NetworkBehaviour
         if (wall.TryGetComponent<NetworkObject>(out var wallobj))
         {
             wallobj.Spawn(true);
+            SpawnedNetworkObjects.Add(wallobj);
         }
         Destroy(_entryPoint.gameObject);
     }
@@ -147,7 +164,11 @@ public class LGManager : NetworkBehaviour
         {
             Destroy(_entryPoint.gameObject);
             Destroy(deadEndEntry.gameObject);
-            deadEnd.GetComponent<NetworkObject>().Spawn(true);
+            if (deadEnd.TryGetComponent<NetworkObject>(out var networkObject))
+            {
+                networkObject.Spawn(true);
+                SpawnedNetworkObjects.Add(networkObject);
+            }
         }
 
     }
@@ -161,7 +182,11 @@ public class LGManager : NetworkBehaviour
             room = Instantiate(theme.Entrance);
 
             room.transform.position = generationPoint.transform.position + room.transform.position;
-            room.GetComponent<NetworkObject>()?.Spawn(true);
+            if (room.TryGetComponent<NetworkObject>(out var entreanceRoomObject))
+            {
+                entreanceRoomObject.Spawn(true);
+                SpawnedNetworkObjects.Add(entreanceRoomObject);
+            }
             room.GetComponent<LGRoom>().AddEntryPoints();
             GeneratedRooms.Add(room);
             return room;
@@ -173,24 +198,24 @@ public class LGManager : NetworkBehaviour
         {
             iterationCount++;
             RemoveNullEntryPoints();
-            LGEntryPointController selectedPoint = entryPoints[Random.Range(0, entryPoints.Count)];
+            LGEntryPointController selectedPoint = entryPoints[UnityEngine.Random.Range(0, entryPoints.Count)];
             RoomType previousRoom = selectedPoint.GetRoomType();
             switch (previousRoom)
             {
                 default:
-                    int randomChoice = Random.Range(0, 2);
+                    int randomChoice = UnityEngine.Random.Range(0, 2);
                     if (randomChoice == 0)
                     {
-                        room = Instantiate(theme.Corridors[Random.Range(0, theme.Corridors.Count)]);
+                        room = Instantiate(theme.Corridors[UnityEngine.Random.Range(0, theme.Corridors.Count)]);
                     }
                     else
                     {
-                        room = Instantiate(theme.Rooms[Random.Range(0, theme.Rooms.Count)]);
+                        room = Instantiate(theme.Rooms[UnityEngine.Random.Range(0, theme.Rooms.Count)]);
                     }
                     break;
 
                 case RoomType.Room:
-                    room = Instantiate(theme.Corridors[Random.Range(0, theme.Corridors.Count)]);
+                    room = Instantiate(theme.Corridors[UnityEngine.Random.Range(0, theme.Corridors.Count)]);
                     break;
             }
             LGRoom roomController = room.GetComponent<LGRoom>();
@@ -207,7 +232,11 @@ public class LGManager : NetworkBehaviour
                 Destroy(selectedPoint.gameObject);
                 Destroy(roomEntry.gameObject);
                 roomController.AddEntryPoints();
-                room.GetComponent<NetworkObject>().Spawn(true);
+                if (room.TryGetComponent<NetworkObject>(out var networkObject))
+                {
+                    networkObject.Spawn(true);
+                    SpawnedNetworkObjects.Add(networkObject);
+                }
                 return room;
             }
             else
@@ -244,7 +273,7 @@ public class LGManager : NetworkBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        if (currentEntrypoint == null) return;  
+        if (currentEntrypoint == null) return;
         Gizmos.DrawSphere(currentEntrypoint.position, 1f);
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +14,8 @@ public class ItemSpawner : NetworkBehaviour
     {
         if (IsServer)
         {
+            LGManager.OnLevelGenerated += SpawnItems;
+            GameManager.DestroyCurrentLevel += DestroyItems;
             if (_normalItems.Length == 0)
             {
                 Debug.LogError("No normal items assigned to ItemManager");
@@ -24,22 +28,40 @@ public class ItemSpawner : NetworkBehaviour
             }
         }
     }
+    public static HashSet<NetworkObject> SpawnedNetworkObjects = new HashSet<NetworkObject>();
+    private void DestroyItems()
+    {
+        foreach (var obj in SpawnedNetworkObjects)
+        {
+            obj?.Despawn(true);
+        }
+        SpawnedNetworkObjects.Clear();
+    }
+
+    public override void OnDestroy()
+    {
+        LGManager.OnLevelGenerated -= SpawnItems;
+        GameManager.DestroyCurrentLevel -= DestroyItems;
+        base.OnDestroy();
+    }
 
     public static ItemData[] Shuffle(ItemData[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {
             ItemData temp = items[i];
-            int randomIndex = Random.Range(i, items.Length);
+            int randomIndex = UnityEngine.Random.Range(i, items.Length);
             items[i] = items[randomIndex];
             items[randomIndex] = temp;
         }
         return items;
     }
 
+    const int DefaultStabilityPerItem = 5;
     private void SpawnItems()
     {
-        float unstableItemCount = GameManager.LevelUnstableItemSpawnCount;
+        Debug.Log("! Spawning items");
+        float stabilityTarget = GameManager.ActiveLevelStability;
 
         var spawnpoints = ItemSpawnPoint.GetShuffledSpawnPoints();
         var currentTimePeriod = GameManager.instance.GetCurrentLevelStability().scene.TimePeriod;
@@ -50,16 +72,37 @@ public class ItemSpawner : NetworkBehaviour
 
         int maxItems = spawnpoints.Count;
         int i = 0;
-        while (unstableItemCount > 0)
+        
+        while (stabilityTarget > 0)
         {
             var item = unstableItems[i % unstableItems.Length];
             var spawnpoint = spawnpoints[i % spawnpoints.Count];
-            SpawnItem(item, spawnpoint);
-            unstableItemCount--;
-            i++;
-        }
+            
+            var itemInstability = DefaultStabilityPerItem;
 
-        while (i < maxItems)
+            // Spawn the last item with the remaining stability
+            if(maxItems == 2)
+            {
+                itemInstability = (int)stabilityTarget;
+            } 
+            if(maxItems == 1)  break;
+    
+            // Spawn the last item with the remaining stability
+            if (stabilityTarget < DefaultStabilityPerItem)
+            {
+                itemInstability = (int)stabilityTarget;
+            }
+
+            SpawnItem(item, spawnpoint, itemInstability);
+            stabilityTarget -= itemInstability;
+            i++;
+            maxItems--;
+        }
+        Debug.Log($"Spawned {i} unstable items");
+        // Fill the rest of the spawnpoints with normal items
+        var NormalSpawnAmount = UnityEngine.Random.Range(Math.Max(0, maxItems / 3), Math.Max(0, maxItems));
+        Debug.Log($"Spawned {NormalSpawnAmount} unstable items");
+        while (i < NormalSpawnAmount)
         {
             var item = normalItems[i % normalItems.Length];
             var spawnpoint = spawnpoints[i % spawnpoints.Count];
@@ -71,11 +114,11 @@ public class ItemSpawner : NetworkBehaviour
     [ContextMenu("Autofill")]
     private void Autofill()
     {
-        if(idProvider == null)
+        if (idProvider == null)
         {
             Debug.LogError("No ItemIdProvider assigned to ItemManager");
         }
-        if(level == null)
+        if (level == null)
         {
             Debug.LogError("No TimePeriod assigned to ItemManager");
         }
@@ -90,12 +133,17 @@ public class ItemSpawner : NetworkBehaviour
         return item;
     }
 
-    private void SpawnItem(ItemData itemData, Transform spawnpoint)
+    private void SpawnItem(ItemData itemData, Transform spawnpoint, int stability = 0)
     {
         var item = Instantiate(itemData.Prefab, spawnpoint.position, spawnpoint.transform.rotation);
         if (item.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Spawn(true);
+            SpawnedNetworkObjects.Add(networkObject);
+            if(item.TryGetComponent(out Item itemComponent))
+            {
+                itemComponent.InStabilityWorth = stability;
+            }
         }
         else
         {

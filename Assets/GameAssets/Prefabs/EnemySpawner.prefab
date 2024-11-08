@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 150096875
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 2252233845
+  InScenePlacedSourceGlobalObjectIdHash: 2834616716
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -66,9 +66,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e193d567d2c3b4dbc2d2cc90b83758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies:
-  - {fileID: 5033324704183572467, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
+  outsideEnemies:
   - {fileID: 5712975056265632853, guid: b8b8abf8bb1b45341bee436991fdf52d, type: 3}
+  - {fileID: 3645534348648636940, guid: 03e30da3bdb7dc647b62209aa0e1bc7b, type: 3}
+  insideEnemies:
+  - {fileID: 5033324704183572467, guid: a5a648fff17aaa244ac390521355ca99, type: 3}
   difficulty: 1
   tokenCount: 0
   tokensRemaining: 0

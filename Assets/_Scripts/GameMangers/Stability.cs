@@ -4,8 +4,6 @@ using UnityEngine;
 
 public static class Stability
 {
-
-    const int DefaultItemStability = 5;
     public static void ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene, LevelEndData levelEndData)
     {
         var completedLevel = allLevelStabilities.GetLevelStability(completedScene);
@@ -13,17 +11,9 @@ public static class Stability
 
         float completedLevelStability = completedLevel.Stability;
 
-        for (int i = 0; i < levelEndData.CorrectSendCount; i++)
-        {
-            completedLevel.Stability += DefaultItemStability;
-        }
-
-        int distributeWrong = 0;
-        for (int i = 0; i < levelEndData.WrongSendCount; i++)
-        {
-            completedLevel.Stability -= DefaultItemStability / 2;
-            distributeWrong -= DefaultItemStability / 2;
-        }
+        completedLevel.Stability += levelEndData.SendCorrectInstability;
+        int distributeWrong = levelEndData.SendWrongInstability / 2;
+        completedLevel.Stability -= levelEndData.SendWrongInstability / 2;
 
         uncompletedLevels.DistributeInstabilityRandomly(distributeWrong);
 

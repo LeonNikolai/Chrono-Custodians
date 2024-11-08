@@ -8,6 +8,11 @@ public class LGEntryPointController : MonoBehaviour
 
     void Awake()
     {
+
+    }
+
+    void Start()
+    {
         bool isClient = NetworkManager.Singleton.IsClient;
         bool isHost = NetworkManager.Singleton.IsHost;
         if (isClient && !isHost)

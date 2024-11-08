@@ -23,28 +23,30 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     [SerializeField] Collider[] _collider = new Collider[0];
     public Collider[] Collider => _collider;
     public ulong RandomSeed => NetworkObject.NetworkObjectId;
+    public int InStabilityWorth { get; set; } = 0;
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public static int CalculateRemainingItems(TimePeriod currentTimePeriod, bool despawnItems = false)
+    public static int CalculateRemainingUnstableItemInstability(TimePeriod currentTimePeriod, bool despawnItems = false)
     {
-        int itemsRemaining = 0;
+        int instability = 0;
         foreach (var item in Item.AllItems)
         {
             bool itemBellongsInPeriod = item.ItemData.TimePeriods.Contains(currentTimePeriod);
-            bool sendable = item.ItemData.UnSendable;
+            bool sendable = !item.ItemData.UnSendable;
 
             if (sendable)
             {
                 if (itemBellongsInPeriod)
                 {
-                    itemsRemaining++;
+                    instability += item.InStabilityWorth;
                 }
-                if (despawnItems) item.NetworkObject.Despawn();
+                if (despawnItems) item.NetworkObject.Despawn(true);
             }
+            // bool isPickedUpByPlayer = item.isPickedUpByPlayer.Value;
         }
-        return itemsRemaining;
+        return instability;
     }
     public bool InInventory
     {

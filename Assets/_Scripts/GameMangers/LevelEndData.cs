@@ -5,9 +5,9 @@ using Unity.Netcode;
 public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
 {
     public int LevelId;
-    public int RemainingUnstableItems;
-    public int WrongSendCount;
-    public int CorrectSendCount;
+    public int RemainingUnstableItemStability;
+    public int SendWrongInstability;
+    public int SendCorrectInstability;
     public int Dayprogression;
 
     public LevelScene Level
@@ -24,9 +24,9 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
     public LevelEndData()
     {
         LevelId = -1;
-        RemainingUnstableItems = 0;
-        WrongSendCount = 0;
-        CorrectSendCount = 0;
+        RemainingUnstableItemStability = 0;
+        SendWrongInstability = 0;
+        SendCorrectInstability = 0;
     }
     public LevelEndData(LevelScene levelScene)
     {
@@ -35,34 +35,34 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
     public LevelEndData(LevelScene levelScene, int RemainingUnstableItems, int WrongSendCount, int CorrectSendCount)
     {
         LevelId = LevelManager.GetSceneID(levelScene);
-        this.RemainingUnstableItems = RemainingUnstableItems;
-        this.WrongSendCount = WrongSendCount;
-        this.CorrectSendCount = CorrectSendCount;
+        this.RemainingUnstableItemStability = RemainingUnstableItems;
+        this.SendWrongInstability = WrongSendCount;
+        this.SendCorrectInstability = CorrectSendCount;
     }
 
     public LevelEndData(int level, int RemainingUnstableItems, int WrongSendCount, int CorrectSendCount)
     {
         this.LevelId = level;
-        this.RemainingUnstableItems = RemainingUnstableItems;
-        this.WrongSendCount = WrongSendCount;
-        this.CorrectSendCount = CorrectSendCount;
+        this.RemainingUnstableItemStability = RemainingUnstableItems;
+        this.SendWrongInstability = WrongSendCount;
+        this.SendCorrectInstability = CorrectSendCount;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref LevelId);
-        serializer.SerializeValue(ref RemainingUnstableItems);
-        serializer.SerializeValue(ref WrongSendCount);
-        serializer.SerializeValue(ref CorrectSendCount);
+        serializer.SerializeValue(ref RemainingUnstableItemStability);
+        serializer.SerializeValue(ref SendWrongInstability);
+        serializer.SerializeValue(ref SendCorrectInstability);
         serializer.SerializeValue(ref Dayprogression);
     }
 
     public bool Equals(LevelEndData other)
     {
         if (LevelId != other.LevelId) return false;
-        if (RemainingUnstableItems != other.RemainingUnstableItems) return false;
-        if (WrongSendCount != other.WrongSendCount) return false;
-        if (CorrectSendCount != other.CorrectSendCount) return false;
+        if (RemainingUnstableItemStability != other.RemainingUnstableItemStability) return false;
+        if (SendWrongInstability != other.SendWrongInstability) return false;
+        if (SendCorrectInstability != other.SendCorrectInstability) return false;
         if (Dayprogression != other.Dayprogression) return false;
         return true;
     }

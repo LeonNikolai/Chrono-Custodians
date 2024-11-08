@@ -111,7 +111,7 @@ public class GameManager : NetworkBehaviour
 
 
 
-    public static int LevelUnstableItemSpawnCount;
+    public static float ActiveLevelStability;
     public void LevelStart(LevelScene sceneStart = null, int sceneIndex = 0)
     {
         LevelStability levelStability = GetLevelStability(sceneStart);
@@ -120,13 +120,7 @@ public class GameManager : NetworkBehaviour
             Debug.LogError("Level stability not found for " + sceneStart.LevelName);
             return;
         }
-
-        LevelUnstableItemSpawnCount = 0;
-        int stabilityPerItem = 5;
-        for (int i = 0; i < levelStability.Stability; i += stabilityPerItem)
-        {
-            LevelUnstableItemSpawnCount += 1;
-        }
+        ActiveLevelStability = levelStability._stability.Value;
         // Increase visit count of level
         foreach (var item in levelStabilities)
         {
@@ -142,26 +136,27 @@ public class GameManager : NetworkBehaviour
 
     public void LevelEnd(LevelScene sceneEnd)
     {
-        int RemainingUnstableItems = Item.CalculateRemainingItems(sceneEnd.TimePeriod, true);
-        int WrongSendCount = 0;
-        int CorrectSendCount = 0;
+        int RemainingUnstableItems = Item.CalculateRemainingUnstableItemInstability(sceneEnd.TimePeriod);
+        int WrongSendInstability = 0;
+        int CorrectItemSentStability = 0;
 
         foreach (var item in ItemSender.SentItems)
         {
             if (item.ItemData.TimePeriods.Contains(sceneEnd.TimePeriod))
             {
-                CorrectSendCount++;
+                
+                CorrectItemSentStability+= item.InstabilityWorth;
                 continue;
             }
-            WrongSendCount++;
+            WrongSendInstability += item.InstabilityWorth;
         }
 
         ItemSender.SentItems.Clear();
         LevelEndData result = new LevelEndData(sceneEnd)
         {
-            RemainingUnstableItems = RemainingUnstableItems,
-            WrongSendCount = WrongSendCount,
-            CorrectSendCount = CorrectSendCount,
+            RemainingUnstableItemStability = RemainingUnstableItems,
+            SendWrongInstability = WrongSendInstability,
+            SendCorrectInstability = CorrectItemSentStability,
             Dayprogression = DayProgression.Value
         };
 
@@ -177,9 +172,10 @@ public class GameManager : NetworkBehaviour
         {
             DayProgression.Value++;
         }
-
+        DestroyCurrentLevel?.Invoke();
         LevelManager.LoadLevelScene(null);
     }
+    public static event Action DestroyCurrentLevel = delegate { };
 
 
 

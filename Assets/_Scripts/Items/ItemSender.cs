@@ -10,6 +10,7 @@ public struct ItemSendEvent
 {
     public ItemData ItemData;
     public LevelScene level;
+    public int InstabilityWorth;
     public int TargetPeriodID;
 
 }
@@ -183,15 +184,26 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
             timer += Time.deltaTime * 2;
             currentlyHeldItem.transform.position = Vector3.Lerp(oldPos, newPos, timer);
         }
+        
+        int Instability = currentlyHeldItem.InStabilityWorth;
 
-        currentlyHeldItem.GetComponent<NetworkObject>().Despawn();
+        if (currentlyHeldItem.TryGetComponent(out NetworkObject networkObject))
+        {
+            networkObject.Despawn();
+        }
+        else
+        {
+            Destroy(currentlyHeldItem.gameObject);
+        }
+
         currentlyHeldItem = null;
 
         ItemSendEvent item = new ItemSendEvent
         {
             ItemData = itemData,
             level = LevelManager.LoadedScene,
-            TargetPeriodID = SelectedPeriodID.Value
+            TargetPeriodID = SelectedPeriodID.Value,
+            InstabilityWorth = Instability
         };
         SentItems.Add(item);
         OnItemSendServer.Invoke(item);

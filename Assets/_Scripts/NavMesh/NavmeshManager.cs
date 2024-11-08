@@ -16,7 +16,8 @@ public class NavmeshManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-        } else if (Instance != null && Instance != this) 
+        }
+        else if (Instance != null && Instance != this)
         {
             Destroy(this);
         }
@@ -24,9 +25,10 @@ public class NavmeshManager : MonoBehaviour
 
     public void BuildNavMesh()
     {
-        foreach(var agent in agentTypesToBuild)
+        foreach (var agent in agentTypesToBuild)
         {
-            GameObject go = Instantiate(new GameObject(), transform);
+            GameObject go = new GameObject();
+            go.transform.parent = transform;
             NavMeshSurface navMesh = go.AddComponent<NavMeshSurface>();
             NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(agent.agentTypeID);
             navMesh.layerMask = navmeshBuildLayer;

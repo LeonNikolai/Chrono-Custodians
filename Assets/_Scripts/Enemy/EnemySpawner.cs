@@ -3,13 +3,14 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using UnityEngine.UIElements.Experimental;
 
-public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
+public class EnemySpawner : NetworkBehaviour
 {
     [SerializeField] private GameObject[] outsideEnemies; // The array of enemies that can be spawned outside
     [SerializeField] private GameObject[] insideEnemies; // The array of enemies that can be spawned inside
-    private List<Vector3> outsideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
-    private List<Vector3> insideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
+    private Vector3[] outsideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
+    private Vector3[] insideSpawnPoints; // This is an array of spawnpoints, this is using the waypoint manager.
     [SerializeField] private Difficulty difficulty; // Selected difficulty level
 
     [SerializeField] private int tokenCount;
@@ -21,6 +22,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
     public enum Difficulty
     {
+        None,
         Easy,
         Medium,
         Hard
@@ -28,15 +30,56 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        
+
         if (IsServer)
         {
             base.OnNetworkSpawn();
-            outsideSpawnPoints = WaypointManager.instance.GetWaypoints(WaypointType.Outside);
-            insideSpawnPoints = WaypointManager.instance.GetWaypoints(WaypointType.Inside);
-            tokenCount = GetTokenCount(difficulty);
-            StartCoroutine(SpawnTimer());
+            LGManager.OnLevelGenerated += SpawnEnemies;
+            GameManager.DestroyCurrentLevel += DestroyEnemies;
         }
+    }
+    public override void OnDestroy()
+    {
+        LGManager.OnLevelGenerated -= SpawnEnemies;
+        GameManager.DestroyCurrentLevel -= DestroyEnemies;
+        base.OnDestroy();
+    }
+
+    public static HashSet<NetworkObject> SpawnedEnemies = new HashSet<NetworkObject>();
+    private void DestroyEnemies()
+    {
+        StopAllCoroutines();
+        foreach (var obj in SpawnedEnemies)
+        {
+            obj?.Despawn(true);
+        }
+        SpawnedEnemies.Clear();
+    }
+
+    private void SpawnEnemies()
+    {
+        outsideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Outside).ToArray();
+        insideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Inside).ToArray();
+
+        float levelStability = GameManager.instance.TimeStability;
+        switch (levelStability)
+        {
+      
+            default:
+            case float n when n >= 75:
+                difficulty = Difficulty.Easy;
+                break;
+            case float n when n >= 50:
+                difficulty = Difficulty.Medium;
+                break;
+            case float n when n >= 25:
+                difficulty = Difficulty.Hard;
+                break;
+        }
+        Debug.Log($"Level stability: {levelStability} , Difficulty: {difficulty}");
+
+        tokenCount = GetTokenCount(difficulty);
+        StartCoroutine(SpawnTimer());
     }
 
     // Get the number of tokens based on the selected difficulty
@@ -50,6 +93,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
                 return 15;
             case Difficulty.Hard:
                 return 25;
+            case Difficulty.None:
             default:
                 return 0;
         }
@@ -69,7 +113,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
     // Spawns the enemy if theres tokens available for it.
     private void SpawnEnemy(WaypointType type)
     {
-        List<Vector3> enemyWaypoints = outsideSpawnPoints;
+        Vector3[] enemyWaypoints = outsideSpawnPoints;
         if (type == WaypointType.Inside)
         {
             enemyWaypoints = insideSpawnPoints;
@@ -91,7 +135,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
 
         if (tokenCost < tokensRemaining)
         {
-            int randomSpawn = Random.Range(0, enemyWaypoints.Count);
+            int randomSpawn = Random.Range(0, enemyWaypoints.Length);
             GameObject enemy = Instantiate(prefabToSpawn);
             tokensRemaining -= tokenCost;
             enemy.transform.position = enemyWaypoints[randomSpawn];
@@ -100,12 +144,16 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
             {
                 // Spawn the networked object on the server
                 networkObject.Spawn();
+                SpawnedEnemies.Add(networkObject);
+                if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
+                {
+                    enemyComponent.SetLocationType(type);
+                }
             }
             else
             {
                 Debug.LogError("The enemy must have a NetworkObject component.");
             }
-            enemy.GetComponent<Enemy>().SetWaypoints(enemyWaypoints);
         }
         else
         {
@@ -178,7 +226,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
         while (true)
         {
 
-            int SpawnTime = Random.Range(spawnTimeMin, spawnTimeMax+1);
+            int SpawnTime = Random.Range(spawnTimeMin, spawnTimeMax + 1);
             yield return new WaitForSeconds(SpawnTime);
             CheckEnemies();
             SpawnEnemy(EnemyType());
@@ -188,7 +236,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
     private WaypointType EnemyType()
     {
         int totalEnemies = outsideEnemies.Length + insideEnemies.Length;
-        if (Random.Range(1, totalEnemies+1) <= outsideEnemies.Length)
+        if (Random.Range(1, totalEnemies + 1) <= outsideEnemies.Length)
         {
             return WaypointType.Outside;
         }
@@ -199,7 +247,7 @@ public class NetworkedPrefabSpawnerWithTokens : NetworkBehaviour
     {
         List<GameObject> enemiesToRemove = new List<GameObject>();
 
-        foreach(GameObject enemy in spawnedEnemies.Keys)
+        foreach (GameObject enemy in spawnedEnemies.Keys)
         {
 
             if (enemy == null)

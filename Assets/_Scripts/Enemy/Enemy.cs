@@ -44,7 +44,7 @@ public abstract class Enemy : NetworkBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool debug = false;
-    
+
 
     public override void OnNetworkSpawn()
     {
@@ -62,9 +62,8 @@ public abstract class Enemy : NetworkBehaviour
 
     private void Update()
     {
-        if(!IsSpawned) return;
+        if (!IsSpawned) return;
         if (!IsServer) return;
-
         if (!isRoaming) return;
         // Checks if the enemy is roaming and the distance between it and the target waypoint is within the checkoff radius
         float sqrDistance = Vector3.SqrMagnitude(transform.position - targetWaypoint);
@@ -73,13 +72,9 @@ public abstract class Enemy : NetworkBehaviour
 
     private void GetWaypoints()
     {
-        waypoints = WaypointManager.instance.GetWaypoints(insideOrOutside);
+        waypoints = WaypointController.GetWaypoint(insideOrOutside);
+        Debug.Log("Waypoints: " + waypoints.Count);
         // Enemy should find a waypoint manager and get a list of waypoints that are active.
-    }
-
-    public void SetWaypoints(List<Vector3> _waypoints)
-    {
-        waypoints = _waypoints;
     }
 
     protected void WaypointReached()
@@ -105,7 +100,7 @@ public abstract class Enemy : NetworkBehaviour
             waypoints.Add(tempWaypoint);
         }
         targetWaypoint = newTarget;
-    } 
+    }
 
     private void SelectWaypointNearby()
     {
@@ -122,7 +117,7 @@ public abstract class Enemy : NetworkBehaviour
             waypoints.Add(tempWaypoint);
         }
         targetWaypoint = newTarget;
-    }    
+    }
 
     private void MoveToWaypoint()
     {
@@ -269,5 +264,10 @@ public abstract class Enemy : NetworkBehaviour
         isRoaming = false;
         agent.speed = moveSpeed;
 
+    }
+
+    internal void SetLocationType(WaypointType insideOrOutside)
+    {
+        this.insideOrOutside = insideOrOutside;
     }
 }

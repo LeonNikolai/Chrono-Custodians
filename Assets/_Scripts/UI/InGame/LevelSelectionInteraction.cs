@@ -81,7 +81,6 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     private void OnLevelSelect(LevelScene scene, int index)
     {
-        Debug.Log("OnLevelSelect");
         bool rightIndex = _sceneIndex == -1 || _sceneIndex == index;
         bool rightScene = levelScene == scene;
         
