@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,7 @@ public class FieldOfView : NetworkBehaviour
     public Transform head;
 
     public GameObject curtarget;
+    public Transform targetHead;
     private CapsuleCollider playerCollider;
     private int raycastPoints = 3;
 

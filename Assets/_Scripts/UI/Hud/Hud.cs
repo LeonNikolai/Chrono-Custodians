@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 /// <summary>
@@ -13,6 +14,7 @@ public class Hud : MonoBehaviour
     [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] TMP_Text shortScannerNotificationText;
     [SerializeField] GameObject shortScannerNotification;
+    [SerializeField] GameObject animOverlay;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
     [SerializeField] ItemSendFeedback _itemSendFeedback;
@@ -77,6 +79,14 @@ public class Hud : MonoBehaviour
         get
         {
             return instance?.shortScannerNotificationText?.text ?? "";
+        }
+    }
+
+    public static GameObject AnimOverlay
+    {
+        get
+        {
+            return instance?.animOverlay;
         }
     }
 
