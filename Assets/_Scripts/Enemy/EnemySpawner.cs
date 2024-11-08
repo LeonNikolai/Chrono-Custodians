@@ -58,6 +58,7 @@ public class EnemySpawner : NetworkBehaviour
 
     private void SpawnEnemies()
     {
+        WaypointController.UpdateAll();
         outsideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Outside).ToArray();
         insideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Inside).ToArray();
 
@@ -113,9 +114,11 @@ public class EnemySpawner : NetworkBehaviour
     // Spawns the enemy if theres tokens available for it.
     private void SpawnEnemy(WaypointType type)
     {
+        Debug.Log($"Trying to Spawning enemy at {type} waypoint");
         Vector3[] enemyWaypoints = outsideSpawnPoints;
         if (type == WaypointType.Inside)
         {
+            Debug.Log("Spawning inside enemy");
             enemyWaypoints = insideSpawnPoints;
         }
         tokensRemaining = GetRemainingTokens();
@@ -139,6 +142,7 @@ public class EnemySpawner : NetworkBehaviour
             GameObject enemy = Instantiate(prefabToSpawn);
             tokensRemaining -= tokenCost;
             enemy.transform.position = enemyWaypoints[randomSpawn];
+            Debug.Log($"Enemy {enemy.name} spawned at {enemy.transform.position} with {tokensRemaining} tokens remaining, as {type}");
             spawnedEnemies.Add(enemy, tokenCost);
             if (enemy.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
             {

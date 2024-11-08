@@ -11,6 +11,7 @@ public enum WaypointType
     Outside,
     Inside
 }
+[DefaultExecutionOrder(-2)]
 public class WaypointController : MonoBehaviour
 {
     [SerializeField] public WaypointType type;
@@ -56,12 +57,17 @@ public class WaypointController : MonoBehaviour
             Waypoints[type] = new List<Vector3>();
         }
         Waypoints[type].Clear();
-        foreach (var waypointController in WaypointControllers.Values)
+        foreach (var controller in WaypointControllers[type])
         {
-            foreach (var waypoint in waypointController)
-            {
-                Waypoints[type].Add(waypoint.transform.position);
-            }
+            Waypoints[type].Add(controller.transform.position);
+        }
+    }
+
+    public static void UpdateAll()
+    {
+        foreach (var type in WaypointControllers.Keys)
+        {
+            UpdateType(type);
         }
     }
 
