@@ -9,15 +9,14 @@ public class LookDetection : NetworkBehaviour
     private void OnBecameVisible()
     {
         if (IsServer && !IsHost) return;
-        if (enemy == null) return;
+        if (NetworkManager == null || enemy == null) return;
         enemy.PlayerStartLookingRPC(NetworkManager.Singleton.LocalClientId);
     }
 
     private void OnBecameInvisible()
     {
         if (IsServer && !IsHost) return;
-        if (enemy == null) return;
-
+        if (NetworkManager == null || enemy == null) return;
         enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
     }
 

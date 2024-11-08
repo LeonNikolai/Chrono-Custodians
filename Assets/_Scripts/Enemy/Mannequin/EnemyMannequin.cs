@@ -28,6 +28,7 @@ public class EnemyMannequin : Enemy
     [SerializeField] private AnimationClip killPose;
     [SerializeField] private AudioSource crunch;
     [SerializeField] private AudioClip crunchClip;
+    [SerializeField] private float chaseTime = 2;
 
     public override void OnNetworkSpawn()
     {
@@ -84,6 +85,7 @@ public class EnemyMannequin : Enemy
         state = MannequinState.Chasing;
         float lookTime = 0;
         float killTime = 0;
+        float curChaseTime = 0;
         bool isRotating = false;
         bool isSeen = false;
         bool isKilling = false;
@@ -145,6 +147,19 @@ public class EnemyMannequin : Enemy
                     {
                         SwitchState(MannequinState.Killing);
                     }
+
+            }
+            else
+            {
+                if (curChaseTime < chaseTime)
+                {
+                    agent.SetDestination(enemyFOV.curtarget.transform.position);
+                    if (agent.isStopped)
+                    {
+                        agent.isStopped = false;
+                        GetComponentInChildren<MannequinHead>().StartRotating(false);
+                    }
+                    isRotating = false;
                 }
             }
         }
