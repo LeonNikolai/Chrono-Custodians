@@ -54,10 +54,19 @@ public abstract class Enemy : NetworkBehaviour
             currentHealth.Value = maxHealth;
             agent = GetComponent<NavMeshAgent>();
             agent.speed = moveSpeed;
-            if (!isRoaming) return;
             GetWaypoints();
             StartRoaming();
+            Debug.Log("Enemy Spawned at: " + transform.position);
         }
+        StartCoroutine(Frame());
+    }
+
+    private IEnumerator Frame()
+    {
+        yield return new WaitForEndOfFrame();
+        Debug.Log("Enemy Spawned at: " + transform.position);
+        yield return new WaitForEndOfFrame();
+        Debug.Log("Enemy Spawned at: " + transform.position);
     }
 
     private void Update()

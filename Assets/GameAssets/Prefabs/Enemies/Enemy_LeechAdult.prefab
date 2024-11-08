@@ -171,7 +171,7 @@ Transform:
   m_GameObject: {fileID: 5712975056265632853}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11, y: 0, z: 43.7}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -276,6 +276,7 @@ MonoBehaviour:
   angle: 80
   head: {fileID: 3521694754398139705}
   curtarget: {fileID: 0}
+  targetHead: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 8
@@ -353,6 +354,7 @@ MonoBehaviour:
   angle: 360
   head: {fileID: 3521694754398139705}
   curtarget: {fileID: 0}
+  targetHead: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 64
@@ -973,7 +975,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fov: {fileID: 8424506856430388398}
-  isGlitchy: 1
   rotationLimit: {x: 20, y: 60, z: 80}
   rotationDuration: 1
   rotationInterval: 5

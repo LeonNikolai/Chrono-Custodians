@@ -230,7 +230,7 @@ Transform:
   m_GameObject: {fileID: 3645534348648636940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.5, y: 0, z: 20.6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -314,6 +314,7 @@ MonoBehaviour:
   enemyFOV: {fileID: 6007402618805359333}
   timeToKill: 1
   killFace: {fileID: 6902641641797385879}
+  killAnim: {fileID: 0}
   head: {fileID: 6505257794455068336}
   anim: {fileID: 7265489090551557001}
   poses:
@@ -342,6 +343,7 @@ MonoBehaviour:
   angle: 360
   head: {fileID: 7539502986072602784}
   curtarget: {fileID: 0}
+  targetHead: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 8

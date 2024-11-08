@@ -139,9 +139,9 @@ public class EnemySpawner : NetworkBehaviour
         if (tokenCost < tokensRemaining)
         {
             int randomSpawn = Random.Range(0, enemyWaypoints.Length);
-            GameObject enemy = Instantiate(prefabToSpawn);
+            var spawnpoint =  enemyWaypoints[randomSpawn];
+            GameObject enemy = Instantiate(prefabToSpawn,spawnpoint, Quaternion.identity);
             tokensRemaining -= tokenCost;
-            enemy.transform.position = enemyWaypoints[randomSpawn];
             Debug.Log($"Enemy {enemy.name} spawned at {enemy.transform.position} with {tokensRemaining} tokens remaining, as {type}");
             spawnedEnemies.Add(enemy, tokenCost);
             if (enemy.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
