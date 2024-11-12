@@ -38,7 +38,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         }
         sendingItemScreen.SetActive(true);
         sendingItemText.text = idProvider.GetPeriodData(current).periodName;
-        StartSending();
+        if (IsHost) StartSending();
     }
 
     [SerializeField] private GameObject sendingItemScreen;
@@ -184,7 +184,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
             timer += Time.deltaTime * 2;
             currentlyHeldItem.transform.position = Vector3.Lerp(oldPos, newPos, timer);
         }
-        
+
         int Instability = currentlyHeldItem.InStabilityWorth;
 
         if (currentlyHeldItem.TryGetComponent(out NetworkObject networkObject))
