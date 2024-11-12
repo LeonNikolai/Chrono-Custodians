@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Netcode;
-using System.Collections.Specialized;
 
 public class LookDetection : NetworkBehaviour
 {
