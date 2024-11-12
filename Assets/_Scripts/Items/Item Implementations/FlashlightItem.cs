@@ -28,6 +28,9 @@ public class FlashlightItem : Item, ItemUseToolTip
     public override void OnUnequip(object character)
     {
         base.OnUnequip(character);
+        renderer.material = off;
+        lightComp.SetActive(false);
+
     }
 
     public override void OnEquipUpdate(object character)
