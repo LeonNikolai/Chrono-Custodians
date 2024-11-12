@@ -269,6 +269,7 @@ public class Player : NetworkBehaviour, IScanable
 
             }
             RenderSettings.reflectionIntensity = 0;
+            RenderSettings.ambientIntensity = 0.3f;
         }
         if (Location == LocationType.Outside)
         {
