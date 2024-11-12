@@ -200,6 +200,7 @@ public class Player : NetworkBehaviour, IScanable
 
 
     float originalReflection;
+    float originalAmbientIntensity;
     private void Awake()
     {
         if (Camera) Camera.enabled = false;
@@ -208,6 +209,7 @@ public class Player : NetworkBehaviour, IScanable
         if (_movement == null) _movement = GetComponent<PlayerMovement>();
         if (_health == null) _health = GetComponent<HealthSystem>();
         originalReflection = RenderSettings.reflectionIntensity;
+        originalAmbientIntensity = RenderSettings.ambientIntensity;
         UpdateInteractionState();
     }
 
@@ -274,6 +276,7 @@ public class Player : NetworkBehaviour, IScanable
         if (Location == LocationType.Outside)
         {
             RenderSettings.fog = false;
+            RenderSettings.ambientIntensity = originalAmbientIntensity;
             RenderSettings.reflectionIntensity = originalReflection;
         }
     }

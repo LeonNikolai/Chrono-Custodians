@@ -248,8 +248,9 @@ public class EnemyMannequin : Enemy
     [Rpc(SendTo.ClientsAndHost)]
     private void SpawnDeathAnimRPC()
     {
+        player = enemyFOV.curtarget;
         Debug.Log("Called SpawnDeathAnimRPC"); 
-        if (player != null && NetworkManager.LocalClientId == player.GetComponent<Player>().OwnerClientId)
+        if (player != null && NetworkManager.Singleton.LocalClientId == player.GetComponent<Player>().OwnerClientId)
         {
             Debug.Log("Spawned Death Anim");
             Destroy(Instantiate(killAnim, Hud.AnimOverlay.transform), 4);
