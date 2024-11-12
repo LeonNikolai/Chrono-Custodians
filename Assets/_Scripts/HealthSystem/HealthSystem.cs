@@ -88,6 +88,18 @@ public class HealthSystem : NetworkBehaviour
     private void OnHealthChanged(int previousValue, int newValue)
     {
         if (IsServer) isDead.Value = newValue <= 0;
+        if (IsDead)
+        {
+            gameObject.layer = LayerMask.NameToLayer("PlayerDead");
+
+        }
+        else
+        {
+            if (LayerMask.LayerToName(gameObject.layer) == "PlayerDead")
+            {
+                gameObject.layer = LayerMask.NameToLayer("Player");
+            }
+        }
         if (shouldUpdateHud && IsOwner)
         {
 
