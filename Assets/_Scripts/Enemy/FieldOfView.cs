@@ -9,6 +9,7 @@ public class FieldOfView : NetworkBehaviour
     public float radius;
     [Range(0, 360)]
     public float angle;
+    public float timeBetweenChecks = 0.5f;
 
     public Transform head;
 
@@ -38,8 +39,7 @@ public class FieldOfView : NetworkBehaviour
     private IEnumerator FOVRoutine()
     {
         if (!IsServer) yield break;
-        float delay = 0.5f;
-        WaitForSeconds wait = new WaitForSeconds(delay);
+        WaitForSeconds wait = new WaitForSeconds(timeBetweenChecks);
 
         while (true)
         {

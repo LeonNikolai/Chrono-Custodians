@@ -19,7 +19,8 @@ public class EnemyMannequin : Enemy
     [SerializeField] private FieldOfView enemyFOV;
 
     private NetworkVariable<bool> isBeingLookedAt = new NetworkVariable<bool>(false);
-    private HashSet<ulong> playersLooking = new HashSet<ulong>();
+    //private HashSet<ulong> playersLooking = new HashSet<ulong>();
+    private List<ulong> playersLooking = new List<ulong>();
 
     [Header("Mannequin Specific Parameters")]
     [SerializeField] private float timeToKill = 1f;
@@ -104,6 +105,7 @@ public class EnemyMannequin : Enemy
             yield return null;
             if (enemyFOV.canSeeTarget)
             {
+                curChaseTime = 0;
                 if (playersLooking.Count == 0)
                 {
                     Debug.Log("Stopped");
@@ -180,13 +182,18 @@ public class EnemyMannequin : Enemy
             }
             else
             {
-                if (curChaseTime < chaseTime)
+                if (playersLooking.Count == 0)
                 {
-                    agent.SetDestination(player.transform.position);
-                }
-                else
-                {
-                    SwitchState(MannequinState.Roaming);
+                    if (agent.isStopped) agent.isStopped = false;
+                    if (curChaseTime < chaseTime)
+                    {
+                        curChaseTime += Time.deltaTime;
+                        agent.SetDestination(player.transform.position);
+                    }
+                    else
+                    {
+                        SwitchState(MannequinState.Roaming);
+                    }
                 }
             }
         }
@@ -228,7 +235,11 @@ public class EnemyMannequin : Enemy
         collider.enabled = true;
         if (enemyFOV.canSeeTarget)
         {
-            SwitchState(MannequinState.Idle);
+            SwitchState(MannequinState.Chasing);
+        }
+        else
+        {
+            SwitchState(MannequinState.Roaming);
         }
         yield return null;
 
