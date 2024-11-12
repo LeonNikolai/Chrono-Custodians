@@ -249,7 +249,7 @@ public class EnemyMannequin : Enemy
     private void SpawnDeathAnimRPC()
     {
         Debug.Log("Called SpawnDeathAnimRPC"); 
-        if (NetworkManager.LocalClientId == player.GetComponent<Player>().OwnerClientId)
+        if (player != null && NetworkManager.LocalClientId == player.GetComponent<Player>().OwnerClientId)
         {
             Debug.Log("Spawned Death Anim");
             Destroy(Instantiate(killAnim, Hud.AnimOverlay.transform), 4);
