@@ -44,6 +44,12 @@ public class MultiplayerJoin : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        if(LobbyService.Instance == null)
+        {
+            Debug.LogError("LobbyService is null");
+            return;
+        }
+  
         QueryResponse lobbyQuery = await LobbyService.Instance.QueryLobbiesAsync();
         foreach (var lobby in lobbyQuery.Results)
         {

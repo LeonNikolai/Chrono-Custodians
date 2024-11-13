@@ -24,7 +24,7 @@ public class LevelScene : ScriptableObject
         return _sceneNames != null && _sceneNames.Length > 0 ? _sceneNames[index % _sceneNames.Length] : "";
     }
     public string RandomSceneName => _sceneNames != null && _sceneNames.Length > 0 ? _sceneNames[UnityEngine.Random.Range(0, _sceneNames.Length)] : "";
-    public string LevelName => _levelName != null ? _levelName.GetLocalizedString() : FirstSceneName != "" ? FirstSceneName : name;
+    public string LevelName => _levelName != null && !_levelName.IsEmpty ? _levelName.GetLocalizedString() : FirstSceneName != "" ? FirstSceneName : name;
 
 
     public void LoadScene(int index = 0)

@@ -1031,7 +1031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000039994367}
+  m_AnchoredPosition: {x: 0, y: 0.00005673214}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &156201757
@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2047615317}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999155
+  m_Size: 0.9999939
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2111,7 +2111,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 977354406}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999103
+  m_Size: 0.99999374
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2479,7 +2479,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000039994367}
+  m_AnchoredPosition: {x: 0, y: 0.00005673214}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &496025688
@@ -2784,8 +2784,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.0025, y: -94.145004}
-  m_SizeDelta: {x: 124.005005, y: 0}
+  m_AnchoredPosition: {x: 81.44, y: -94.145004}
+  m_SizeDelta: {x: 142.88, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &655131302
 MonoBehaviour:
@@ -4066,7 +4066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 829834514}
   - component: {fileID: 829834516}
-  - component: {fileID: 829834515}
   m_Layer: 5
   m_Name: Join Session By Code
   m_TagString: Untagged
@@ -4095,29 +4094,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &829834515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829834513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b894d3ecaad0434cbb21c3eec3b7c3da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WidgetConfiguration: {fileID: 11400000, guid: 1ea707e0012a33f4096834957da39c40, type: 2}
-  JoiningSession:
-    m_PersistentCalls:
-      m_Calls: []
-  JoinedSession:
-    m_PersistentCalls:
-      m_Calls: []
-  FailedToJoinSession:
-    m_PersistentCalls:
-      m_Calls: []
-  m_EnterSessionButton: {fileID: 0}
 --- !u!114 &829834516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7094,6 +7070,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 675831591219570369, guid: fc67000aad9776b4bb40b7d2ca562bf5, type: 3}
+      propertyPath: m_ProtocolType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7135765919987862879, guid: fc67000aad9776b4bb40b7d2ca562bf5, type: 3}
       propertyPath: m_Name
       value: Network Manager
@@ -7174,8 +7154,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>Build Version :</b><br>0.0.0.57<br><b>Build Date :</b><br>2024-11-07
-    09.01.51
+  m_text: <b>Build Version :</b><br>0.0.0.64<br><b>Build Date :</b><br>2024-11-12
+    16:20:07
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
   m_sharedMaterial: {fileID: -1086939817028454185, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
@@ -9594,8 +9574,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.0025, y: -183.53}
-  m_SizeDelta: {x: 124.005005, y: 0}
+  m_AnchoredPosition: {x: 81.44, y: -174.155}
+  m_SizeDelta: {x: 142.88, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1944843074
 MonoBehaviour:

@@ -4,10 +4,10 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Vivox;
 using UnityEngine;
-
+[DefaultExecutionOrder(-1000)]
 public class ServiceInitalizer : MonoBehaviour
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Main()
     {
         var go = new GameObject("ServiceInitalizer");
@@ -17,25 +17,47 @@ public class ServiceInitalizer : MonoBehaviour
     async void Start()
     {
         await InitalizeUnityServices();
+        await InitalizeVivoxServices();
     }
+
     public static async Task InitalizeUnityServices()
     {
         try
         {
             await UnityService();
             await Login();
-            await VivoxService.Instance.InitializeAsync();
         }
         catch (Exception e)
         {
-            Debug.Log(e);
+            Debug.LogWarning(e);
         }
 
     }
 
+    public static bool VivoxInitialized { get; private set; } = false;
+    public static async Task<bool> InitalizeVivoxServices()
+    {
+        if (VivoxInitialized)
+        {
+            return true;
+        }
+        try
+        {
+            await InitalizeUnityServices();
+            await VivoxService.Instance.InitializeAsync();
+            VivoxInitialized = true;
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            return false;
+        }
+    }
+
     public static async Task<bool> UnityService()
     {
-        if (UnityServices.Instance.State == ServicesInitializationState.Initialized)
+        if (UnityServices.Instance.State != ServicesInitializationState.Uninitialized)
         {
             return true;
         }
@@ -59,7 +81,6 @@ public class ServiceInitalizer : MonoBehaviour
     {
         if (!await UnityService())
         {
-            Debug.Log("Unity Services Not Initialized");
             return false;
         }
         if (AuthenticationService.Instance.IsSignedIn)
