@@ -162,6 +162,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _collider)
         {
+            if(collider == null) continue; 
             collider.enabled = enable;
         }
     }
@@ -169,6 +170,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _meshRenderers)
         {
+            if(collider == null) continue; 
+            if(collider == null) continue; 
             collider.enabled = enable;
         }
     }
@@ -176,6 +179,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _handMeshRenderers)
         {
+            if(collider == null) continue; 
             collider.enabled = enable;
         }
     }

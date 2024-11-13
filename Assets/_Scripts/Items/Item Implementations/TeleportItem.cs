@@ -11,7 +11,7 @@ public class TeleportItem : Item, ItemUseToolTip
 {
     Player player;
     private List<Player> players = new List<Player>();
-    private int selectedPlayer;
+    private int selectedPlayer  = 0;
     [SerializeField] private Transform contentArea;
     [SerializeField] private GameObject playerCardPrefab;
     [SerializeField] private GameObject teleportingPlayerPrefab;

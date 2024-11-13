@@ -10,7 +10,7 @@ public class VivoxPlayer : NetworkBehaviour
     private Vector3 lastPlayerHeadPos;
 
     private const string gameChannelName = "ProximityVoice";
-    private bool isIn3DChannel = false;
+    public bool isIn3DChannel = false;
     Channel3DProperties player3DProperties;
 
     private int clientID;
@@ -99,6 +99,8 @@ public class VivoxPlayer : NetworkBehaviour
 
     public async void join3DChannelAsync()
     {
+        await VivoxService.Instance.EnableAutoVoiceActivityDetectionAsync();
+        await VivoxService.Instance.SetSafeVoiceConsentStatus(true);
         await VivoxService.Instance.JoinPositionalChannelAsync(gameChannelName, ChatCapability.TextAndAudio, player3DProperties);
         
         isIn3DChannel = true;

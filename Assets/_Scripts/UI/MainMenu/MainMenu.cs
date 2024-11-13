@@ -4,8 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] string GameScene = "GamePlay";
-
+    [SerializeField] string gameScene = "GameLobby";
+    public static string GameScene = "GameLobby";
+    void Awake()
+    {
+        GameScene = gameScene;
+    }
 
     public void StartClientGame()
     {
@@ -18,14 +22,16 @@ public class MainMenu : MonoBehaviour
         if(NetworkManager.Singleton.IsListening) return;
         NetworkManager.Singleton.StartHost();
     }
-    public void StartGame()
+    public static void StartGameScene()
     {
         NetworkManager.Singleton.SceneManager.LoadScene(GameScene, LoadSceneMode.Single);
+    }
+    public void StartGame()
+    {
+        StartGameScene();
     }
     public void QuitApplication()
     {
         Application.Quit();
     }
-
-
 }
