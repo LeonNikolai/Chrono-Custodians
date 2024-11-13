@@ -23,7 +23,8 @@ public static class Matchmaking
     {
         var joinCode = lobby.JoinCode();
         var allocaiton = await Relay.JoinRelayAsync(joinCode);
-        if(allocaiton == null)
+        MultiplayerJoin.JoinAllocation = allocaiton;
+        if (allocaiton == null)
         {
             Debug.LogError("Failed to join relay");
             return;
@@ -35,18 +36,15 @@ public static class Matchmaking
     {
         try
         {
-            var lobby = await LobbyService.Instance.CreateLobbyAsync(
-            name,       // Lobby name
-            maxPlayers: 10,        // Max players in the lobby
-            new CreateLobbyOptions
+            var options = new CreateLobbyOptions
             {
                 IsPrivate = false,
                 Data = new Dictionary<string, DataObject>
                 {
                     { "joinCode", new DataObject(DataObject.VisibilityOptions.Public, JoinCode) }
                 }
-            }
-        );
+            };
+            var lobby = await LobbyService.Instance.CreateLobbyAsync(name, maxPlayers, options);
             return lobby;
         }
         catch (LobbyServiceException e)

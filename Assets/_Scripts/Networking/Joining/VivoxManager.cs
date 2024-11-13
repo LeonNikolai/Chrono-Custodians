@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using Unity.Services.Vivox;
 using UnityEngine;
 
 [DefaultExecutionOrder(-5)]
 public class VivoxManager : MonoBehaviour
 {
-    // Join a Vivox voice channel
-    public const string ChannelName = "Game";
+    public string ChannelName = "Game";
     public string channels = "";
     public string activeInput = "";
     public string activeOutput = "";
@@ -35,37 +35,36 @@ public class VivoxManager : MonoBehaviour
         await VivoxService.Instance.LeaveAllChannelsAsync();
         await VivoxService.Instance.LogoutAsync();
     }
+
     private void RemovedParticipant(VivoxParticipant participant)
     {
-        Debug.Log("Removed participant : " + participant.DisplayName);
+        Debug.Log("[VIVOX] Removed participant : " + participant.DisplayName);
     }
 
     private void AddedParticipant(VivoxParticipant participant)
     {
-        Debug.Log("Added participant : " + participant.DisplayName);
+        Debug.Log("[VIVOX] Added participant : " + participant.DisplayName);
     }
 
     private void onChannelJoined(string obj)
     {
-        Debug.Log("Joined channel : " + obj);
+        Debug.Log("[VIVOX] Joined channel : " + obj);
         inChannel = true;
     }
 
     private void onChannelLeft(string obj)
     {
-        Debug.Log("Left channel : " + obj);
+        Debug.Log("[VIVOX] Left channel : " + obj);
         inChannel = false;
     }
 
     private void onLoggedOut()
     {
-        Debug.Log("Logged out of Vivox");
         loggedIn = false;
     }
 
     private void onLoggedIn()
     {
-        Debug.Log("Logged in to Vivox");
         loggedIn = true;
     }
 
@@ -100,7 +99,7 @@ public class VivoxManager : MonoBehaviour
 
     public static string DisplayName(ulong clientId)
     {
-        return "CLIENT" + clientId;
+        return "VIVOX_" + clientId;
     }
     public async Task Login()
     {

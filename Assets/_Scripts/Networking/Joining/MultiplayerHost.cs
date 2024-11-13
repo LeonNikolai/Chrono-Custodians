@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,8 @@ public class MultiplayerHost : MonoBehaviour
     public static string JoinCode = "JoinCode";
     public static string LobbyName = "LobbyName";
     public static Lobby Lobby;
+
+    public static Allocation HostAllocation;
     public async void StartHost()
     {
         Debug.Log("Starting Host");
@@ -48,6 +51,7 @@ public class MultiplayerHost : MonoBehaviour
         {
             Debug.Log("Starting Relay");
             var result = await Relay.StartHostAsync();
+            HostAllocation = result.allocation;
             JoinCode = result.joinCode;
             Debug.Log("Started Relay : " + JoinCode);
             if (JoinCode != null && JoinCode.Length > 0)
