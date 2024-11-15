@@ -81,8 +81,16 @@ public abstract class Enemy : NetworkBehaviour
 
     private void GetWaypoints()
     {
+        visitedWaypoints.Clear();
         waypoints = WaypointController.GetWaypoint(insideOrOutside);
-        Debug.Log("Waypoints: " + waypoints.Count);
+        Debug.Log("Enemy (" + gameObject.name + ") got Waypoints: " + waypoints.Count + (insideOrOutside == WaypointType.Inside ? " Inside" : " Outside"));
+        // Enemy should find a waypoint manager and get a list of waypoints that are active.
+    }
+    private void SetWaypoints(WaypointType isinsideOrOutside)
+    {
+        visitedWaypoints.Clear();
+        waypoints = WaypointController.GetWaypoint(isinsideOrOutside);
+        Debug.Log("Enemy (" + gameObject.name + ") got Waypoints: " + waypoints.Count + (isinsideOrOutside == WaypointType.Inside ? " Inside" : " Outside"));
         // Enemy should find a waypoint manager and get a list of waypoints that are active.
     }
 

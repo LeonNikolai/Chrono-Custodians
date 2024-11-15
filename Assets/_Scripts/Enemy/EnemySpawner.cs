@@ -57,14 +57,11 @@ public class EnemySpawner : NetworkBehaviour
 
     private void SpawnEnemies()
     {
-        WaypointController.UpdateAll();
-        outsideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Outside).ToArray();
-        insideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Inside).ToArray();
 
         float levelStability = GameManager.instance.TimeStability;
         switch (levelStability)
         {
-      
+
             default:
             case float n when n >= 75:
                 difficulty = Difficulty.Easy;
@@ -138,20 +135,21 @@ public class EnemySpawner : NetworkBehaviour
         if (tokenCost < tokensRemaining)
         {
             int randomSpawn = Random.Range(0, enemyWaypoints.Length);
-            var spawnpoint =  enemyWaypoints[randomSpawn];
-            GameObject enemy = Instantiate(prefabToSpawn,spawnpoint, Quaternion.identity);
+            var spawnpoint = enemyWaypoints[randomSpawn];
+            GameObject enemy = Instantiate(prefabToSpawn, spawnpoint, Quaternion.identity);
             tokensRemaining -= tokenCost;
             Debug.Log($"Enemy {enemy.name} spawned at {enemy.transform.position} with {tokensRemaining} tokens remaining, as {type}");
             spawnedEnemies.Add(enemy, tokenCost);
-            if (enemy.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
+            if (enemy.TryGetComponent(out NetworkObject networkObject))
             {
-                // Spawn the networked object on the server
-                networkObject.Spawn();
-                SpawnedEnemies.Add(networkObject);
-                if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
+                
+                if (enemy.TryGetComponent(out Enemy enemyComponent))
                 {
                     enemyComponent.SetLocationType(type);
                 }
+                // Spawn the networked object on the server
+                networkObject.Spawn();
+                SpawnedEnemies.Add(networkObject);
             }
             else
             {
@@ -226,9 +224,12 @@ public class EnemySpawner : NetworkBehaviour
 
     private IEnumerator SpawnTimer()
     {
+        WaypointController.UpdateAll();
+
         while (true)
         {
-
+            outsideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Outside).ToArray();
+            insideSpawnPoints = WaypointController.GetWaypoint(WaypointType.Inside).ToArray();
             int SpawnTime = Random.Range(spawnTimeMin, spawnTimeMax + 1);
             yield return new WaitForSeconds(SpawnTime);
             CheckEnemies();
