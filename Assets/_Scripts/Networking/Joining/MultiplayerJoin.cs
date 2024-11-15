@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,7 +61,7 @@ public class MultiplayerJoin : MonoBehaviour
             }
         }
     }
-
+    public static JoinAllocation JoinAllocation;
     public async void TryJoinClientFromCode()
     {
         var joincode = JoinCode;
@@ -70,6 +71,7 @@ public class MultiplayerJoin : MonoBehaviour
             Debug.LogError("Failed to join relay");
             return;
         }
+        JoinAllocation = allocaiton;
         NetworkManager.Singleton.StartClient();
 
     }
