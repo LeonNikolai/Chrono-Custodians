@@ -28,6 +28,9 @@ public class TimePeriodStabilityUI : MonoBehaviour
         {
             _levelStability._stability.OnValueChanged += OnStabilityChange;
             OnStabilityChange(_levelStability._stability.Value, _levelStability._stability.Value);
+        } else {
+            SetLevel(scene);
+            OnStabilityChange(_levelStability._stability.Value, _levelStability._stability.Value);
         }
     }
     private void OnDisable()
@@ -61,7 +64,6 @@ public class TimePeriodStabilityUI : MonoBehaviour
     private void OnStabilityChange(float previousValue, float newValue)
     {
         _stabilityText.text = scene.LevelName;
-        if (_previousStability == newValue) return;
         StartCoroutine(UpdateStability(previousValue, newValue));
     }
     private IEnumerator UpdateStability(float previousValue, float newValue)
