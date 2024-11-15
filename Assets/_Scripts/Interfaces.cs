@@ -12,6 +12,12 @@ public interface IInteractable
     void Interact(Player player);
     public bool Interactable { get; }
 }
+
+public interface ILongInteractable
+{
+    void LongInteract(Player player);
+    public float InteractTime { get; }
+}
 interface IInteractionMessage
 {
     string InteractionMessage { get; }

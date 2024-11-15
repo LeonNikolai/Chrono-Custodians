@@ -5,16 +5,23 @@ public enum LocationType
     Outside = 0,
     Inside = 1,
 }
-public class TeleportInteraction : MonoBehaviour, IInteractable
+public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractionMessage
 {
     [Header("Teleport Settings")]
     [SerializeField] Transform target;
     [SerializeField] Vector3 fallBackPositonIfNoTarget;
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
     [SerializeField] LocationType locationType = LocationType.Outside;
+    [SerializeField] private string interactionMessage;
+    [SerializeField] private float _interactTime = 1.5f;
 
-    public bool Interactable => true;
-    public void Interact(Player player)
+    public float InteractTime => _interactTime;
+
+    public string InteractionMessage => interactionMessage;
+
+    public string CantInteractMessage => "Cannot interact";
+
+    public void LongInteract(Player player)
     {
         if (target)
         {
@@ -27,7 +34,6 @@ public class TeleportInteraction : MonoBehaviour, IInteractable
         }
         player.Location = locationType;
     }
-
 
     private void OnDrawGizmosSelected()
     {

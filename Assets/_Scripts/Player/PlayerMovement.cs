@@ -1,6 +1,9 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -16,6 +19,8 @@ public class PlayerMovement : NetworkBehaviour
     public Transform CameraTransform => rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
+    private ILongInteractable currentLongInteractable;
+    private float currentInteractTime = 0;
     private Vector3 velocity = Vector3.zero, moveDirection = Vector3.zero;
     private float moveSpeedCurrent, staminaRegainTimer;
     private NetworkVariable<float> MoveSpeedCurrent = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -70,7 +75,9 @@ public class PlayerMovement : NetworkBehaviour
         Player.Input.Player.Jump.performed += ctx => InputJump();
         Player.Input.Player.Crouch.performed += ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled += ctx => Walk();
-        Player.Input.Player.Interact.performed += ctx => InputInteract();
+        Player.Input.Player.Interact.performed += ctx => InputInteract(); 
+        Player.Input.Player.Interact.started += ctx => InputLongInteract();
+        Player.Input.Player.Interact.canceled += ctx => CancelLongInteract();
         xRotation = rotate.localRotation.eulerAngles.x;
         ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
 
@@ -109,7 +116,10 @@ public class PlayerMovement : NetworkBehaviour
         Player.Input.Player.Crouch.performed -= ctx => InputCrouch();
         Player.Input.Player.Crouch.canceled -= ctx => Walk();
         Player.Input.Player.Interact.performed -= ctx => InputInteract();
+        Player.Input.Player.Interact.started -= ctx => InputLongInteract();
+        Player.Input.Player.Interact.canceled -= ctx => CancelLongInteract();
     }
+
 
     private void Update()
     {
@@ -133,6 +143,30 @@ public class PlayerMovement : NetworkBehaviour
         if (transform.position.y < -200f)
         {
             ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
+        }
+        if (isInteracting)
+        {
+            if (CurrentLongInteractible == null)
+            {
+                isInteracting = false;
+                currentInteractTime = 0;
+                Hud.LongInteract.value = 0;
+                return;
+            }
+            currentInteractTime += Time.deltaTime;
+            Debug.Log(currentInteractTime);
+            Hud.LongInteract.value = currentInteractTime / currentLongInteractable.InteractTime;
+            if (currentInteractTime > currentLongInteractable.InteractTime)
+            {
+                Debug.Log("Interacting");
+                currentLongInteractable.LongInteract(_player);
+                isInteracting = false;
+                currentInteractTime = 0;
+            }
+        }
+        else if (currentInteractTime > 0)
+        {
+            currentInteractTime = 0;
         }
     }
 
@@ -185,14 +219,51 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (currentInteractible == value)
             {
-                UpdateHud();
+                UpdateInteractableHud();
             }
             currentInteractible = value;
-            UpdateHud();
+            UpdateInteractableHud();
         }
     }
 
-    private void UpdateHud()
+    ILongInteractable CurrentLongInteractible
+    {
+        get => currentLongInteractable;
+        set
+        {
+            if (currentLongInteractable == value)
+            {
+                UpdateLongInteractableHud();
+            }
+            currentLongInteractable = value;
+            UpdateLongInteractableHud();
+        }
+    }
+
+    private void UpdateLongInteractableHud()
+    {
+        if (currentLongInteractable == null)
+        {
+            Debug.Log("Not looking at it anymore");
+            Hud.LongInteract.value = 0;
+            Hud.LongInteract.gameObject.SetActive(false); 
+            Hud.CrosshairTooltip = "";
+            return;
+        }
+        else
+        {
+            Debug.Log("Looking at it");
+            Hud.LongInteract.gameObject.SetActive(true);
+        }
+        if (currentLongInteractable is IInteractionMessage message)
+        {
+            Hud.CrosshairTooltip = message.InteractionMessage;
+            return;
+        }
+        Hud.CrosshairTooltip = currentLongInteractable is ILongInteractable ? "Hold E to interact" : "Can't interact";
+    }
+
+    private void UpdateInteractableHud()
     {
         if (currentInteractible == null)
         {
@@ -205,6 +276,7 @@ public class PlayerMovement : NetworkBehaviour
             return;
         }
         Hud.CrosshairTooltip = currentInteractible is IInteractable && currentInteractible.Interactable ? "Press E to interact" : "Can't interact";
+
     }
 
     IHighlightable CurrentHighlightable
@@ -239,8 +311,15 @@ public class PlayerMovement : NetworkBehaviour
                 CurrentInteractible = interactable;
                 return;
             }
+            else if (hit.collider.TryGetComponent<ILongInteractable>(out var longInteractable))
+            {
+                Debug.Log("Hit longInteractable");
+                CurrentLongInteractible = longInteractable;
+                return;
+            }
         }
         CurrentInteractible = null;
+        CurrentLongInteractible = null;
         CurrentHighlightable = null;
     }
 
@@ -352,6 +431,19 @@ public class PlayerMovement : NetworkBehaviour
             CurrentInteractible.Interact(_player);
         }
         //ChangeState(MovementState.Jetpack, 1f);s
+    }
+
+    bool isInteracting = false;
+    private void InputLongInteract()
+    {
+        if (CurrentLongInteractible == null) return;
+        isInteracting = true;
+    }
+    private void CancelLongInteract()
+    {
+        if (CurrentLongInteractible == null) return;
+        Hud.LongInteract.value = 0;
+        isInteracting = false;
     }
 
     public void ChangeModifier(MovementModifier modifier, bool enable)

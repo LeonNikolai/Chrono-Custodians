@@ -3907,6 +3907,8 @@ MonoBehaviour:
   fallBackPositonIfNoTarget: {x: 0, y: 0, z: 0}
   teleportOffset: {x: 0, y: 0, z: 0}
   locationType: 0
+  interactionMessage: Hold E to leave Pyramid
+  _interactTime: 1.5
 --- !u!65 &1075211799
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6995,6 +6997,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 727316831}
+    - target: {fileID: 904724116028869120, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
+      propertyPath: interactionMessage
+      value: Hold E to Enter Pyramid
+      objectReference: {fileID: 0}
     - target: {fileID: 967943192438921699, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
       propertyPath: outsideVectors.Array.data[0].x
       value: 51.27008
