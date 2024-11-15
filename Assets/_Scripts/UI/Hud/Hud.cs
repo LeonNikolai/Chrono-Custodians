@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// This class is responsible for the HUD of the game.
 /// </summary>
@@ -14,6 +15,7 @@ public class Hud : MonoBehaviour
     [SerializeField] TMP_Text shortScannerNotificationText;
     [SerializeField] GameObject shortScannerNotification;
     [SerializeField] GameObject animOverlay;
+    [SerializeField] Slider longInteract;
     [SerializeField] CanvasGroup _hudRoot;
     [SerializeField] HudItemIcon[] _inventoryIcons;
     [SerializeField] ItemSendFeedback _itemSendFeedback;
@@ -78,6 +80,14 @@ public class Hud : MonoBehaviour
         get
         {
             return instance?.shortScannerNotificationText?.text ?? "";
+        }
+    }
+
+    public static Slider LongInteract
+    {
+        get
+        {
+            return instance?.longInteract;
         }
     }
 
