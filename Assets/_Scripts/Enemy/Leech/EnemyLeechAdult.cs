@@ -90,8 +90,8 @@ public class EnemyLeechAdult : Enemy
         targetItem = itemFOV.curtarget.transform;
         Item a = itemFOV.curtarget.GetComponent<Item>();
         ItemData b = a.ItemData;
-        TimePeriod c = b.TimePeriods[0];
-        string p = c.periodName;
+        TimePeriod c = b.TimePeriods.Length != 0 ? b.TimePeriods[0] : null;
+        string p = c?.periodName ?? "null";
         string p2 = LevelManager.LoadedScene.TimePeriod.periodName;
         if (p == p2) return;
         ResetEnemyToNormal();

@@ -24,7 +24,15 @@ public class LookDetection : NetworkBehaviour
         Debug.Log("isn't looking");
         isRendered = false;
         StopAllCoroutines();
-        enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
+        if(!IsBeingDestroyed && enemy.IsSpawned) {
+            enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
+        }
+    }
+
+    bool IsBeingDestroyed = false;
+    public override void OnDestroy() {
+        IsBeingDestroyed = true;
+        StopAllCoroutines();
     }
 
     private IEnumerator CheckObstruction()
@@ -32,6 +40,8 @@ public class LookDetection : NetworkBehaviour
         while (isRendered)
         {
             yield return null;
+            if(IsBeingDestroyed) yield break;
+
             bool isRegistered = false;
             foreach (var pos in posToCheckFrom)
             {
@@ -47,12 +57,12 @@ public class LookDetection : NetworkBehaviour
             }
             if (isRegistered)
             {
-                Debug.Log("Can see enemy");
+                // Debug.Log("Can see enemy");
                 enemy.PlayerStartLookingRPC(NetworkManager.Singleton.LocalClientId);
             }
             else
             {
-                Debug.Log("Enemy obstructed");
+                // Debug.Log("Enemy obstructed");
                 enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
             }
 

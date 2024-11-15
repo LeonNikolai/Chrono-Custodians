@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay.Models;
@@ -28,7 +30,7 @@ public class MultiplayerJoin : MonoBehaviour
         LobbyCode.onValueChanged.AddListener(SetLobbyCode);
     }
 
-    void Start()
+    void OnEnable()
     {
         ListLobbies();
     }
@@ -40,17 +42,20 @@ public class MultiplayerJoin : MonoBehaviour
 
     public async void ListLobbies()
     {
-
+        if (UnityServices.Instance.State != ServicesInitializationState.Initialized || AuthenticationService.Instance.IsSignedIn)
+        {
+            return;
+        }
         foreach (Transform child in ListLobbyContent)
         {
             Destroy(child.gameObject);
         }
-        if(LobbyService.Instance == null)
+        if (LobbyService.Instance == null)
         {
             Debug.LogError("LobbyService is null");
             return;
         }
-  
+
         QueryResponse lobbyQuery = await LobbyService.Instance.QueryLobbiesAsync();
         foreach (var lobby in lobbyQuery.Results)
         {

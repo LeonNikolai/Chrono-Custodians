@@ -29,11 +29,9 @@ public class Player : NetworkBehaviour, IScanable
     public static Action OnPlayerDeadCountChanged = delegate { };
     public static Action AllPlayersDead = delegate { };
 
-    public FixedString64Bytes playerName = "Player ";
-    public string GetPlayerName()
-    {
-        return playerName.ToString();
-    }
+    NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>("Player", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public string PlayerName => playerName.Value.ToString();
+
 
     public static bool AllPlayersAreDead => PlayerDeadCount == AllPlayers.Count;
     static int playerDeadCount = -1;
@@ -238,6 +236,8 @@ public class Player : NetworkBehaviour, IScanable
             Input.Spectator.SpectateNextPerson.performed += SpectateNext;
             Input.Spectator.SpectatePreviousPerson.performed += SpectatePrevious;
             Health.onDeath.AddListener(OnSpectatingChanged);
+            playerName.Value = CustomUserData.PlayerName;
+            
         }
         Health.onDeath.AddListener(OnHealthChanged);
         AllPlayers.Add(this);
@@ -325,4 +325,6 @@ public class Player : NetworkBehaviour, IScanable
     {
 
     }
+
+    public static CustomUserData CustomUserData = new CustomUserData();
 }

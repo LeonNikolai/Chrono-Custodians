@@ -8,6 +8,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
     public static bool IsGameActive = true;
     public ItemIdProvider idProvider;
+    public static ItemIdProvider IdProvider => instance.idProvider;
     public NetworkVariable<int> _timeStability = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public int TimeStability
     {
@@ -24,6 +25,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> DayProgression = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<GameState> gameState = new NetworkVariable<GameState>(GameState.InLobby, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LevelState> levelState = new NetworkVariable<LevelState>(LevelState.Playing, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<LevelEndData> lastLevelEndData = new NetworkVariable<LevelEndData>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public enum GameState
     {
@@ -133,36 +135,17 @@ public class GameManager : NetworkBehaviour
         sceneStart.LoadScene(sceneIndex);
     }
 
-
+    NetworkVariable<int> _itemSendCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void LevelEnd(LevelScene sceneEnd)
     {
         int RemainingUnstableItems = Item.CalculateRemainingUnstableItemInstability(sceneEnd.TimePeriod);
-        int WrongSendInstability = 0;
-        int CorrectItemSentStability = 0;
-
-        foreach (var item in ItemSender.SentItems)
-        {
-            if (item.ItemData.TimePeriods.Contains(sceneEnd.TimePeriod))
-            {
-                
-                CorrectItemSentStability+= item.InstabilityWorth;
-                continue;
-            }
-            WrongSendInstability += item.InstabilityWorth;
-        }
-
+        var itemSendEvets = ItemSender.SentItems.ToArray();
         ItemSender.SentItems.Clear();
-        LevelEndData result = new LevelEndData(sceneEnd)
-        {
-            RemainingUnstableItemStability = RemainingUnstableItems,
-            SendWrongInstability = WrongSendInstability,
-            SendCorrectInstability = CorrectItemSentStability,
-            Dayprogression = DayProgression.Value
-        };
 
         Player.RespawnAll();
-        levelStabilities.ProgressStability(sceneEnd, result);
+        LevelEndData data = levelStabilities.ProgressStability(sceneEnd,DayProgression.Value,itemSendEvets,RemainingUnstableItems);
         TimeStability = levelStabilities.TotalStability();
+        lastLevelEndData.Value = data;
 
         if (TimeStability <= 0)
         {
@@ -172,6 +155,7 @@ public class GameManager : NetworkBehaviour
         {
             DayProgression.Value++;
         }
+
         DestroyCurrentLevel?.Invoke();
         LevelManager.LoadLevelScene(null);
     }

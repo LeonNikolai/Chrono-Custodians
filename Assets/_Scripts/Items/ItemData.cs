@@ -12,7 +12,7 @@ public class ItemData : ScriptableObject
     [SerializeField] LocalizedString _description;
     [SerializeField] Sprite _icon;
     public Sprite Icon => _icon;
-    public string Id => _id != null && String.IsNullOrEmpty(_id) ? _id : name;
+    public int Id => GameManager.IdProvider.GetId(this);
     /*
     public int AstronomicalYearStart => _astronomicalYearStart;
     public int AstronomicalYearEnd => _astronomicalYearEnd;*/

@@ -479,6 +479,12 @@ public class PlayerMovement : NetworkBehaviour
         ChangePosition(position);
     }
     [Rpc(SendTo.Owner)]
+    public void TeleportRpc(Vector3 position,LocationType locationType)
+    {
+        _player.Location = locationType;
+        ChangePosition(position);
+    }
+    [Rpc(SendTo.Owner)]
     public void TeleportAndRotateRpc(Vector3 position, Quaternion rotation)
     {
         ChangePositionAndRotation(position, rotation);

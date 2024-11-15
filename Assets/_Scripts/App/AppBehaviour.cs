@@ -6,12 +6,7 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class AppBehaviour : MonoBehaviour
 {
-    [Serializable]
-    struct asdasd
-    {
-        public int a;
-        public int b;
-    }
+
     private void OnDestroy()
     {
         if (App.IsRunning)

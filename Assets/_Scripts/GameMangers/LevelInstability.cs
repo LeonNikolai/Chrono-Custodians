@@ -15,6 +15,7 @@ public class LevelStability : NetworkBehaviour
     }
     public NetworkVariable<float> _stability = new NetworkVariable<float>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> _visitCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> _itemsSentToTime = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public float Stability
     {
         get => _stability.Value;

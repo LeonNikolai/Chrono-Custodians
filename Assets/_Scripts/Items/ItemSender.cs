@@ -6,13 +6,47 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
-public struct ItemSendEvent
+public struct ItemSendEvent : INetworkSerializable, System.IEquatable<ItemSendEvent>
 {
-    public ItemData ItemData;
-    public LevelScene level;
+    public int ItemID;
+    public ItemData ItemData
+    {
+        get
+        {
+            return GameManager.IdProvider.GetItemData(ItemID);
+        }
+        set
+        {
+            ItemID = GameManager.IdProvider.GetId(value);
+        }
+    }
+    public int LevelId;
+    public LevelScene Level
+    {
+        get
+        {
+            return LevelManager.GetSceneById(LevelId);
+        }
+        set
+        {
+            LevelId = LevelManager.GetSceneID(value);
+        }
+    }
     public int InstabilityWorth;
     public int TargetPeriodID;
 
+    public bool Equals(ItemSendEvent other)
+    {
+        return ItemID == other.ItemID && LevelId == other.LevelId && InstabilityWorth == other.InstabilityWorth && TargetPeriodID == other.TargetPeriodID;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref InstabilityWorth);
+        serializer.SerializeValue(ref TargetPeriodID);
+        serializer.SerializeValue(ref ItemID);
+        serializer.SerializeValue(ref LevelId);
+    }
 }
 
 public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
@@ -201,7 +235,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         ItemSendEvent item = new ItemSendEvent
         {
             ItemData = itemData,
-            level = LevelManager.LoadedScene,
+            Level = LevelManager.LoadedScene,
             TargetPeriodID = SelectedPeriodID.Value,
             InstabilityWorth = Instability
         };

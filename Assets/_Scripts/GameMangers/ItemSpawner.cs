@@ -31,9 +31,16 @@ public class ItemSpawner : NetworkBehaviour
     public static HashSet<NetworkObject> SpawnedNetworkObjects = new HashSet<NetworkObject>();
     private void DestroyItems()
     {
-        foreach (var obj in SpawnedNetworkObjects)
+        try
         {
-            obj?.Despawn(true);
+            foreach (var obj in SpawnedNetworkObjects)
+            {
+                obj?.Despawn(true);
+            }
+        }
+        catch
+        {
+
         }
         SpawnedNetworkObjects.Clear();
     }
@@ -72,21 +79,21 @@ public class ItemSpawner : NetworkBehaviour
 
         int maxItems = spawnpoints.Count;
         int i = 0;
-        
+
         while (stabilityTarget > 0)
         {
             var item = unstableItems[i % unstableItems.Length];
             var spawnpoint = spawnpoints[i % spawnpoints.Count];
-            
+
             var itemInstability = DefaultStabilityPerItem;
 
             // Spawn the last item with the remaining stability
-            if(maxItems == 2)
+            if (maxItems == 2)
             {
                 itemInstability = (int)stabilityTarget;
-            } 
-            if(maxItems == 1)  break;
-    
+            }
+            if (maxItems == 1) break;
+
             // Spawn the last item with the remaining stability
             if (stabilityTarget < DefaultStabilityPerItem)
             {
@@ -140,7 +147,7 @@ public class ItemSpawner : NetworkBehaviour
         {
             networkObject.Spawn(true);
             SpawnedNetworkObjects.Add(networkObject);
-            if(item.TryGetComponent(out Item itemComponent))
+            if (item.TryGetComponent(out Item itemComponent))
             {
                 itemComponent.InStabilityWorth = stability;
             }

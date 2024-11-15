@@ -27,6 +27,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> HasBeenTouched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public static int CalculateRemainingUnstableItemInstability(TimePeriod currentTimePeriod, bool despawnItems = false)
     {
@@ -154,6 +155,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public override void OnDestroy()
     {
         AllItems.Remove(this);
+        ItemSpawner.SpawnedNetworkObjects.Remove(NetworkObject);
         base.OnDestroy();
     }
 

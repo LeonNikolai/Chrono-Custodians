@@ -13,7 +13,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
     [SerializeField] private bool _interactible = true;
     [SerializeField] private bool _onlyHost = false;
     [SerializeField] private bool _onlyIfNoLevelLoaded = false;
-
+    Vector3 originalScale;
     public bool Interactable
     {
         get
@@ -50,6 +50,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
     }
     void Awake()
     {
+        originalScale = transform.localScale;
         if (levelScene != null)
         {
             LevelManager.AllScenes.Add(levelScene);
@@ -58,9 +59,11 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
 
     public override void OnNetworkSpawn()
     {
+        transform.localScale = originalScale;
         base.OnNetworkSpawn();
         StartLevelButton.OnSelectLevel += OnLevelSelect;
         LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
+        OnLevelSelect(null, -1);
     }
 
     private void OnLevelLoaded(LevelScene arg0)
@@ -83,7 +86,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
     {
         bool rightIndex = _sceneIndex == -1 || _sceneIndex == index;
         bool rightScene = levelScene == scene;
-        
+
         float stability = _levelScenes != null ? Stability.GetLevelStability(_levelScenes).Stability : 0;
         bool lowStability = stability < 50;
         bool fullStability = stability == 100;
@@ -135,7 +138,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
                 multiplier = 1.1f;
                 break;
             }
-            transform.localScale = Vector3.one * multiplier;
+            transform.localScale = originalScale * multiplier;
             yield return null;
         }
         while (true)
@@ -146,9 +149,9 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
                 multiplier = 1f;
                 break;
             }
-            transform.localScale = Vector3.one * multiplier;
+            transform.localScale = originalScale * multiplier;
             yield return null;
         }
-        transform.localScale = Vector3.one;
+        transform.localScale = originalScale;
     }
 }

@@ -108,7 +108,7 @@ public class EnemyMannequin : Enemy
                 curChaseTime = 0;
                 if (playersLooking.Count == 0)
                 {
-                    Debug.Log("Stopped");
+                    // Debug.Log("Stopped");
                     agent.SetDestination(enemyFOV.curtarget.transform.position);
                     if (agent.isStopped)
                     {

@@ -11,7 +11,34 @@ public class TeleportItem : Item, ItemUseToolTip
 {
     Player player;
     private List<Player> players = new List<Player>();
-    private int selectedPlayer  = 0;
+    private int selectedPlayer = 0;
+    private int SelectedPlayer
+    {
+        get => selectedPlayer;
+        set
+        {
+            if (value != selectedPlayer) return;
+            foreach (var item in playerCards)
+            {
+                if (item == null) continue;
+                item.color = unselectedColor;
+            }
+            if (value < 0)
+            {
+                selectedPlayer = players.Count - 1;
+            }
+            else if (value >= players.Count)
+            {
+                selectedPlayer = 0;
+            }
+            else
+            {
+                selectedPlayer = value;
+                selectedPlayer = selectedPlayer % players.Count;
+                playerCards[selectedPlayer].color = selectedColor;
+            }
+        }
+    }
     [SerializeField] private Transform contentArea;
     [SerializeField] private GameObject playerCardPrefab;
     [SerializeField] private GameObject teleportingPlayerPrefab;
@@ -40,10 +67,13 @@ public class TeleportItem : Item, ItemUseToolTip
     {
         base.OnEquip(character);
         canvas.SetActive(true);
+
+
         if (player == null && character is Player playerComponent)
         {
             player = playerComponent;
         }
+        UpdateView();
     }
 
     private void UpdateView()
@@ -68,15 +98,8 @@ public class TeleportItem : Item, ItemUseToolTip
             {
                 GameObject go = Instantiate(playerCardPrefab, contentArea);
                 playerCards.Add(go.GetComponent<Image>());
-                go.GetComponentInChildren<TMP_Text>().text = player.GetPlayerName() + player.GetComponent<NetworkObject>().NetworkObjectId;
-                if (i == selectedPlayer)
-                {
-                    playerCards[i].color = selectedColor;
-                }
-                else
-                {
-                    playerCards[i].color = unselectedColor;
-                }
+                go.GetComponentInChildren<TMP_Text>().text = player.PlayerName;
+                playerCards[i].color = i == SelectedPlayer ? selectedColor : unselectedColor;
             }
         }
 
@@ -102,20 +125,16 @@ public class TeleportItem : Item, ItemUseToolTip
             if (teleporterDisabled) return;
             if (Mouse.current.scroll.ReadValue().y > 0)
             {
-                if (selectedPlayer < Player.AllPlayers.Count - 1)
+                if (SelectedPlayer < Player.AllPlayers.Count - 1)
                 {
-                    playerCards[selectedPlayer].color = unselectedColor;
-                    selectedPlayer++;
-                    playerCards[selectedPlayer].color = selectedColor;
+                    SelectedPlayer++;
                 }
             }
             else if (Mouse.current.scroll.ReadValue().y < 0)
             {
                 if (selectedPlayer > 0)
                 {
-                    playerCards[selectedPlayer].color = unselectedColor;
-                    selectedPlayer--;
-                    playerCards[selectedPlayer].color = selectedColor;
+                    SelectedPlayer--;
                 }
             }
 
@@ -134,9 +153,10 @@ public class TeleportItem : Item, ItemUseToolTip
         actionInProgress.SetActive(true);
         teleporterDisabled = true;
         Vector3 teleportPos = player.transform.position;
+        LocationType locationType = player.Location;
 
-        SpawnEffectsRPC(teleportPos);
-        teleportText.text = "Teleporting " + players[selectedPlayer].playerName + " in";
+        SpawnEffectsRPC(teleportPos, players[selectedPlayer].OwnerClientId);
+        teleportText.text = "Teleporting " + players[selectedPlayer].PlayerName + " in";
         countdownText.text = "3";
         // Teleport after the wait here
         yield return new WaitForSeconds(1);
@@ -146,7 +166,7 @@ public class TeleportItem : Item, ItemUseToolTip
         yield return new WaitForSeconds(1);
 
 
-        players[selectedPlayer].GetComponent<PlayerMovement>().TeleportRpc(teleportPos);
+        players[selectedPlayer].GetComponent<PlayerMovement>().TeleportRpc(teleportPos, locationType);
 
         curCooldown = cooldown;
         teleportText.text = "Teleporter ready in";
@@ -163,16 +183,19 @@ public class TeleportItem : Item, ItemUseToolTip
 
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void SpawnEffectsRPC(Vector3 teleportPos)
+    private void SpawnEffectsRPC(Vector3 teleportPos, ulong clientId)
     {
-        StartCoroutine(SpawnEffects(teleportPos));
+        if (Player.Players.TryGetValue(clientId, out Player targetPlayer))
+        {
+            StartCoroutine(SpawnEffects(teleportPos, targetPlayer));
+        }
     }
 
-    private IEnumerator SpawnEffects(Vector3 teleportPos)
+    private IEnumerator SpawnEffects(Vector3 teleportPos, Player targetPlayer)
     {
         GameObject locationEffect = Instantiate(teleportPointPrefab);
         locationEffect.transform.position = teleportPos;
-        GameObject playerEffect = Instantiate(teleportingPlayerPrefab, players[selectedPlayer].transform);
+        GameObject playerEffect = Instantiate(teleportingPlayerPrefab, targetPlayer.transform);
 
         yield return new WaitForSeconds(2.99f);
         playerEffect.transform.parent = null;

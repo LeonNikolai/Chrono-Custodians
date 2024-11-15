@@ -4,20 +4,32 @@ using UnityEngine;
 
 public static class Stability
 {
-    public static void ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene, LevelEndData levelEndData)
+    public static LevelEndData ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene,int day, ItemSendEvent[] itemevents,int RemainingUnstableItems)
     {
+        int SendWrongInstability = 0;
+        int SendCorrectInstability = 0;
+         foreach (ItemSendEvent item in itemevents)
+        {
+            
+            if (item.ItemData.TimePeriods.Contains(completedScene.TimePeriod))
+            {
+                
+                SendCorrectInstability+= item.InstabilityWorth;
+                continue;
+            }
+            SendWrongInstability += item.InstabilityWorth;
+        }
+
         var completedLevel = allLevelStabilities.GetLevelStability(completedScene);
         var uncompletedLevels = allLevelStabilities.Where(x => x.scene != completedScene).ToArray();
 
         float completedLevelStability = completedLevel.Stability;
 
-        completedLevel.Stability += levelEndData.SendCorrectInstability;
-        int distributeWrong = levelEndData.SendWrongInstability / 2;
-        completedLevel.Stability -= levelEndData.SendWrongInstability / 2;
+        completedLevel.Stability += SendCorrectInstability;
+        int distributeWrong = SendWrongInstability / 2;
+        completedLevel.Stability -= SendWrongInstability / 2;
 
         uncompletedLevels.DistributeInstabilityRandomly(distributeWrong);
-
-        int day = levelEndData.Dayprogression;
 
         float rand1 = Mathf.Sin(day) * Mathf.Exp(day * 0.1f);
         float rand2 = 3 + Mathf.Sin(day * 3) * Mathf.Exp(day * 0.15f);
@@ -31,6 +43,15 @@ public static class Stability
         uncompletedLevels.DecreseAllStability(exponentiaDecrese);
 
         completedLevel.Stability = completedLevelStability;
+        return new LevelEndData
+        {
+            Level = completedScene,
+            RemainingUnstableItemStability = RemainingUnstableItems,
+            SendWrongInstability = SendWrongInstability,
+            SendCorrectInstability = SendCorrectInstability,
+            Dayprogression = day,
+            itemSendEvets = itemevents
+        };
     }
     public static int TotalStability(this LevelStability[] levels)
     {

@@ -46,10 +46,12 @@ public static class App
     public static void SaveAppdata()
     {
         appdata?.Save();
+        Player.CustomUserData.Save();
     }
     public static void LoadAppdata()
     {
         appdata = Appdata.Load() ?? new Appdata();
+        Player.CustomUserData.Load();
     }
     public static void ClearData()
     {
