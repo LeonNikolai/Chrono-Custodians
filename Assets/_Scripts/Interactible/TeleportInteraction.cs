@@ -25,7 +25,7 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
     {
         if (target)
         {
-            player.Movement.ChangePositionAndRotation(target.position + teleportOffset, target.rotation);
+            player.Movement.ChangePositionAndRotation(target.position + teleportOffset, player.transform.rotation);
         }
         else
         {
