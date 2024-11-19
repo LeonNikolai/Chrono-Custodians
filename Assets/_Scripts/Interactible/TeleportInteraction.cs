@@ -12,6 +12,7 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
     [SerializeField] Vector3 fallBackPositonIfNoTarget;
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
     [SerializeField] LocationType locationType = LocationType.Outside;
+    [SerializeField] bool playerRotation = false;
     [SerializeField] private string interactionMessage;
     [SerializeField] private float _interactTime = 1.5f;
 
