@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 [DefaultExecutionOrder(-100)]
 public class GameManager : NetworkBehaviour
 {
@@ -71,6 +73,7 @@ public class GameManager : NetworkBehaviour
         IsGameActive = true;
         Player.AllPlayersDead += GameLost;
         levelState.OnValueChanged += LevelStateChanged;
+        timer.OnValueChanged += TimerChanged;
         DayProgression.OnValueChanged += (previousValue, newValue) =>
         {
             Menu.ActiveMenu = Menu.MenuType.LevelStability;
@@ -168,6 +171,7 @@ public class GameManager : NetworkBehaviour
         if (levelLoaded != null)
         {
             gameState.Value = GameState.InLevel;
+            StartCoroutine(Timer());
         }
         else
         {
@@ -201,5 +205,44 @@ public class GameManager : NetworkBehaviour
         GameLost();
     }
 
+
+    private NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private float timerColorIntensity = 0;
+
+    private void TimerChanged(float previousValue,  float newValue)
+    {
+        if (MathF.Floor(previousValue) != MathF.Floor(newValue))
+        {
+            timerColorIntensity = 0;
+        }
+    }
+    
+
+    private IEnumerator Timer()
+    {
+        while (timer.Value > 0)
+        {
+            yield return null;
+            timer.Value -= Time.deltaTime;
+            if (timer.Value < 60)
+            {
+                timerColorIntensity += Time.deltaTime * 0.5f;
+                Hud.TimerText.color = Color.Lerp(Color.white, Color.red, timerColorIntensity);
+            }
+            Hud.TimerText.text = UpdateTimer();
+
+        }
+        if (timer.Value <= 0)
+        {
+
+        }
+    }
+
+    private string UpdateTimer()
+    {
+        int minutes = Mathf.FloorToInt(timer.Value / 60f);
+        int seconds = Mathf.FloorToInt(timer.Value % 60f);
+        return $"{minutes:0}:{seconds:00}";
+    }
 
 }

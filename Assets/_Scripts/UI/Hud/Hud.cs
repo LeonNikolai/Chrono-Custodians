@@ -10,6 +10,7 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _healthBar;
     [SerializeField] UiBar _staminaBar;
     [SerializeField] UiBar _shieldBar;
+    [SerializeField] TMP_Text _timerText;
     [SerializeField] TMP_Text _crosshairTooltip;
     [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] TMP_Text shortScannerNotificationText;
@@ -39,6 +40,18 @@ public class Hud : MonoBehaviour
     {
         set => instance._staminaBar.Progress = value;
     }
+    public static TMP_Text TimerText
+    {
+        set
+        {
+            instance._timerText = value;
+        }
+        get
+        {
+            return instance?._timerText;
+        }
+    }
+
     public static string CrosshairTooltip
     {
         set
