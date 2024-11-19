@@ -19,8 +19,8 @@ public class PortalTeleporter : MonoBehaviour {
 
 		if (playerIsOverlapping)
 		{
-			Vector3 portalToPlayer = player.position - transform.position;
-			float dotProduct = Vector3.Dot(transform.up, portalToPlayer);
+			Vector3 portalToPlayer = player.transform.position - transform.position;
+			float dotProduct = Vector3.Dot(Player.LocalPlayer.HeadTransform.up, portalToPlayer);
 
 			// If this is true: The player has moved across the portal
 			if (dotProduct < 0f)
