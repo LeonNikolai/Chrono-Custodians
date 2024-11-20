@@ -12,7 +12,7 @@ public class ItemData : ScriptableObject
     [SerializeField] LocalizedString _description;
     [SerializeField] Sprite _icon;
     public Sprite Icon => _icon;
-    public int Id => GameManager.IdProvider.GetId(this);
+    public int Id => GameManager.IdProvider.GetItemId(this);
     /*
     public int AstronomicalYearStart => _astronomicalYearStart;
     public int AstronomicalYearEnd => _astronomicalYearEnd;*/
@@ -40,4 +40,6 @@ public class ItemData : ScriptableObject
     [Header("Hints")]
     [SerializeField] ItemTag[] _tags = new ItemTag[0];
     public ItemTag[] Tags => _tags;
+
+    public ItemDataRefference NetworkedRefference => new ItemDataRefference(this);
 }

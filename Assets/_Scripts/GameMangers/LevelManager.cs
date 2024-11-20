@@ -26,30 +26,14 @@ public class LevelManager : NetworkBehaviour
             _loadedScene = value;
             if (instance)
             {
-                instance.LoadedLevel.Value = _loadedScene?.GetNetworklevel() ?? NetworkLevel.Default;
+                instance.LoadedLevel.Value = _loadedScene?.GetNetworklevel() ?? LevelSceneRefference.None;
                 instance.OnLevelLoaded?.Invoke(_loadedScene);
             }
         }
     }
-    public NetworkVariable<NetworkLevel> LoadedLevel = new NetworkVariable<NetworkLevel>(NetworkLevel.Default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<LevelSceneRefference> LoadedLevel = new NetworkVariable<LevelSceneRefference>(LevelSceneRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public UnityEvent<LevelScene> OnLevelLoaded = new UnityEvent<LevelScene>();
-
-    public static HashSet<LevelScene> AllScenes = new HashSet<LevelScene>();
     static List<LevelScene> sceneById = new List<LevelScene>();
-    public static LevelScene GetSceneById(int id)
-    {
-        if (id < 0 || id >= sceneById.Count) return null;
-        return sceneById[id] ?? null;
-    }
-    public static int GetSceneID(LevelScene scene)
-    {
-        if (scene == null) return -1;
-        if (!sceneById.Contains(scene))
-        {
-            return -1;
-        }
-        return sceneById.IndexOf(scene);
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -62,7 +46,7 @@ public class LevelManager : NetworkBehaviour
         sceneById.Clear();
         if (!IsHost)
         {
-            LoadedLevel.OnValueChanged += (previous, current) => LoadedScene = current.Level;
+            LoadedLevel.OnValueChanged += (previous, current) => LoadedScene = current.Refference;
         }
 
 
@@ -80,13 +64,13 @@ public class LevelManager : NetworkBehaviour
         }
         else
         {
-            LoadLevelRpc(GetSceneID(scene), index);
+            LoadLevelRpc(scene, index);
         }
     }
     [Rpc(SendTo.Server)]
-    private void LoadLevelRpc(int sceneID, int index)
+    private void LoadLevelRpc(LevelSceneRefference sceneRefference, int index)
     {
-        LevelScene scene = GetSceneById(sceneID);
+        LevelScene scene = sceneRefference.Refference;
         LoadLevelServer(scene, index);
     }
 
@@ -183,7 +167,6 @@ public class LevelManager : NetworkBehaviour
         foreach (var level in _levelScene)
         {
             if (level == null) continue;
-            AllScenes.Add(level);
         }
         if (OnLevelLoaded == null) OnLevelLoaded = new UnityEvent<LevelScene>();
         instance = this;

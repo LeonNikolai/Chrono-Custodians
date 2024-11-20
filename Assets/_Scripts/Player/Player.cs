@@ -12,6 +12,7 @@ public class Player : NetworkBehaviour, IScanable
     // Static variables
     public static Player LocalPlayer = null;
     public NetworkVariable<LocationType> _location = new NetworkVariable<LocationType>(LocationType.Outside, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<LocationRenderingSettingsRefference> _locationRendering = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public LocationType Location
     {
         get => _location.Value;
@@ -237,7 +238,11 @@ public class Player : NetworkBehaviour, IScanable
             Input.Spectator.SpectatePreviousPerson.performed += SpectatePrevious;
             Health.onDeath.AddListener(OnSpectatingChanged);
             playerName.Value = CustomUserData.PlayerName;
-            
+            _locationRendering.OnValueChanged += (previousValue, newValue) =>
+            {
+                newValue.Refference?.Apply();
+            };
+            _locationRendering.Value.Refference?.Apply();
         }
         Health.onDeath.AddListener(OnHealthChanged);
         AllPlayers.Add(this);

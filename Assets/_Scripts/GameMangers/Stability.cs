@@ -4,17 +4,17 @@ using UnityEngine;
 
 public static class Stability
 {
-    public static LevelEndData ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene,int day, ItemSendEvent[] itemevents,int RemainingUnstableItems)
+    public static LevelEndData ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene, int day, ItemSendEvent[] itemevents, int RemainingUnstableItems)
     {
         int SendWrongInstability = 0;
         int SendCorrectInstability = 0;
-         foreach (ItemSendEvent item in itemevents)
+        foreach (ItemSendEvent item in itemevents)
         {
-            
+
             if (item.ItemData.TimePeriods.Contains(completedScene.TimePeriod))
             {
-                
-                SendCorrectInstability+= item.InstabilityWorth;
+
+                SendCorrectInstability += item.InstabilityWorth;
                 continue;
             }
             SendWrongInstability += item.InstabilityWorth;
@@ -41,7 +41,6 @@ public static class Stability
         int dayClamped = Mathf.Max(day - 2, 0);
         float exponentiaDecrese = Mathf.Exp(dayClamped / 5) - Mathf.Exp(dayClamped / 10);
         uncompletedLevels.DecreseAllStability(exponentiaDecrese);
-
         completedLevel.Stability = completedLevelStability;
         return new LevelEndData
         {
@@ -67,7 +66,7 @@ public static class Stability
     }
     static void DistributeInstabilityRandomly(this LevelStability[] levels, int instabilityToDistribute)
     {
-        if(levels.Length == 0)
+        if (levels.Length == 0)
         {
             Debug.LogError("No levels to distribute instability to");
             return;
@@ -77,7 +76,7 @@ public static class Stability
         {
             int randomLevel = UnityEngine.Random.Range(0, levels.Length);
             LevelStability scene = levels[randomLevel];
-            if(scene == null)
+            if (scene == null)
             {
                 Debug.LogWarning("Scene is null");
                 instabilityToDistribute -= 1;

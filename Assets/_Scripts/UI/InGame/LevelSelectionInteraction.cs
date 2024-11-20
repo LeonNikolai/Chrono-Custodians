@@ -51,10 +51,6 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
     void Awake()
     {
         originalScale = transform.localScale;
-        if (levelScene != null)
-        {
-            LevelManager.AllScenes.Add(levelScene);
-        }
     }
 
     public override void OnNetworkSpawn()
@@ -66,9 +62,9 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
         OnLevelSelect(null, -1);
     }
 
-    private void OnLevelLoaded(LevelScene arg0)
+    private void OnLevelLoaded(LevelScene level)
     {
-        OnLevelSelect(arg0, -1);
+        OnLevelSelect(level, -1);
     }
 
     public override void OnDestroy()

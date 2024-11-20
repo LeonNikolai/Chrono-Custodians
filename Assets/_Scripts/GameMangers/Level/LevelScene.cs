@@ -40,9 +40,9 @@ public class LevelScene : ScriptableObject
     {
         LevelManager.LoadLevelScene(this);
     }
-    public NetworkLevel GetNetworklevel()
+    public LevelSceneRefference GetNetworklevel()
     {
-        return new NetworkLevel(this);
+        return new LevelSceneRefference(this);
     }
     public LevelStability GetStability()
     {

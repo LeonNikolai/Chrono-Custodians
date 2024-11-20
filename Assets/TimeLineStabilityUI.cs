@@ -23,9 +23,9 @@ public class TimeLineStabilityUI : MonoBehaviour
         GameManager.instance.DayProgression.OnValueChanged += DayProgression;
         OnStabilityChange(GameManager.instance._timeStability.Value, GameManager.instance._timeStability.Value);
         DayProgression(GameManager.instance.DayProgression.Value, GameManager.instance.DayProgression.Value);
-
         var data = GameManager.instance.lastLevelEndData.Value;
-        if(data != null) {
+        if (data != null)
+        {
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("Data");
             builder.AppendLine($"Sent {data.SendCorrectInstability} items to correct time periods");
@@ -33,16 +33,23 @@ public class TimeLineStabilityUI : MonoBehaviour
             builder.AppendLine($"{data.RemainingUnstableItemStability} unstable items was left in the time period");
             builder.AppendLine("");
             builder.AppendLine("Items :");
-            foreach (var item in data.itemSendEvets)
+            var targetPeriodId = GameManager.instance.idProvider.GetTimeId(data.Level.Refference?.TimePeriod);
+            var targetPerioName = data.Level.Refference.TimePeriod?.periodName ?? "Unknown";
+            foreach (ItemSendEvent item in data.itemSendEvets)
             {
-                if(item.LevelId == data.LevelId) {
-                    builder.AppendLine($"<color=#FFFFFF>Sent {item.ItemData.Name} to {item.Level.LevelName}</color>");
-                } else {
-                    builder.AppendLine($"<color=#FF0000>Sent {item.ItemData.Name} to {item.Level.LevelName}</color>");
+                if (item.TargetPeriodID == targetPeriodId)
+                {
+                    builder.AppendLine($"<color=#FFFFFF>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName}</color>");
+                }
+                else
+                {
+                    builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} to {item.TargetPeriod?.periodName ?? "Unknown"}</color>");
                 }
             }
             _itemText.text = builder.ToString();
-        } else {
+        }
+        else
+        {
             _itemText.text = "No data";
         }
     }
@@ -59,7 +66,7 @@ public class TimeLineStabilityUI : MonoBehaviour
             _stabilityBar.Progress = Mathf.Lerp(previous, targetValue, lerp) / 100f;
             yield return null;
         }
-         _stabilityBar.Progress = newValue / 100f;
+        _stabilityBar.Progress = newValue / 100f;
     }
 
     void OnDisable()
@@ -83,7 +90,7 @@ public class TimeLineStabilityUI : MonoBehaviour
 
     private void OnStabilityChange(int previousValue, int newValue)
     {
-        if(_previousStability == newValue) return;
+        if (_previousStability == newValue) return;
         StartCoroutine(UpdateStability(previousValue, newValue));
     }
 }

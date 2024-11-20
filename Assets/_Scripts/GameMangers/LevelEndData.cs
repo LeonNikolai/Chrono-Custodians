@@ -4,27 +4,16 @@ using Unity.Netcode;
 [System.Serializable]
 public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
 {
-    public int LevelId;
+    public LevelSceneRefference Level;
     public int RemainingUnstableItemStability;
     public int SendWrongInstability;
     public int SendCorrectInstability;
     public int Dayprogression;
     public ItemSendEvent[] itemSendEvets;
 
-    public LevelScene Level
-    {
-        get
-        {
-            return LevelManager.GetSceneById(LevelId);
-        }
-        set
-        {
-            LevelId = LevelManager.GetSceneID(value);
-        }
-    }
     public LevelEndData()
     {
-        LevelId = -1;
+        Level = LevelSceneRefference.None;
         RemainingUnstableItemStability = 0;
         SendWrongInstability = 0;
         SendCorrectInstability = 0;
@@ -34,7 +23,7 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        serializer.SerializeValue(ref LevelId);
+        serializer.SerializeValue(ref Level);
         serializer.SerializeValue(ref RemainingUnstableItemStability);
         serializer.SerializeValue(ref SendWrongInstability);
         serializer.SerializeValue(ref SendCorrectInstability);
@@ -44,12 +33,12 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
 
     public bool Equals(LevelEndData other)
     {
-        if (LevelId != other.LevelId) return false;
+        if (Level != other.Level) return false;
         if (RemainingUnstableItemStability != other.RemainingUnstableItemStability) return false;
         if (SendWrongInstability != other.SendWrongInstability) return false;
         if (SendCorrectInstability != other.SendCorrectInstability) return false;
         if (Dayprogression != other.Dayprogression) return false;
-        if(itemSendEvets.Length != other.itemSendEvets.Length) return false;
+        if (itemSendEvets.Length != other.itemSendEvets.Length) return false;
         return true;
     }
 }

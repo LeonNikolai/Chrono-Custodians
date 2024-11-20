@@ -3,7 +3,7 @@ using UnityEngine;
 using Unity.Netcode; // Ensure this is correct for your version of Netcode for GameObjects
 using System.Collections.Generic;
 
-public class NetworkPrefabsEditor : EditorWindow
+public class NetworkPrefabsWindowEditor : EditorWindow
 {
     private NetworkPrefabsList prefablist;
     private List<GameObject> prefabsToAdd;
@@ -11,7 +11,7 @@ public class NetworkPrefabsEditor : EditorWindow
     [MenuItem("Tools/Network Prefabs Manager")]
     public static void ShowWindow()
     {
-        GetWindow<NetworkPrefabsEditor>("Network Prefabs Manager");
+        GetWindow<NetworkPrefabsWindowEditor>("Network Prefabs Manager");
     }
 
     private void OnGUI()

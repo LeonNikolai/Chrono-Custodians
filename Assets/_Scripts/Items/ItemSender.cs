@@ -17,7 +17,7 @@ public struct ItemSendEvent : INetworkSerializable, System.IEquatable<ItemSendEv
         }
         set
         {
-            ItemID = GameManager.IdProvider.GetId(value);
+            ItemID = GameManager.IdProvider.GetItemId(value);
         }
     }
     public int LevelId;
@@ -25,11 +25,22 @@ public struct ItemSendEvent : INetworkSerializable, System.IEquatable<ItemSendEv
     {
         get
         {
-            return LevelManager.GetSceneById(LevelId);
+            return GameManager.IdProvider.GetLevelScene(LevelId);
         }
         set
         {
-            LevelId = LevelManager.GetSceneID(value);
+            LevelId = GameManager.IdProvider.GetLevelSceneId(value);
+        }
+    }
+    public TimePeriod TargetPeriod
+    {
+        get
+        {
+            return GameManager.IdProvider.GetPeriodData(TargetPeriodID);
+        }
+        set
+        {
+            LevelId = GameManager.IdProvider.GetTimeId(value);
         }
     }
     public int InstabilityWorth;
@@ -54,7 +65,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
     public NetworkVariable<int> SelectedPeriodID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void SetSelectedTimePeriod(TimePeriod period)
     {
-        int id = idProvider.GetId(period);
+        int id = idProvider.GetTimeId(period);
         SetSelectedYearServerRpc(id);
     }
     [Rpc(SendTo.Server)]
@@ -102,7 +113,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         SelectedPeriodID.OnValueChanged += OnPeriodIDChanged;
         if (IsServer)
         {
-            SelectedPeriodID.Value = LevelManager.LoadedScene ? idProvider.GetId(LevelManager.LoadedScene.TimePeriod) : 0;
+            SelectedPeriodID.Value = LevelManager.LoadedScene ? idProvider.GetTimeId(LevelManager.LoadedScene.TimePeriod) : 0;
         }
     }
     public bool Interactable

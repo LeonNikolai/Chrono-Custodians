@@ -8,10 +8,11 @@ using UnityEngine;
 [DefaultExecutionOrder(-5)]
 public class VivoxManager : MonoBehaviour
 {
-    public string ChannelName = "Game";
+    public string ChannelName => "Game" + GameManager.instance.GameID;
     public string channels = "";
     public string activeInput = "";
     public string activeOutput = "";
+    public string MainChannel = "Main" + GameManager.instance.GameID;
 
     async void Start()
     {

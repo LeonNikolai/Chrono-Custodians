@@ -13,6 +13,7 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
     [SerializeField] Vector3 teleportOffset = Vector3.zero;
     [SerializeField] LocationType locationType = LocationType.Outside;
     [SerializeField] bool playerRotation = false;
+    [SerializeField] LocationRenderingSettings _RenderingOverride = null;
     [SerializeField] private string interactionMessage;
     [SerializeField] private float _interactTime = 1.5f;
 
@@ -34,6 +35,10 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
             player.Movement.ChangePosition(position + teleportOffset);
         }
         player.Location = locationType;
+        if (_RenderingOverride != null)
+        {
+            player._locationRendering.Value = _RenderingOverride.NetworkRefference();
+        }
     }
 
     private void OnDrawGizmosSelected()

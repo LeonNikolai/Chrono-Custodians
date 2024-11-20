@@ -24,38 +24,39 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
             selectedLevel = value;
             if (IsHost)
             {
-                SelectedSceneID.Value = LevelManager.GetSceneID(value);
+                SelectedScene.Value = selectedLevel;
             }
             OnSelectLevel?.Invoke(value, SelectedIndex.Value);
         }
     }
-    NetworkVariable<int> SelectedSceneID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    NetworkVariable<LevelSceneRefference> SelectedScene = new NetworkVariable<LevelSceneRefference>(LevelSceneRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     NetworkVariable<int> SelectedIndex = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     NetworkVariable<float> CoolDown = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private void Start()
     {
         selectLevelEvent += SelectALevel;
-        SelectedSceneID.OnValueChanged += NewLevelId;
+        SelectedScene.OnValueChanged += NewLevel;
         SelectedIndex.OnValueChanged += NewIndex;
+    }
+
+    private void NewIndex(int previousValue, int newValue)
+    {
+        SelectedLevel = SelectedScene.Value.Refference;
+    }
+
+    private void NewLevel(LevelSceneRefference previousValue, LevelSceneRefference newValue)
+    {
+        SelectedLevel = newValue.Refference;
     }
 
     public override void OnDestroy()
     {
         selectLevelEvent -= SelectALevel;
-        SelectedSceneID.OnValueChanged -= NewLevelId;
+        SelectedScene.OnValueChanged -= NewLevel;
         SelectedIndex.OnValueChanged -= NewIndex;
         base.OnDestroy();
     }
 
-    private void NewIndex(int previousValue, int newValue)
-    {
-        SelectedLevel = LevelManager.GetSceneById(SelectedSceneID.Value);
-    }
-
-    private void NewLevelId(int previousValue, int newValue)
-    {
-        SelectedLevel = LevelManager.GetSceneById(newValue);
-    }
 
     private void SelectALevel(LevelScene scene, int newIndex)
     {
@@ -71,7 +72,7 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
     [Rpc(SendTo.Server)]
     public void InteractRpc()
     {
-        StartCoroutine(CoolDownCoroutine());
+
         if (LevelManager.LoadedScene == null)
         {
             if (SelectedLevel == null)
@@ -79,14 +80,15 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
                 Debug.Log("Select a level before starting");
                 return;
             }
+            StartCoroutine(CoolDownCoroutine());
             LevelScene levelToStart = SelectedLevel;
             GameManager.instance.LevelStart(levelToStart, SelectedIndex.Value);
             return;
         }
-
+        StartCoroutine(CoolDownCoroutine());
         LevelScene level = LevelManager.LoadedScene;
         GameManager.instance.LevelEnd(level);
-        SelectedSceneID.Value = -1;
+        SelectedScene.Value = LevelSceneRefference.None;
     }
 
     private IEnumerator CoolDownCoroutine()

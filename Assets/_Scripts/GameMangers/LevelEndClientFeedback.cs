@@ -4,7 +4,7 @@ using Unity.Netcode;
 [Serializable]
 public struct NetworkLevelStabilty : INetworkSerializable, IEquatable<NetworkLevelStabilty>
 {
-    public NetworkLevel level;
+    public LevelSceneRefference level;
     public int Stability;
 
     public bool Equals(NetworkLevelStabilty other)

@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager instance;
+    public static ItemIdProvider ID => instance.idProvider;
     public static bool IsGameActive = true;
     public ItemIdProvider idProvider;
     public static ItemIdProvider IdProvider => instance.idProvider;
@@ -48,7 +49,8 @@ public class GameManager : NetworkBehaviour
             instance = this;
         }
     }
-
+    public NetworkVariable<int> GameId = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public string GameID => "G-"+GameManager.instance.GameId.Value.ToString();
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -68,6 +70,7 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
+            GameId.Value = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
         }
         IsGameActive = true;
@@ -146,7 +149,8 @@ public class GameManager : NetworkBehaviour
         ItemSender.SentItems.Clear();
 
         Player.RespawnAll();
-        LevelEndData data = levelStabilities.ProgressStability(sceneEnd,DayProgression.Value,itemSendEvets,RemainingUnstableItems);
+        LevelEndData data = levelStabilities.ProgressStability(sceneEnd, DayProgression.Value, itemSendEvets, RemainingUnstableItems);
+        data.Level = sceneEnd;
         TimeStability = levelStabilities.TotalStability();
         lastLevelEndData.Value = data;
 
@@ -209,14 +213,14 @@ public class GameManager : NetworkBehaviour
     private NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float timerColorIntensity = 0;
 
-    private void TimerChanged(float previousValue,  float newValue)
+    private void TimerChanged(float previousValue, float newValue)
     {
         if (MathF.Floor(previousValue) != MathF.Floor(newValue))
         {
             timerColorIntensity = 0;
         }
     }
-    
+
 
     private IEnumerator Timer()
     {

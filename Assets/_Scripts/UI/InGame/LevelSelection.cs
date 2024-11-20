@@ -11,19 +11,15 @@ public class LevelSelection : MonoBehaviour
     [Header("Visual References")]
     [SerializeField] private TMP_Text _Name;
     [SerializeField] private TMP_Text _Year;
-    public void LoadLevel() {
+    public void LoadLevel()
+    {
         _levelScene.LoadRandomScene();
     }
 
-    void Awake()
-    {
-        if(_levelScene != null) {
-            LevelManager.AllScenes.Add(_levelScene);
-        }
-    }
     void Start()
     {
-        if(NetworkManager.Singleton.IsHost) {
+        if (NetworkManager.Singleton.IsHost)
+        {
             if (_button) _button.onClick.AddListener(LoadLevel);
 
         }
