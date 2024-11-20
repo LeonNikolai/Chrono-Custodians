@@ -81,10 +81,14 @@ public class LocationRenderingSettings : ScriptableObject
 
     public void Apply()
     {
+        Debug.Log("Applying Rendering : " + name);
         // Sun
-        RenderSettings.sun.transform.rotation = Quaternion.Euler(sunAngle);
-        RenderSettings.sun.color = sunColor;
-        RenderSettings.sun.intensity = sunIntensity;
+        if (RenderSettings.sun)
+        {
+            RenderSettings.sun.transform.rotation = Quaternion.Euler(sunAngle);
+            RenderSettings.sun.color = sunColor;
+            RenderSettings.sun.intensity = sunIntensity;
+        }
 
         // Skybox
         RenderSettings.skybox = skyboxMaterial;
@@ -98,14 +102,12 @@ public class LocationRenderingSettings : ScriptableObject
         RenderSettings.reflectionBounces = reflectionBounces;
 
         // Fog
+
+        RenderSettings.fogColor = fogColor;
+        RenderSettings.fogStartDistance = fogStartDistance;
+        RenderSettings.fogEndDistance = fogEndDistance;
+        RenderSettings.fogMode = fogMode;
         RenderSettings.fog = fogEnabled;
-        if (fogEnabled)
-        {
-            RenderSettings.fogColor = fogColor;
-            RenderSettings.fogStartDistance = fogStartDistance;
-            RenderSettings.fogEndDistance = fogEndDistance;
-            RenderSettings.fogMode = fogMode;
-        }
 
         // Shadow
         RenderSettings.subtractiveShadowColor = subtractiveShadowColor;

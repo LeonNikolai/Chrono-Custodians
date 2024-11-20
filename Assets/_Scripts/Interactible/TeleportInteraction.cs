@@ -35,10 +35,8 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
             player.Movement.ChangePosition(position + teleportOffset);
         }
         player.Location = locationType;
-        if (_RenderingOverride != null)
-        {
-            player._locationRendering.Value = _RenderingOverride.NetworkRefference();
-        }
+        GameManager.UpdateRendering();
+  
     }
 
     private void OnDrawGizmosSelected()

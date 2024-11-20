@@ -8,6 +8,10 @@ public struct ItemDataRefference : IEquatable<ItemDataRefference>, INetworkSeria
     {
         get
         {
+            if(id < 0)
+            {
+                return null;
+            }
             return GameManager.ID.GetItemData(id);
         }
         set

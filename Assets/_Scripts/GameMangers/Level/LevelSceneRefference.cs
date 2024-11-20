@@ -9,6 +9,10 @@ public struct LevelSceneRefference : IEquatable<LevelSceneRefference>, INetworkS
     {
         get
         {
+            if(id < 0)
+            {
+                return null;
+            }
             return GameManager.ID.GetLevelScene(id);
         }
         set

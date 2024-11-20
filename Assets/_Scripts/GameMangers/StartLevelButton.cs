@@ -41,7 +41,7 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
 
     private void NewIndex(int previousValue, int newValue)
     {
-        SelectedLevel = SelectedScene.Value.Refference;
+        OnSelectLevel?.Invoke(SelectedLevel, SelectedIndex.Value);
     }
 
     private void NewLevel(LevelSceneRefference previousValue, LevelSceneRefference newValue)

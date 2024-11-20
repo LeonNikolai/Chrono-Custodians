@@ -12,7 +12,6 @@ public class Player : NetworkBehaviour, IScanable
     // Static variables
     public static Player LocalPlayer = null;
     public NetworkVariable<LocationType> _location = new NetworkVariable<LocationType>(LocationType.Outside, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<LocationRenderingSettingsRefference> _locationRendering = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public LocationType Location
     {
         get => _location.Value;
@@ -238,11 +237,8 @@ public class Player : NetworkBehaviour, IScanable
             Input.Spectator.SpectatePreviousPerson.performed += SpectatePrevious;
             Health.onDeath.AddListener(OnSpectatingChanged);
             playerName.Value = CustomUserData.PlayerName;
-            _locationRendering.OnValueChanged += (previousValue, newValue) =>
-            {
-                newValue.Refference?.Apply();
-            };
-            _locationRendering.Value.Refference?.Apply();
+            GameManager.RenderingUpdate += RenderThisPlayersWorldView;
+            RenderThisPlayersWorldView();
         }
         Health.onDeath.AddListener(OnHealthChanged);
         AllPlayers.Add(this);
@@ -250,6 +246,7 @@ public class Player : NetworkBehaviour, IScanable
         base.OnNetworkSpawn();
         Camera.enabled = IsOwner;
         _location.OnValueChanged += LocationChanged;
+
         UpdateInteractionState();
         OnHealthChanged(false);
     }
@@ -266,6 +263,11 @@ public class Player : NetworkBehaviour, IScanable
     {
         if (Location == LocationType.Inside)
         {
+            if (GameManager.InsideRendering != null)
+            {
+                GameManager.InsideRendering.Apply();
+                return;
+            }
             RenderSettings.fog = true;
             if (RenderSettings.fog)
             {
@@ -280,6 +282,11 @@ public class Player : NetworkBehaviour, IScanable
         }
         if (Location == LocationType.Outside)
         {
+            if (GameManager.OutsideRendering != null)
+            {
+                GameManager.OutsideRendering?.Apply();
+                return;
+            }
             RenderSettings.fog = false;
             RenderSettings.ambientIntensity = originalAmbientIntensity;
             RenderSettings.reflectionIntensity = originalReflection;
@@ -322,8 +329,12 @@ public class Player : NetworkBehaviour, IScanable
             LocalPlayer = null;
             Input.Player.Disable();
         }
+        Health.onDeath.RemoveListener(OnSpectatingChanged);
+        Health.onDeath.RemoveListener(OnHealthChanged);
+        GameManager.RenderingUpdate -= RenderThisPlayersWorldView;
         AllPlayers.Remove(this);
         Players.Remove(OwnerClientId);
+        base.OnDestroy();
     }
 
     public void OnScan(Player player)

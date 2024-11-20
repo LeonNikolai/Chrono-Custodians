@@ -7,6 +7,10 @@ public struct TimePeriodRefference : IEquatable<TimePeriodRefference>, INetworkS
     {
         get
         {
+            if (id < 0)
+            {
+                return null;
+            }
             return GameManager.ID.GetPeriodData(id);
         }
         set

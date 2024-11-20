@@ -19,6 +19,11 @@ public struct LocationRenderingSettingsRefference : IEquatable<LocationRendering
         }
         set
         {
+            if (value == null)
+            {
+                id = -1;
+                return;
+            }
             id = GameManager.ID.GetRenderingSettingsId(value);
         }
     }

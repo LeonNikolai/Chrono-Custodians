@@ -1,6 +1,6 @@
-using UnityEditor;
-#if UNITY_EDITOR
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
 # endif
 [CreateAssetMenu(menuName = "Chrono Custodians/ItemIdProvider")]
 public class ItemIdProvider : ScriptableObject
@@ -133,7 +133,7 @@ public class ItemIdProvider : ScriptableObject
     {
         if (id < 0 || id >= levelScenes.Length)
         {
-            Debug.LogError("LevelScene not found in ItemIdProvider");
+            Debug.LogError($"LevelScene at index {id} not found in ItemIdProvider (Length: {levelScenes.Length})");
         }
         return levelScenes[id];
     }

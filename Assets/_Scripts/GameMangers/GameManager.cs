@@ -12,6 +12,12 @@ public class GameManager : NetworkBehaviour
     public static bool IsGameActive = true;
     public ItemIdProvider idProvider;
     public static ItemIdProvider IdProvider => instance.idProvider;
+    [SerializeField] LocationRenderingSettings shipRenderingSettings = null;
+    [SerializeField] LocationRenderingSettings ousideShipRenderingSettings = null;
+    public NetworkVariable<LocationRenderingSettingsRefference> _outsideRenderingSettings = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<LocationRenderingSettingsRefference> _insideRenderingSettings = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public static LocationRenderingSettings OutsideRendering => instance._outsideRenderingSettings.Value.Refference == null ? instance?.shipRenderingSettings : instance._outsideRenderingSettings.Value.Refference;
+    public static LocationRenderingSettings InsideRendering => instance._insideRenderingSettings.Value.Refference == null ? instance?.ousideShipRenderingSettings : instance._insideRenderingSettings.Value.Refference;
     public NetworkVariable<int> _timeStability = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public int TimeStability
     {
@@ -50,9 +56,13 @@ public class GameManager : NetworkBehaviour
         }
     }
     public NetworkVariable<int> GameId = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public string GameID => "G-"+GameManager.instance.GameId.Value.ToString();
+    public string GameID => "G-" + GameManager.instance.GameId.Value.ToString();
+
+    public static event Action RenderingUpdate = delegate { };
+    public static void UpdateRendering() => RenderingUpdate?.Invoke();
     public override void OnNetworkSpawn()
     {
+
         base.OnNetworkSpawn();
         if (instance == null)
         {
@@ -81,8 +91,15 @@ public class GameManager : NetworkBehaviour
         {
             Menu.ActiveMenu = Menu.MenuType.LevelStability;
         };
+        _outsideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
+        _insideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
 
         levelStabilities[UnityEngine.Random.Range(0, levelStabilities.Length)].Stability = 60;
+    }
+
+    private void UpdateRenderingSettings(LocationRenderingSettingsRefference previousValue, LocationRenderingSettingsRefference newValue)
+    {
+        RenderingUpdate?.Invoke();
     }
 
     private void LevelStateChanged(LevelState previousValue, LevelState newValue)
@@ -190,6 +207,10 @@ public class GameManager : NetworkBehaviour
             instance = null;
         }
         Player.AllPlayersDead -= GameLost;
+        _timeStability.OnValueChanged -= TimeLineStabilityChanged;
+        levelState.OnValueChanged -= LevelStateChanged;
+        timer.OnValueChanged -= TimerChanged;
+
         IsGameActive = false;
         base.OnDestroy();
     }

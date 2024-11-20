@@ -143,6 +143,7 @@ public class PlayerMovement : NetworkBehaviour
         PlayerCamera();
         if (transform.position.y < -200f)
         {
+            Player.LocalPlayer.Location = LocationType.Outside;
             ChangePositionAndRotation(PlayerSpawner.getSpawnPointTransform());
         }
         if (isInteracting)
@@ -245,7 +246,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (currentLongInteractable == null)
         {
-            Debug.Log("Not looking at it anymore");
+            // Debug.Log("Not looking at it anymore");
             Hud.LongInteract.value = 0;
             Hud.LongInteract.gameObject.SetActive(false); 
             Hud.CrosshairTooltip = "";

@@ -42,8 +42,9 @@ public class MultiplayerJoin : MonoBehaviour
 
     public async void ListLobbies()
     {
-        if (UnityServices.Instance.State != ServicesInitializationState.Initialized || AuthenticationService.Instance.IsSignedIn)
+        if (UnityServices.Instance.State != ServicesInitializationState.Initialized || !AuthenticationService.Instance.IsSignedIn)
         {
+            Debug.LogWarning("Services not initialized or not signed in, not listing lobbies");
             return;
         }
         foreach (Transform child in ListLobbyContent)
