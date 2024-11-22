@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ItemSpawner : NetworkBehaviour
 {
@@ -10,6 +11,11 @@ public class ItemSpawner : NetworkBehaviour
     public ItemIdProvider idProvider;
     public ItemData[] _normalItems;
     public ItemData[] _forignItems;
+
+    public NetworkVariable<int> foreignItemNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    // First int is total unstable items, second is total items
+    public static UnityEvent<int, int> OnItemsSpawned = new UnityEvent<int, int>();
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -31,6 +37,7 @@ public class ItemSpawner : NetworkBehaviour
     public static HashSet<NetworkObject> SpawnedNetworkObjects = new HashSet<NetworkObject>();
     private void DestroyItems()
     {
+        OnItemsSpawned.RemoveAllListeners();
         try
         {
             foreach (var obj in SpawnedNetworkObjects)
@@ -67,6 +74,7 @@ public class ItemSpawner : NetworkBehaviour
     const int DefaultStabilityPerItem = 5;
     private void SpawnItems()
     {
+        if (!IsServer) return;
         Debug.Log("! Spawning items");
         float stabilityTarget = GameManager.ActiveLevelStability;
 
@@ -105,6 +113,7 @@ public class ItemSpawner : NetworkBehaviour
             i++;
             maxItems--;
         }
+        int foreignItemSpawnNumber = i;
         Debug.Log($"Spawned {i} unstable items");
         // Fill the rest of the spawnpoints with normal items
         var NormalSpawnAmount = UnityEngine.Random.Range(Math.Max(0, maxItems / 3), Math.Max(0, maxItems));
@@ -116,6 +125,14 @@ public class ItemSpawner : NetworkBehaviour
             SpawnItem(item, spawnpoint);
             i++;
         }
+        ItemSpawningFinishedRPC(foreignItemSpawnNumber, i);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ItemSpawningFinishedRPC(int foreignitemtotal, int itemTotal)
+    {
+        Debug.Log("it's " + foreignitemtotal);
+        OnItemsSpawned.Invoke(foreignitemtotal, itemTotal);
     }
 
     [ContextMenu("Autofill")]

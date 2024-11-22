@@ -231,7 +231,7 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    private NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float timerColorIntensity = 0;
 
     private void TimerChanged(float previousValue, float newValue)
@@ -249,25 +249,12 @@ public class GameManager : NetworkBehaviour
         {
             yield return null;
             timer.Value -= Time.deltaTime;
-            if (timer.Value < 60)
-            {
-                timerColorIntensity += Time.deltaTime * 0.5f;
-                Hud.TimerText.color = Color.Lerp(Color.white, Color.red, timerColorIntensity);
-            }
-            Hud.TimerText.text = UpdateTimer();
 
         }
         if (timer.Value <= 0)
         {
-
+            LevelEnd(LevelManager.instance.LoadedLevel.Value);
         }
-    }
-
-    private string UpdateTimer()
-    {
-        int minutes = Mathf.FloorToInt(timer.Value / 60f);
-        int seconds = Mathf.FloorToInt(timer.Value % 60f);
-        return $"{minutes:0}:{seconds:00}";
     }
 
 }
