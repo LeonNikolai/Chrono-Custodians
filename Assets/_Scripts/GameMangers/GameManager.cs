@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 [DefaultExecutionOrder(-100)]
 public class GameManager : NetworkBehaviour
@@ -161,6 +162,7 @@ public class GameManager : NetworkBehaviour
     NetworkVariable<int> _itemSendCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void LevelEnd(LevelScene sceneEnd)
     {
+        doorAnim.SetTrigger("CloseDoor");
         int RemainingUnstableItems = Item.CalculateRemainingUnstableItemInstability(sceneEnd.TimePeriod);
         var itemSendEvets = ItemSender.SentItems.ToArray();
         ItemSender.SentItems.Clear();
@@ -179,12 +181,10 @@ public class GameManager : NetworkBehaviour
         {
             DayProgression.Value++;
         }
-
         DestroyCurrentLevel?.Invoke();
         LevelManager.LoadLevelScene(null);
     }
     public static event Action DestroyCurrentLevel = delegate { };
-
 
 
     private void OnLevelLoaded(LevelScene levelLoaded)
@@ -192,6 +192,7 @@ public class GameManager : NetworkBehaviour
         if (levelLoaded != null)
         {
             gameState.Value = GameState.InLevel;
+            doorAnim.SetTrigger("OpenDoor");
             StartCoroutine(Timer());
         }
         else
@@ -230,6 +231,7 @@ public class GameManager : NetworkBehaviour
         GameLost();
     }
 
+    [SerializeField] private Animator doorAnim;
 
     public NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float timerColorIntensity = 0;
