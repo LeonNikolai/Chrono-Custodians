@@ -29,7 +29,7 @@ public class Player : NetworkBehaviour, IScanable
     public static Action OnPlayerDeadCountChanged = delegate { };
     public static Action AllPlayersDead = delegate { };
 
-    NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>("Player", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>("Player", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public string PlayerName => playerName.Value.ToString();
 
 

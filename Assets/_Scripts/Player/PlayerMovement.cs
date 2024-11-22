@@ -156,7 +156,7 @@ public class PlayerMovement : NetworkBehaviour
                 return;
             }
             currentInteractTime += Time.deltaTime;
-            Debug.Log(currentInteractTime);
+            // Debug.Log(currentInteractTime);
             Hud.LongInteract.value = currentInteractTime / currentLongInteractable.InteractTime;
             if (currentInteractTime > currentLongInteractable.InteractTime)
             {
@@ -254,7 +254,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            Debug.Log("Looking at it");
+            // Debug.Log("Looking at it");
             Hud.LongInteract.gameObject.SetActive(true);
         }
         if (currentLongInteractable is IInteractionMessage message)
@@ -315,7 +315,7 @@ public class PlayerMovement : NetworkBehaviour
             }
             else if (hit.collider.TryGetComponent<ILongInteractable>(out var longInteractable))
             {
-                Debug.Log("Hit longInteractable");
+                // Debug.Log("Hit longInteractable");
                 CurrentLongInteractible = longInteractable;
                 return;
             }
