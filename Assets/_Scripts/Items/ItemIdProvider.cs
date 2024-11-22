@@ -52,6 +52,8 @@ public class ItemIdProvider : ScriptableObject
             string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
             levelScenes[i] = AssetDatabase.LoadAssetAtPath<LevelScene>(assetPath);
         }
+
+        EditorUtility.SetDirty(this);
 #endif
     }
 
