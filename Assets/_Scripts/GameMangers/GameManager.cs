@@ -94,6 +94,7 @@ public class GameManager : NetworkBehaviour
         };
         _outsideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         _insideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
+        ItemSender.OnItemSendServer.AddListener(CheckIfSentRight);
 
         levelStabilities[UnityEngine.Random.Range(0, levelStabilities.Length)].Stability = 60;
     }
@@ -234,16 +235,24 @@ public class GameManager : NetworkBehaviour
     [SerializeField] private Animator doorAnim;
 
     public NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private float timerColorIntensity = 0;
 
     private void TimerChanged(float previousValue, float newValue)
     {
-        if (MathF.Floor(previousValue) != MathF.Floor(newValue))
-        {
-            timerColorIntensity = 0;
-        }
+
     }
 
+    private void CheckIfSentRight(ItemSendEvent item)
+    {
+        if (IdProvider.GetItemData(item.ItemID).TimePeriods[0] == IdProvider.GetPeriodData(item.TargetPeriodID) && IdProvider.GetPeriodData(item.TargetPeriodID) != LevelManager.LoadedScene.TimePeriod)
+        {
+            // correct!
+            timer.Value += 30;
+        }
+        else
+        {
+            timer.Value -= 30;
+        }
+    }
 
     private IEnumerator Timer()
     {

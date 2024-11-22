@@ -624,7 +624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488c20dddec813547afc71a1f46c10dd, type: 3}
   m_Name: VisualEffectControlClip
   m_EditorClassIdentifier: 
-  scrubbing: 1
+  scrubbing: 0
   startSeed: 0
   reinit: 3
   prewarm:
@@ -641,18 +641,32 @@ MonoBehaviour:
       name:
         m_Name: OnPlay
       eventAttributes:
-        content: []
+        content:
+        - rid: 9115592917873852608
     exit:
-      time: 0
-      timeSpace: 1
+      time: 2
+      timeSpace: 3
       name:
-        m_Name: OnStop
+        m_Name: OnPlay
       eventAttributes:
-        content: []
+        content:
+        - rid: 9115592917873852609
   singleEvents: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 9115592917873852608
+      type: {class: EventAttributeBool, ns: UnityEngine.VFX, asm: Unity.VisualEffectGraph.Runtime}
+      data:
+        id:
+          m_Name: IsEmitting
+        value: 1
+    - rid: 9115592917873852609
+      type: {class: EventAttributeBool, ns: UnityEngine.VFX, asm: Unity.VisualEffectGraph.Runtime}
+      data:
+        id:
+          m_Name: IsEmitting
+        value: 0
 --- !u!114 &8533353371565567494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -678,7 +692,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 8169140009964599775}
-    m_Duration: 2.2666666666666666
+    m_Duration: 5
     m_TimeScale: 1
     m_ParentTrack: {fileID: 8533353371565567494}
     m_EaseInDuration: 0

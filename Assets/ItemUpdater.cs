@@ -61,18 +61,19 @@ public class ItemUpdater : MonoBehaviour
 
         if (isCorrectTimePeriod)
         {
-            SendClientFeedback(1, item.ItemData.NetworkedRefference, item.TargetPeriodID, -15);
+            SendClientFeedback(1, item.ItemData.NetworkedRefference, item.TargetPeriodID);
         }
         else
         {
-            SendClientFeedback(0, item.ItemData.NetworkedRefference, item.TargetPeriodID, 10);
+            SendClientFeedback(0, item.ItemData.NetworkedRefference, item.TargetPeriodID);
         }
     }
-
-    private void SendClientFeedback(int type, ItemDataRefference refferencedata, int periodID, float instabilityChange)
+    
+    // Type - 0 = incorrect | 1 = correct | 2 = item should not have been sent
+    private void SendClientFeedback(int type, ItemDataRefference refferencedata, int periodID)
     {
         Debug.Log("Item Tracker Received");
         ItemData data = refferencedata.Refference;
-        Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
+        Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID));
     }
 }

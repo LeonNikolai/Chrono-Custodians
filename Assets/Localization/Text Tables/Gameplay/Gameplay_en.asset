@@ -89,14 +89,12 @@ MonoBehaviour:
       m_Items:
       - rid: 5496770204155248759
   - m_Id: 13225611913572352
-    m_Localized: '{itemName} does not belong in {timePeriodName}. Time bubble integrity
-      loss increased by: {instabilityChange}'
+    m_Localized: '{itemName} does not belong in {timePeriodName}. '
     m_Metadata:
       m_Items:
       - rid: 5496770204155248759
   - m_Id: 13234895271473152
-    m_Localized: '{itemName} was sent correctly to {timePeriodName}. Time bubble
-      loss reduced by: {instabilityChange}'
+    m_Localized: '{itemName} was sent correctly to {timePeriodName}. '
     m_Metadata:
       m_Items:
       - rid: 5496770204155248759
@@ -109,8 +107,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 14732851636056064
-    m_Localized: '{itemName} was removed from it''s correct time period! Time bubble
-      integrity loss increased by: {instabilityChange}'
+    m_Localized: '{itemName} was removed from it''s correct time period! '
     m_Metadata:
       m_Items:
       - rid: 5496770204155248759

@@ -19,12 +19,11 @@ public class ItemSendFeedback : MonoBehaviour
     public LocalizedString incorrectItemExplanation;
     public LocalizedString wrongItemExplanation;
 
-    public void SendItem(int type, ItemData itemData, TimePeriod targetPeriod, float instabilityModifyValue)
+    public void SendItem(int type, ItemData itemData, TimePeriod targetPeriod)
     {
 
         StringVariable itemName = new StringVariable { Value = itemData.Name };
         StringVariable timePeriodName = new StringVariable { Value = targetPeriod.periodName };
-        StringVariable instabilityChange = new StringVariable { Value = instabilityModifyValue.ToString() };
         switch (type)
         {
             case 0: // Incorrect
@@ -32,7 +31,6 @@ public class ItemSendFeedback : MonoBehaviour
                 incorrectItemTitle.Add("itemName", itemName);
                 incorrectItemExplanation.Add("itemName", itemName);
                 incorrectItemExplanation.Add("timePeriodName", timePeriodName);
-                incorrectItemExplanation.Add("instabilityChange", instabilityChange);
                 _title.text = incorrectItemTitle.GetLocalizedString();
                 _explanation.text = incorrectItemExplanation.GetLocalizedString();
                 _animator.SetTrigger("Incorrect");
@@ -43,7 +41,6 @@ public class ItemSendFeedback : MonoBehaviour
                 correctItemTitle.Add("itemName", itemName);
                 correctItemExplanation.Add("itemName", itemName);
                 correctItemExplanation.Add("timePeriodName", timePeriodName);
-                correctItemExplanation.Add("instabilityChange", instabilityChange);
                 _title.text = correctItemTitle.GetLocalizedString();
                 _explanation.text = correctItemExplanation.GetLocalizedString();
                 _animator.SetTrigger("Correct");
@@ -53,7 +50,6 @@ public class ItemSendFeedback : MonoBehaviour
                 if (_itemImage) _itemImage.sprite = itemData.Icon;
                 incorrectItemTitle.Add("itemName", itemName);
                 wrongItemExplanation.Add("itemName", itemName);
-                wrongItemExplanation.Add("instabilityChange", instabilityChange);
                 _title.text = incorrectItemTitle.GetLocalizedString();
                 _explanation.text = incorrectItemExplanation.GetLocalizedString();
                 _animator.SetTrigger("Incorrect");

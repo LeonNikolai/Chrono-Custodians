@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 687bd93af6c620d4db9f0fbb82586ad4, type: 2}
   - {fileID: 2100000, guid: f83fcb00120f5104da7736ad6125b3c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -287,7 +287,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 687bd93af6c620d4db9f0fbb82586ad4, type: 2}
   - {fileID: 2100000, guid: f83fcb00120f5104da7736ad6125b3c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -721,7 +721,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 687bd93af6c620d4db9f0fbb82586ad4, type: 2}
   - {fileID: 2100000, guid: f83fcb00120f5104da7736ad6125b3c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -999,7 +999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 11400000, guid: 779120ac57b8eaf4ca533faf163b6add, type: 2}
-  Droppable: 1
+  Droppable: 0
   UseUniqueVisualsWhenInHand: 0
   _handMeshRenderers: []
   _requiresMinigameToScan: 0
@@ -1015,6 +1015,8 @@ MonoBehaviour:
   - {fileID: 1996025375315812074}
   HasBeenScanned:
     m_InternalValue: 0
+  HasBeenTouched:
+    m_InternalValue: 0
   isInteractable:
     m_InternalValue: 1
   contentArea: {fileID: 1783491602772528699}
@@ -1029,6 +1031,13 @@ MonoBehaviour:
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   unselectedColor: {r: 0.6150943, g: 0.6150943, b: 0.6150943, a: 1}
   cooldown: 15
+  chargeOff: {fileID: 2100000, guid: 687bd93af6c620d4db9f0fbb82586ad4, type: 2}
+  chargeOn: {fileID: 2100000, guid: f83fcb00120f5104da7736ad6125b3c2, type: 2}
+  chargeIndicators:
+  - {fileID: 4246745895705316310}
+  - {fileID: 5710735678502381936}
+  - {fileID: 4581575921364802228}
+  - {fileID: 3721793793354519884}
 --- !u!1 &7209669056810669493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,7 +1238,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 687bd93af6c620d4db9f0fbb82586ad4, type: 2}
   - {fileID: 2100000, guid: f83fcb00120f5104da7736ad6125b3c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

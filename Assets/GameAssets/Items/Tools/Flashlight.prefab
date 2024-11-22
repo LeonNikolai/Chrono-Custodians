@@ -857,13 +857,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemData: {fileID: 0}
-  Droppable: 1
+  Droppable: 0
   UseUniqueVisualsWhenInHand: 0
   _handMeshRenderers: []
   _requiresMinigameToScan: 1
   _meshRenderers: []
   _collider: []
   HasBeenScanned:
+    m_InternalValue: 0
+  HasBeenTouched:
     m_InternalValue: 0
   isInteractable:
     m_InternalValue: 1

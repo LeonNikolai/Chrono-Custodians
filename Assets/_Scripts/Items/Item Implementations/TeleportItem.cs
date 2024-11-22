@@ -12,6 +12,8 @@ public class TeleportItem : Item, ItemUseToolTip
     Player player;
     private List<Player> players = new List<Player>();
     private int selectedPlayer = 0;
+    private NetworkVariable<int> remainingUses = new NetworkVariable<int>(4, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     private int SelectedPlayer
     {
         get => selectedPlayer;
@@ -55,13 +57,53 @@ public class TeleportItem : Item, ItemUseToolTip
     [SerializeField] private Color selectedColor;
     [SerializeField] private Color unselectedColor;
 
+
+
+
     private bool teleporterDisabled = false;
 
     private float curCooldown;
     [SerializeField] private float cooldown;
 
+    [SerializeField] private Material chargeOff;
+    [SerializeField] private Material chargeOn;
+    [SerializeField] private MeshRenderer[] chargeIndicators;
+
 
     public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to teleport the selected (blue) player, Mouse Wheel to scroll between players";
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsServer) return;
+        GameManager.DestroyCurrentLevel += ResetDevice;
+    }
+
+    private void ResetDevice()
+    {
+        if (IsServer)
+        {
+            remainingUses.Value = 4;
+            ResetVisualsRPC();
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ResetVisualsRPC()
+    {
+        foreach(var charge in chargeIndicators)
+        {
+            charge.materials[1] = chargeOn;
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void LowerChargeVisualRPC()
+    {
+        var materials = chargeIndicators[remainingUses.Value].materials;
+        materials[1] = chargeOff;
+        chargeIndicators[remainingUses.Value].materials = materials;
+    }
 
     public override void OnEquip(object character)
     {
@@ -138,11 +180,19 @@ public class TeleportItem : Item, ItemUseToolTip
                 }
             }
 
-            if (Mouse.current.leftButton.isPressed)
+            if (Mouse.current.leftButton.wasPressedThisFrame && remainingUses.Value > 0)
             {
+                CalculateChargesRPC();
                 StartCoroutine(TeleportPlayer());
             }
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void CalculateChargesRPC()
+    {
+        remainingUses.Value--;
+        LowerChargeVisualRPC();
     }
 
 

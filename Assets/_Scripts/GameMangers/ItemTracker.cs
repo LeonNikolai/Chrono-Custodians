@@ -156,11 +156,11 @@ public class ItemTracker : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)] // Type - 0 = incorrect | 1 = correct | 2 = item should not have been sent
-    public void ItemSentClientFeedbackRpc(int type, ItemDataRefference refferencedata, int periodID, float instabilityChange)
+    public void ItemSentClientFeedbackRpc(int type, ItemDataRefference refferencedata, int periodID)
     {
         Debug.Log("Item Tracker Received");
         ItemData data = refferencedata.Refference;
-        Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID), instabilityChange);
+        Hud.ItemSentFeedback(type, data, GameManager.instance.idProvider.GetPeriodData(periodID));
     }
 
     private void OnItemSent(ItemSendEvent item)
@@ -181,7 +181,7 @@ public class ItemTracker : NetworkBehaviour
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
-            ItemSentClientFeedbackRpc(2, item.ItemData.NetworkedRefference, item.TargetPeriodID, 10);
+            ItemSentClientFeedbackRpc(2, item.ItemData.NetworkedRefference, item.TargetPeriodID);
             return;
         }
 
@@ -192,13 +192,13 @@ public class ItemTracker : NetworkBehaviour
             temporalInstabilityVelocity -= 0.1f;
             if (temporalInstabilityVelocity < baseTemporalInstabilityVelocity) temporalInstabilityVelocity = baseTemporalInstabilityVelocity;
             if (TemporalInstabilityNetworked.Value < 0) TemporalInstabilityNetworked.Value = 0;
-            ItemSentClientFeedbackRpc(1, item.ItemData.NetworkedRefference, item.TargetPeriodID, -15);
+            ItemSentClientFeedbackRpc(1, item.ItemData.NetworkedRefference, item.TargetPeriodID);
         }
         else
         {
             TemporalInstabilityNetworked.Value += 10;
             temporalInstabilityVelocity += 0.1f;
-            ItemSentClientFeedbackRpc(0, item.ItemData.NetworkedRefference, item.TargetPeriodID, 10);
+            ItemSentClientFeedbackRpc(0, item.ItemData.NetworkedRefference, item.TargetPeriodID);
         }
 
 

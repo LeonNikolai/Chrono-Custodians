@@ -62,6 +62,16 @@ public class PlayerInventory : NetworkBehaviour
         Debug.LogWarning("Item not found in inventory: " + item);
         return false;
     }
+    public bool TryRemoveItem(int inventorySlot)
+    {
+        if (Inventory[inventorySlot].TryGet(out NetworkObject item))
+        {
+            Inventory[inventorySlot] = new NetworkObjectReference();
+            return true;
+        }
+        Debug.LogWarning("Item not found in inventory: " + item);
+        return false;
+    }
 
     // Equipped Item
     [NonSerialized] public NetworkVariable<byte> EquippedNetworkItemIndex = new NetworkVariable<byte>(2, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);

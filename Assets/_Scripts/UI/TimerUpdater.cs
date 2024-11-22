@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Splines.Interpolators;
 
 public class TimerUpdater : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class TimerUpdater : MonoBehaviour
     [SerializeField] private Color colorToGoTo = Color.red;
 
     [SerializeField] private float timerColorIntensity = 0;
+    private bool isAnimating = false;
+
+    private Color flashColor = Color.white;
 
     private void Start()
     {
@@ -17,23 +21,49 @@ public class TimerUpdater : MonoBehaviour
 
     private void UpdateText(float previousTime, float currentTime)
     {
-        if (MathF.Floor(previousTime) != MathF.Floor(currentTime))
+        if (previousTime - currentTime < 0)
         {
+            isAnimating = true;
             timerColorIntensity = 0;
+            flashColor = Color.green;
+        }
+        else if (previousTime - currentTime > 2)
+        {
+            isAnimating = true;
+            timerColorIntensity = 0;
+            flashColor = Color.red;
         }
         Color newColor = Color.white;
-        if (currentTime < 60)
+        if (isAnimating)
         {
-            newColor = Color.Lerp(Color.white, colorToGoTo, timerColorIntensity);
-            timerColorIntensity += Time.deltaTime * 0.5f;
-            Hud.TimerText.color = newColor;
+            newColor = Color.Lerp(flashColor, Color.white, timerColorIntensity);
+            timerColorIntensity += Time.deltaTime;
+            Debug.Log(timerColorIntensity);
+            if (timerColorIntensity > 1)
+            {
+                isAnimating = false;
+            }
         }
+        else
+        {
+            if (MathF.Floor(previousTime) != MathF.Floor(currentTime))
+            {
+                timerColorIntensity = 0;
+            }
+            if (currentTime < 60)
+            {
+                newColor = Color.Lerp(Color.white, colorToGoTo, timerColorIntensity);
+                timerColorIntensity += Time.deltaTime * 0.5f;
+            }
+        }
+
 
         int minutes = Mathf.FloorToInt(currentTime / 60f);
         int seconds = Mathf.FloorToInt(currentTime % 60f);
         string timerString = $"{minutes:0}:{seconds:00}";
         Hud.TimerText.text = timerString;
-        foreach(var text in textToUpdate)
+        Hud.TimerText.color = newColor;
+        foreach (var text in textToUpdate)
         {
             text.color = newColor;
             text.text = timerString;
