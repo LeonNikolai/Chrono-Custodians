@@ -319,6 +319,9 @@ public class Player : NetworkBehaviour, IScanable
     {
         foreach (var player in AllPlayers)
         {
+            if(player.Health.IsDead) {
+                player.Health.currentHealth.Value = player.Health.maxHealth.Value;
+            }
             player.Movement.TeleportToSpawnRpc();
         }
     }

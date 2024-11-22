@@ -19,20 +19,28 @@ public class PlayerVisuals : MonoBehaviour
 
     private void OnPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)
     {
-        if(usernameText == null) {
+        if (usernameText == null)
+        {
             return;
         }
+        if (player == Player.LocalPlayer)
+        {
+            usernameText.text = "";
+            usernameText.gameObject.SetActive(false);
+            return;
+        }
+        usernameText.gameObject.SetActive(true);
         usernameText.text = newValue.ToString();
     }
 
     void OnDestroy()
     {
-        if(player != null) return;
+        if (player != null) return;
         player.PlayerIsInMenu.OnValueChanged -= OnPlayerIsInMenu;
     }
 
 
-    void  LateUpdate()
+    void LateUpdate()
     {
         usernameText.transform.LookAt(Camera.main.transform);
         usernameText.transform.Rotate(0, 180, 0);
