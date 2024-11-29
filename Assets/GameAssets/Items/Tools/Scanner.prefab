@@ -174,7 +174,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 5e23b0caa28dd4b9383bba962d389b25, type: 2}
   - {fileID: -3846018093981099296, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -736,7 +736,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 5e23b0caa28dd4b9383bba962d389b25, type: 2}
   - {fileID: -3846018093981099296, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1254,6 +1254,8 @@ MonoBehaviour:
   - {fileID: 1996025375315812074}
   HasBeenScanned:
     m_InternalValue: 0
+  HasBeenTouched:
+    m_InternalValue: 0
   isInteractable:
     m_InternalValue: 1
   scanRange: 10
@@ -1593,7 +1595,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
+  - {fileID: 2100000, guid: 5e23b0caa28dd4b9383bba962d389b25, type: 2}
   - {fileID: -3846018093981099296, guid: 0f8d13d63eb074e49ac51569796cff6c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0

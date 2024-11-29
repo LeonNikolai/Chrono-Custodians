@@ -25,14 +25,14 @@ public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractio
 
     public void LongInteract(Player player)
     {
-        if (target)
+        if (playerRotation)
         {
             player.Movement.ChangePositionAndRotation(target.position + teleportOffset, player.transform.rotation);
         }
         else
         {
             Vector3 position = target ? target.position : fallBackPositonIfNoTarget;
-            player.Movement.ChangePosition(position + teleportOffset);
+            player.Movement.ChangePositionAndRotation(position + teleportOffset, target.rotation);
         }
         player.Location = locationType;
         GameManager.UpdateRendering();
