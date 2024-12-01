@@ -518,7 +518,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ancient Egypt
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
   m_sharedMaterial: {fileID: -1086939817028454185, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
@@ -1353,6 +1353,10 @@ PrefabInstance:
     - target: {fileID: 1471102994314221994, guid: 32b1e81e3f79fef409c8de6e93630704, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.373
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402015047855713750, guid: 32b1e81e3f79fef409c8de6e93630704, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8069286265657751063, guid: 32b1e81e3f79fef409c8de6e93630704, type: 3}
       propertyPath: m_Name
