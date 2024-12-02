@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1431522727574524642, guid: 03382674393c54927868920a46258ae5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f293f505dda7c4f448354f1e6f1e37d1, type: 2}
     - target: {fileID: 919132149155446097, guid: 03382674393c54927868920a46258ae5, type: 3}
       propertyPath: m_Name
       value: RomanTower
@@ -100,7 +104,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 3.273938, y: 8.371554, z: 3.2144136}
-  m_Center: {x: -0.018431425, y: 3.1857772, z: 5.4288273}
+  m_Center: {x: 0, y: -1.63, z: 0}
 --- !u!114 &46856199846533280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedVersion: 0
-  m_Size: {x: 3.6287842, y: 5.3076906, z: 3.481474}
-  m_Center: {x: -0.03547287, y: 6.192307, z: 5.440738}
+  m_Size: {x: 3.6287842, y: 4.94, z: 3.481474}
+  m_Center: {x: 0, y: 2.3, z: 0}
   m_Area: 1
   m_AffectedAgents: ffffffff
