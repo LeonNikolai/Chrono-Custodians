@@ -149,6 +149,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         AllItems.Add(this);
         currentSlot.OnValueChanged += OnSlotChanged;
         isPickedUpByPlayer.OnValueChanged += OnPickedUpChanged;
+        OnSlotChanged(currentSlot.Value, currentSlot.Value);
         base.OnNetworkSpawn();
     }
 
