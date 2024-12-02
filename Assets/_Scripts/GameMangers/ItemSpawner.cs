@@ -116,7 +116,7 @@ public class ItemSpawner : NetworkBehaviour
         int foreignItemSpawnNumber = i;
         Debug.Log($"Spawned {i} unstable items");
         // Fill the rest of the spawnpoints with normal items
-        var NormalSpawnAmount = UnityEngine.Random.Range(Math.Max(0, maxItems / 3), Math.Max(0, maxItems));
+        var NormalSpawnAmount = UnityEngine.Random.Range(2, Math.Min(20,Math.Min(maxItems, i)));
         Debug.Log($"Spawned {NormalSpawnAmount} unstable items");
         while (i < NormalSpawnAmount)
         {

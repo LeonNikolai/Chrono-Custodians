@@ -33,7 +33,7 @@ public class LocationFinder : MonoBehaviour
         var location = LocationDefinition.GetLocation(locationName);
         if (location == null)
         {
-            Debug.LogError("Location with name " + locationName + " not found");
+            // Debug.LogError("Location with name " + locationName + " not found");
             return;
         }
         transform.position = location.transform.position;
