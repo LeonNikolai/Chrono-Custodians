@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e9819cb67edc74c8507e7d88ee840e, type: 3}
   m_Name: RomanOutside
   m_EditorClassIdentifier: 
-  sunAngle: {x: 50, y: 330, z: 0}
+  sunAngle: {x: 34.729996, y: 116.20003, z: 180}
   sunIntensity: 1
   sunColor: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  skyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  skyboxMaterial: {fileID: 2100000, guid: d48a7646f5d0547e889733d84b50cb9f, type: 2}
   ambientIntensity: 1
   ambientMode: 0
   ambientLightColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -28,8 +28,8 @@ MonoBehaviour:
   reflectionMode: 0
   reflectionResolution: 128
   reflectionBounces: 1
-  fogEnabled: 0
-  fogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  fogMode: 3
+  fogEnabled: 1
+  fogColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
+  fogMode: 1
   fogStartDistance: 0
-  fogEndDistance: 300
+  fogEndDistance: 30
