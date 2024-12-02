@@ -133,6 +133,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             transform.rotation = Quaternion.Euler(90f, transform.rotation.eulerAngles.y, 0f);
             return;
+        } else {
+            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
         }
         CheckGround();
         characterController.Move(velocity * Time.deltaTime);
