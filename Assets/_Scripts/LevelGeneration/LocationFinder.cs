@@ -37,5 +37,6 @@ public class LocationFinder : MonoBehaviour
             return;
         }
         transform.position = location.transform.position;
+        transform.rotation = location.transform.rotation;
     }
 }
