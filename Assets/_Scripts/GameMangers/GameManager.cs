@@ -15,8 +15,10 @@ public class GameManager : NetworkBehaviour
     public static ItemIdProvider IdProvider => instance.idProvider;
     [SerializeField] LocationRenderingSettings shipRenderingSettings = null;
     [SerializeField] LocationRenderingSettings ousideShipRenderingSettings = null;
+    public NetworkVariable<LocationRenderingSettingsRefference> _shipRenderingSettings = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LocationRenderingSettingsRefference> _outsideRenderingSettings = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<LocationRenderingSettingsRefference> _insideRenderingSettings = new NetworkVariable<LocationRenderingSettingsRefference>(LocationRenderingSettingsRefference.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public static LocationRenderingSettings ShipRendering => instance._shipRenderingSettings.Value.Refference == null ? instance?.shipRenderingSettings : instance._shipRenderingSettings.Value.Refference;
     public static LocationRenderingSettings OutsideRendering => instance._outsideRenderingSettings.Value.Refference == null ? instance?.shipRenderingSettings : instance._outsideRenderingSettings.Value.Refference;
     public static LocationRenderingSettings InsideRendering => instance._insideRenderingSettings.Value.Refference == null ? instance?.ousideShipRenderingSettings : instance._insideRenderingSettings.Value.Refference;
     public NetworkVariable<int> _timeStability = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -65,6 +67,7 @@ public class GameManager : NetworkBehaviour
     {
 
         base.OnNetworkSpawn();
+        _shipRenderingSettings.Value = shipRenderingSettings;
         if (instance == null)
         {
             instance = this;
@@ -141,6 +144,8 @@ public class GameManager : NetworkBehaviour
     public static float ActiveLevelStability;
     public void LevelStart(LevelScene sceneStart = null, int sceneIndex = 0)
     {
+        OnLevelStartClientRPC();
+        timer.Value = 480;
         LevelStability levelStability = GetLevelStability(sceneStart);
         if (levelStability == null)
         {
@@ -163,6 +168,7 @@ public class GameManager : NetworkBehaviour
     NetworkVariable<int> _itemSendCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void LevelEnd(LevelScene sceneEnd)
     {
+        OnLevelEndClientRPC();
         doorAnim.SetTrigger("CloseDoor");
         int RemainingUnstableItems = Item.CalculateRemainingUnstableItemInstability(sceneEnd.TimePeriod);
         var itemSendEvets = ItemSender.SentItems.ToArray();
@@ -241,6 +247,20 @@ public class GameManager : NetworkBehaviour
 
     }
 
+    public UnityEvent OnLevelStartClient;
+    public UnityEvent OnLevelEndClient;
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void OnLevelStartClientRPC()
+    {
+        OnLevelStartClient.Invoke();
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    private void OnLevelEndClientRPC()
+    {
+        OnLevelEndClient.Invoke();
+    }
+
     private void CheckIfSentRight(ItemSendEvent item)
     {
         if (IdProvider.GetItemData(item.ItemID).TimePeriods[0] == IdProvider.GetPeriodData(item.TargetPeriodID) && IdProvider.GetPeriodData(item.TargetPeriodID) != LevelManager.LoadedScene.TimePeriod)
@@ -259,6 +279,7 @@ public class GameManager : NetworkBehaviour
         while (timer.Value > 0)
         {
             yield return null;
+            if (gameState.Value != GameState.InLevel) continue;
             timer.Value -= Time.deltaTime;
 
         }

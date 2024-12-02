@@ -8,6 +8,7 @@ public class LookDetection : NetworkBehaviour
     [SerializeField] private LayerMask obstructionLayers;
     [SerializeField] private EnemyMannequin enemy;
     bool isRendered = false;
+    bool canSee = false;
 
     private void OnBecameVisible()
     {
@@ -37,7 +38,7 @@ public class LookDetection : NetworkBehaviour
 
     private IEnumerator CheckObstruction()
     {
-        while (isRendered)
+        while (isRendered && enemy.IsSpawned)
         {
             yield return null;
             if(IsBeingDestroyed) yield break;
@@ -58,11 +59,16 @@ public class LookDetection : NetworkBehaviour
             if (isRegistered)
             {
                 // Debug.Log("Can see enemy");
+                if (canSee == true) continue;
+                canSee = true;
                 enemy.PlayerStartLookingRPC(NetworkManager.Singleton.LocalClientId);
             }
             else
             {
+
+                if (canSee == false) continue;
                 // Debug.Log("Enemy obstructed");
+                canSee = false;
                 enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
             }
 

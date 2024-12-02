@@ -4,6 +4,7 @@ public enum LocationType
 {
     Outside = 0,
     Inside = 1,
+    InsideShip = 2
 }
 public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractionMessage
 {

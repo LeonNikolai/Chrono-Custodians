@@ -11,6 +11,7 @@ public class Hud : MonoBehaviour
     [SerializeField] UiBar _staminaBar;
     [SerializeField] UiBar _shieldBar;
     [SerializeField] TMP_Text _timerText;
+    [SerializeField] Animator _timerAnim;
     [SerializeField] TMP_Text _crosshairTooltip;
     [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] TMP_Text shortScannerNotificationText;
