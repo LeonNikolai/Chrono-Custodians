@@ -25,9 +25,9 @@ public class MultiplayerJoin : MonoBehaviour
 
     void Awake()
     {
-        JoinButton.onClick.AddListener(TryJoinClientFromCode);
+        //JoinButton.onClick.AddListener(TryJoinClientFromCode);
         RefreshButton.onClick.AddListener(ListLobbies);
-        LobbyCode.onValueChanged.AddListener(SetLobbyCode);
+        //LobbyCode.onValueChanged.AddListener(SetLobbyCode);
     }
 
     void OnEnable()

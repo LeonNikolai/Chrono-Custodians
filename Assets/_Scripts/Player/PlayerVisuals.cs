@@ -8,7 +8,7 @@ public class PlayerVisuals : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] MaterialReplacer replacer;
     [SerializeField] Animator animator;
-    [SerializeField] TMP_Text usernameText;
+    [SerializeField] TMP_Text[] usernameText;
 
     void Awake()
     {
@@ -23,14 +23,11 @@ public class PlayerVisuals : MonoBehaviour
         {
             return;
         }
-        if (player == Player.LocalPlayer)
+        foreach(var text in usernameText)
         {
-            usernameText.text = "";
-            usernameText.gameObject.SetActive(false);
-            return;
+            text.gameObject.SetActive(true);
+            text.text = newValue.ToString();
         }
-        usernameText.gameObject.SetActive(true);
-        usernameText.text = newValue.ToString();
     }
 
     void OnDestroy()
@@ -39,12 +36,6 @@ public class PlayerVisuals : MonoBehaviour
         player.PlayerIsInMenu.OnValueChanged -= OnPlayerIsInMenu;
     }
 
-
-    void LateUpdate()
-    {
-        usernameText.transform.LookAt(Camera.main.transform);
-        usernameText.transform.Rotate(0, 180, 0);
-    }
     private void OnPlayerIsInMenu(bool previousValue, bool newValue)
     {
         replacer.Show = newValue;

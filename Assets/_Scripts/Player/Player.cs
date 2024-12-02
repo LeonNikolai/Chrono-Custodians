@@ -291,6 +291,17 @@ public class Player : NetworkBehaviour, IScanable
             RenderSettings.ambientIntensity = originalAmbientIntensity;
             RenderSettings.reflectionIntensity = originalReflection;
         }
+        if (Location == LocationType.InsideShip)
+        {
+            if (GameManager.ShipRendering != null)
+            {
+                GameManager.ShipRendering?.Apply();
+                return;
+            }
+            RenderSettings.fog = false; 
+            RenderSettings.ambientIntensity = originalAmbientIntensity;
+            RenderSettings.reflectionIntensity = originalReflection;
+        }
     }
 
     private void OnHealthChanged(bool arg0)
