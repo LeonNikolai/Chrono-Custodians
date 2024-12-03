@@ -25,6 +25,7 @@ public class ItemSenderSelectYear : MonoBehaviour, IInteractable, IScanable
     private void OpenMenu()
     {
         Menu.ActiveMenu = Menu.MenuType.Custom;
+        Hud.Hidden = true;
         Menu.CustomMenuCloseAttempt.AddListener(CloseMenu);
         _camera.enabled = true;
     }
@@ -32,7 +33,7 @@ public class ItemSenderSelectYear : MonoBehaviour, IInteractable, IScanable
     private void CloseMenu()
     {
         EventSystem.current.SetSelectedGameObject(null);
-
+        Hud.Hidden = false;
         _camera.enabled = false;
         Menu.ActiveMenu = Menu.MenuType.Closed;
     }
