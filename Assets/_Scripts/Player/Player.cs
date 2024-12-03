@@ -28,6 +28,7 @@ public class Player : NetworkBehaviour, IScanable
     public static int PlayerAliveCount => AllPlayers.Count - PlayerDeadCount;
     public static Action OnPlayerDeadCountChanged = delegate { };
     public static Action AllPlayersDead = delegate { };
+    public static Action RenderChanged = delegate { };
 
     public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>("Player", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public string PlayerName => playerName.Value.ToString();
@@ -290,6 +291,7 @@ public class Player : NetworkBehaviour, IScanable
         if (IsOwner)
         {
             RenderThisPlayersWorldView();
+            RenderChanged.Invoke();
         }
     }
 

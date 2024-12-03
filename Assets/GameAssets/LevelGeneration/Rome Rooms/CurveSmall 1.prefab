@@ -61,8 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385a10f9f2e1eb9468c3c20c64018035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomSize: {x: 13.580381, y: 4.6832876, z: 27.160765}
-  transformOffset: {x: 6.7901907, y: 2.3416438, z: 3.359617}
+  roomSize: {x: 13.580381, y: 7.61, z: 27.160765}
+  transformOffset: {x: 6.7901907, y: 10.99, z: 3.359617}
   ignoreCheck: {fileID: 0}
   entryPoints:
   - {fileID: 5100666222726500897}
@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 537224746
+  GlobalObjectIdHash: 2846429712
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -236,7 +236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1162327730483860282, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.2
+      value: -6.2005
       objectReference: {fileID: 0}
     - target: {fileID: 1162327730483860282, guid: 4df6626d3fc58934ca1611305fca40f6, type: 3}
       propertyPath: m_LocalRotation.w
