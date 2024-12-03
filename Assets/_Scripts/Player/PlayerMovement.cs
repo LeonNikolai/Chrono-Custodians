@@ -187,7 +187,7 @@ public class PlayerMovement : NetworkBehaviour
         if (Physics.CapsuleCast(collision, collision + Vector3.up * characterController.height,
             characterController.radius, Vector3.down, out RaycastHit groundHit, 0.15f) && velocity.y < 0f)
         {
-            velocity.y = 0f;
+            velocity.y = Mathf.Clamp(velocity.y, -10, velocity.y);
             float slopeAngle = Vector3.Angle(groundHit.normal, Vector3.up);
 
             if (slopeAngle > slopeLimit)
