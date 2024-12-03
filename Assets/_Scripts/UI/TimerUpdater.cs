@@ -57,10 +57,19 @@ public class TimerUpdater : MonoBehaviour
             }
         }
 
+        string timerString = "";
 
-        int minutes = Mathf.FloorToInt(currentTime / 60f);
-        int seconds = Mathf.FloorToInt(currentTime % 60f);
-        string timerString = $"{minutes:0}:{seconds:00}";
+        if (currentTime <= 0)
+        {
+            timerString = $"--:--";
+        }
+        else
+        {
+            int minutes = Mathf.FloorToInt(currentTime / 60f);
+            int seconds = Mathf.FloorToInt(currentTime % 60f);
+            timerString = $"{minutes:0}:{seconds:00}";
+        }
+
         Hud.TimerText.text = timerString;
         Hud.TimerText.color = newColor;
         foreach (var text in textToUpdate)

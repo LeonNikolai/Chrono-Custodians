@@ -24,7 +24,7 @@ public class LevelManager : NetworkBehaviour
         {
             if (_loadedScene == value) return;
             _loadedScene = value;
-            if (instance)
+            if (instance.IsServer)
             {
                 instance.LoadedLevel.Value = _loadedScene?.GetNetworklevel() ?? LevelSceneRefference.None;
                 instance.OnLevelLoaded?.Invoke(_loadedScene);
