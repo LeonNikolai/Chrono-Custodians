@@ -295,6 +295,7 @@ public class PlayerInventory : NetworkBehaviour
 
     private void Update()
     {
+        if(Player.Health.IsDead) return;
         EquippedItemLocalRefference?.OnEquipUpdate(this);
         if (!IsOwner) return;
         if (Keyboard.current.gKey.wasPressedThisFrame)

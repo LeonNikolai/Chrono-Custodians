@@ -77,6 +77,7 @@ public class TeleportItem : Item, ItemUseToolTip
         base.OnNetworkSpawn();
         if (!IsServer) return;
         GameManager.DestroyCurrentLevel += ResetDevice;
+        canvas.SetActive(false);
     }
 
     private void ResetDevice()
