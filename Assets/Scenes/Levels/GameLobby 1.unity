@@ -11751,6 +11751,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1361285471}
     - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
+      propertyPath: levelStabilities.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4179746406386876445, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
       propertyPath: EndOfLevel.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -11870,7 +11874,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7811181136223320996, guid: a8c74a91cca99474686258c14b9a4732, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

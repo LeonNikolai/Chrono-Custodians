@@ -3027,13 +3027,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 768843415}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
   m_LocalPosition: {x: -2, y: -0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1597946859}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!1001 &777772198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7909,7 +7909,7 @@ MonoBehaviour:
   target: {fileID: 98654352}
   fallBackPositonIfNoTarget: {x: 0, y: 0, z: 0}
   teleportOffset: {x: 0, y: 0, z: 0}
-  locationType: 0
+  locationType: 2
   playerRotation: 0
   _RenderingOverride: {fileID: 0}
   interactionMessage: Hold E to leave Colloseum
@@ -9724,7 +9724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 8743971602863688306, guid: 0882345ec52b8fa4dbea2794af3f9356, type: 3}
       propertyPath: m_LocalPosition.z
