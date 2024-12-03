@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.VFX;
+using System;
 
 public class TeleportItem : Item, ItemUseToolTip
 {
@@ -19,7 +20,7 @@ public class TeleportItem : Item, ItemUseToolTip
         get => selectedPlayer;
         set
         {
-            if (value != selectedPlayer) return;
+            // if (value != selectedPlayer) return;
             foreach (var item in playerCards)
             {
                 if (item == null) continue;
@@ -37,8 +38,8 @@ public class TeleportItem : Item, ItemUseToolTip
             {
                 selectedPlayer = value;
                 selectedPlayer = selectedPlayer % players.Count;
-                playerCards[selectedPlayer].color = selectedColor;
             }
+            playerCards[selectedPlayer].color = selectedColor;
         }
     }
     [SerializeField] private Transform contentArea;
@@ -75,9 +76,17 @@ public class TeleportItem : Item, ItemUseToolTip
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        remainingUses.OnValueChanged += UpdateVisuals;
         canvas.SetActive(false);
         if (!IsServer) return;
         GameManager.DestroyCurrentLevel += ResetDevice;
+    }
+
+    private void UpdateVisuals(int previousValue, int newValue)
+    {
+        var materials = chargeIndicators[remainingUses.Value].materials;
+        materials[1] = chargeOff;
+        chargeIndicators[remainingUses.Value].materials = materials;
     }
 
     private void ResetDevice()
@@ -85,26 +94,10 @@ public class TeleportItem : Item, ItemUseToolTip
         if (IsServer)
         {
             remainingUses.Value = 4;
-            ResetVisualsRPC();
         }
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    private void ResetVisualsRPC()
-    {
-        foreach(var charge in chargeIndicators)
-        {
-            charge.materials[1] = chargeOn;
-        }
-    }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    private void LowerChargeVisualRPC()
-    {
-        var materials = chargeIndicators[remainingUses.Value].materials;
-        materials[1] = chargeOff;
-        chargeIndicators[remainingUses.Value].materials = materials;
-    }
 
     public override void OnEquip(object character)
     {
@@ -194,7 +187,6 @@ public class TeleportItem : Item, ItemUseToolTip
     private void CalculateChargesRPC()
     {
         remainingUses.Value--;
-        LowerChargeVisualRPC();
     }
 
 
