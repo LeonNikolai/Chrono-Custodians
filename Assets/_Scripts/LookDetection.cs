@@ -24,6 +24,7 @@ public class LookDetection : NetworkBehaviour
             enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
             return;
         }
+        Debug.Log("Is seen");
         isRendered = true;
         StartCoroutine(CheckObstruction());
     }
@@ -33,6 +34,7 @@ public class LookDetection : NetworkBehaviour
         if (IsServer && !IsHost) return;
         if (NetworkManager == null || enemy == null) return;
         Debug.Log("isn't looking");
+        canSee = false;
         isRendered = false;
         StopAllCoroutines();
         if(!IsBeingDestroyed && enemy.IsSpawned) {
@@ -48,40 +50,50 @@ public class LookDetection : NetworkBehaviour
 
     private IEnumerator CheckObstruction()
     {
+        if (Camera.main == null)
+        {
+            Debug.LogError("Main Camera not found!");
+            yield break;
+        }
+
+        Camera mainCamera = Camera.main; // Cache Camera.main for performance
         while (isRendered && enemy.IsSpawned)
         {
-            yield return null;
-            if(IsBeingDestroyed) yield break;
+            yield return null; // Wait until the next frame
+            if (IsBeingDestroyed) yield break;
 
-            bool isRegistered = false;
+            bool canSeeEnemy = false;
             foreach (var pos in posToCheckFrom)
             {
-                Vector3 vectorFromPlayer = (pos.position - Camera.main.transform.position);
-                if (!Physics.Raycast(Camera.main.transform.position, vectorFromPlayer.normalized, out RaycastHit hit, vectorFromPlayer.magnitude, obstructionLayers))
+                Vector3 vectorFromPlayer = pos.position - mainCamera.transform.position;
+                float distance = vectorFromPlayer.magnitude; // Cache the magnitude
+
+                // Perform raycast to check visibility
+                if (!Physics.Raycast(mainCamera.transform.position, vectorFromPlayer.normalized, out RaycastHit hit, distance, obstructionLayers))
                 {
-                    isRegistered = true;  // Visible and unobstructed
-                    break;
-                }
-                else
-                {
+                    canSeeEnemy = true;  // Enemy is visible and unobstructed
+                    break; // No need to check further
                 }
             }
-            if (isRegistered)
+
+            // Handle visibility state changes
+            if (canSeeEnemy)
             {
-                // Debug.Log("Can see enemy");
-                if (canSee == true) continue;
-                canSee = true;
-                enemy.PlayerStartLookingRPC(NetworkManager.Singleton.LocalClientId);
+                if (!canSee)
+                {
+                    canSee = true;
+                    enemy.PlayerStartLookingRPC(NetworkManager.Singleton.LocalClientId);
+                }
             }
             else
             {
-
-                if (canSee == false) continue;
-                // Debug.Log("Enemy obstructed");
-                canSee = false;
-                enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
+                if (canSee)
+                {
+                    canSee = false;
+                    enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
+                }
             }
-
         }
     }
+
 }
