@@ -84,9 +84,12 @@ public class TeleportItem : Item, ItemUseToolTip
 
     private void UpdateVisuals(int previousValue, int newValue)
     {
-        var materials = chargeIndicators[remainingUses.Value].materials;
-        materials[1] = chargeOff;
-        chargeIndicators[remainingUses.Value].materials = materials;
+        for (int i = 0; i < chargeIndicators.Length; i++)
+        {
+            var materials = chargeIndicators[i].materials;
+            materials[1] = i < newValue ? chargeOn : chargeOff;
+            chargeIndicators[i].materials = materials;
+        }
     }
 
     private void ResetDevice()
