@@ -15,6 +15,12 @@ public class PlayerVisuals : MonoBehaviour
         player.PlayerIsInMenu.OnValueChanged += OnPlayerIsInMenu;
         player.playerName.OnValueChanged += OnPlayerNameChanged;
         OnPlayerNameChanged(player.playerName.Value, player.playerName.Value);
+        player.OnSpawned += OnPlayerSpawned;
+    }
+
+    private void OnPlayerSpawned()
+    {
+        OnPlayerNameChanged(player.playerName.Value, player.playerName.Value);
     }
 
     private void OnPlayerNameChanged(FixedString64Bytes previousValue, FixedString64Bytes newValue)

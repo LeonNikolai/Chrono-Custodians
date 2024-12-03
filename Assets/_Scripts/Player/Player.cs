@@ -261,6 +261,7 @@ public class Player : NetworkBehaviour, IScanable
         UpdateInteractionState();
     }
 
+    public Action OnSpawned = delegate { };
     public override void OnNetworkSpawn()
     {
         if (OwnerClientId == NetworkManager.Singleton.LocalClientId || IsLocalPlayer)
@@ -275,6 +276,7 @@ public class Player : NetworkBehaviour, IScanable
             GameManager.RenderingUpdate += RenderThisPlayersWorldView;
             RenderThisPlayersWorldView();
         }
+        OnSpawned.Invoke();
         Health.onDeath.AddListener(OnHealthChanged);
         AllPlayers.Add(this);
         Players.Add(OwnerClientId, this);
