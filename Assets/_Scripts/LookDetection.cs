@@ -14,6 +14,16 @@ public class LookDetection : NetworkBehaviour
     {
         if (IsServer && !IsHost) return;
         if (NetworkManager == null || enemy == null) return;
+        if (Player.LocalPlayer.PlayerIsSpectating.Value)
+        {
+            if (isRendered == false)
+            {
+                return;
+            }
+            isRendered = false;
+            enemy.PlayerStopLookingRPC(NetworkManager.Singleton.LocalClientId);
+            return;
+        }
         isRendered = true;
         StartCoroutine(CheckObstruction());
     }

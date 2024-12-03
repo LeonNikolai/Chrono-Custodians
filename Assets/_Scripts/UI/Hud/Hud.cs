@@ -15,6 +15,8 @@ public class Hud : MonoBehaviour
     [SerializeField] TMP_Text _crosshairTooltip;
     [SerializeField] TMP_Text _itemTooltip;
     [SerializeField] TMP_Text shortScannerNotificationText;
+    [SerializeField] TMP_Text spectateUsername;
+    [SerializeField] GameObject spectateHUD;
     [SerializeField] GameObject shortScannerNotification;
     [SerializeField] GameObject animOverlay;
     [SerializeField] Slider longInteract;
@@ -96,12 +98,27 @@ public class Hud : MonoBehaviour
             return instance?.shortScannerNotificationText?.text ?? "";
         }
     }
+    public static string SpectateUsername
+    {
+        set
+        {
+            instance.spectateUsername.text = value;
+        }
+    }
 
     public static Slider LongInteract
     {
         get
         {
             return instance?.longInteract;
+        }
+    }
+
+    public static GameObject SpectateHud
+    {
+        get
+        {
+            return instance?.spectateHUD;
         }
     }
 
