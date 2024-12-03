@@ -71,7 +71,7 @@ public class TeleportItem : Item, ItemUseToolTip
     [SerializeField] private MeshRenderer[] chargeIndicators;
 
 
-    public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to teleport the selected (blue) player, Mouse Wheel to scroll between players";
+    public string ItemToolTip => $"Press {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to teleport the selected (blue) player, Mouse Wheel to scroll between players";
 
     public override void OnNetworkSpawn()
     {
