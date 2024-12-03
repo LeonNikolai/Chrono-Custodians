@@ -11,7 +11,7 @@ public class Player : NetworkBehaviour, IScanable
 {
     // Static variables
     public static Player LocalPlayer = null;
-    public NetworkVariable<LocationType> _location = new NetworkVariable<LocationType>(LocationType.Outside, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<LocationType> _location = new NetworkVariable<LocationType>(LocationType.InsideShip, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public LocationType Location
     {
         get => _location.Value;

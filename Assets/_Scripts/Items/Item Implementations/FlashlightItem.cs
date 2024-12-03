@@ -58,13 +58,17 @@ public class FlashlightItem : Item, ItemUseToolTip
     private void ToggleFlashlightRPC(bool isEnabled)
     {
         lightComp.SetActive(isEnabled);
+        Material[] flashlightMats = renderer.materials;
+        
         if (isEnabled)
         {
-            renderer.material = on;
+            flashlightMats[1] = on;
         }
         else
         {
-            renderer.material = off;
+            flashlightMats[1] = off;
         }
+        
+        renderer.materials = flashlightMats;
     }
 }

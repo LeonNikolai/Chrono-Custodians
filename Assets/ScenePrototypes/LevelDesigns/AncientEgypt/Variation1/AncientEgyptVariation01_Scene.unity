@@ -12279,6 +12279,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 4971010284454221325, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
+      propertyPath: m_DrawInstanced
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5004901649576913263, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -13509,7 +13513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4934086916303186687, guid: 1499091d4454d1c46ac3efe4147a4709, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5942428048208272251, guid: 1499091d4454d1c46ac3efe4147a4709, type: 3}
       propertyPath: m_Name

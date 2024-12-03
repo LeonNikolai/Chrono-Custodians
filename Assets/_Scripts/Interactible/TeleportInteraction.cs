@@ -2,9 +2,9 @@ using UnityEngine;
 
 public enum LocationType
 {
-    Outside = 0,
+    InsideShip = 0,
     Inside = 1,
-    InsideShip = 2
+    Outside = 2
 }
 public class TeleportInteraction : MonoBehaviour, ILongInteractable, IInteractionMessage
 {
