@@ -87,7 +87,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
                     else tags += ", ";
                     tags += _itemData.Tags[i].Name;
                 }
-                return $"{_itemData.Description}\n\n Notable Features : {tags}";
+                //return $"{_itemData.Description}\n\n Notable Features : {tags}";
             }
             return _itemData ? _itemData.Description : "No Description\n\n";
         }
