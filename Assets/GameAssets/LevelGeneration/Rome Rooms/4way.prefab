@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2410265039956363948}
@@ -57,8 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385a10f9f2e1eb9468c3c20c64018035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomSize: {x: 12, y: 3.345205, z: 12}
-  transformOffset: {x: 0, y: 1.6726025, z: 0}
+  roomSize: {x: 16.8, y: 4.683287, z: 16.8}
+  transformOffset: {x: 0, y: 2.3416436, z: 0}
   ignoreCheck: {fileID: 0}
   entryPoints:
   - {fileID: 6602806766280972891}
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 391006810
+  GlobalObjectIdHash: 1897772068
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
