@@ -147,8 +147,8 @@ public class ItemSpawner : NetworkBehaviour
             Debug.LogError("No TimePeriod assigned to ItemManager");
         }
         var periods = level.TimePeriod;
-        _normalItems = idProvider.ItemDatas.Where(item => !item.TimePeriods.Contains(periods)).ToArray();
-        _forignItems = idProvider.ItemDatas.Where(item => item.TimePeriods.Contains(periods)).ToArray();
+        _normalItems = idProvider.ItemDatas.Where(item => item.TimePeriods.Contains(periods)).ToArray();
+        _forignItems = idProvider.ItemDatas.Where(item => !item.TimePeriods.Contains(periods)).ToArray();
     }
     private ItemData GetItem()
     {

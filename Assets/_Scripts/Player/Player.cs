@@ -376,10 +376,10 @@ public class Player : NetworkBehaviour, IScanable
     }
     public override void OnDestroy()
     {
-        if (OwnerClientId == NetworkManager.Singleton.LocalClientId || IsLocalPlayer)
+        if (OwnerClientId == NetworkManager.Singleton?.LocalClientId || IsLocalPlayer)
         {
-            LocalPlayer = null;
             Input.Player.Disable();
+            LocalPlayer = null;
         }
         Health.onDeath.RemoveListener(OnSpectatingChanged);
         Health.onDeath.RemoveListener(OnHealthChanged);
