@@ -16,7 +16,17 @@ public class TimerUpdater : MonoBehaviour
 
     private void Start()
     {
+        SetText();
+        GameManager.instance.OnLevelEndClient.AddListener(SetText);
         GameManager.instance.timer.OnValueChanged += UpdateText;
+    }
+
+    private void SetText()
+    {
+        foreach (var text in textToUpdate)
+        {
+            text.text = "--:--";
+        }
     }
 
     private void UpdateText(float previousTime, float currentTime)

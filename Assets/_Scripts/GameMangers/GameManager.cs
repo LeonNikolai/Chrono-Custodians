@@ -283,7 +283,7 @@ public class GameManager : NetworkBehaviour
         while (timer.Value > 0)
         {
             yield return null;
-            if (gameState.Value != GameState.InLevel) continue;
+            if (gameState.Value != GameState.InLevel) break;
             timer.Value -= Time.deltaTime;
 
         }

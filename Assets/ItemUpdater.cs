@@ -9,8 +9,17 @@ public class ItemUpdater : MonoBehaviour
 
     private void Start()
     {
+        GameManager.instance.OnLevelEndClient.AddListener(SetText);
         LevelManager.instance.OnLevelLoaded.AddListener(SetSpawner);
         ItemSender.OnItemSendServer.AddListener(UpdateText);
+    }
+
+    private void SetText()
+    {
+        foreach(var item in textToUpdate)
+        {
+            item.text = "Please select a Time Period to visit";
+        }
     }
 
     private void SetSpawner(LevelScene level)
