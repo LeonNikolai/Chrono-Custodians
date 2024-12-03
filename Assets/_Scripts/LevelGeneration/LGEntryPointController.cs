@@ -49,4 +49,13 @@ public class LGEntryPointController : MonoBehaviour
 
     }
 
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, 0.01f);
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 1.6f);
+        Gizmos.DrawLine(transform.position, transform.position + transform.right* 1.1f);
+        Gizmos.DrawLine(transform.position, transform.position - transform.right* 1.1f);
+    }
+
 }

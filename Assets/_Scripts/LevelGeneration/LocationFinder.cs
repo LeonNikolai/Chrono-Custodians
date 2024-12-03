@@ -8,6 +8,7 @@ public class LocationFinder : MonoBehaviour
     void OnEnable()
     {
         Goto();
+        if(LevelManager.instance == null) return;
         LevelManager.instance.OnLevelLoaded.AddListener(LoadedLevel);
         LocationDefinition.OnLocationChange += OnAddedLocation;
     }
