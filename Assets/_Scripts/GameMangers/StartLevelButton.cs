@@ -13,7 +13,7 @@ public class StartLevelButton : NetworkBehaviour, IInteractable, IInteractionMes
         selectLevelEvent?.Invoke(scene, index);
     }
     public bool Interactable => CoolDown.Value <= 0;
-    public string InteractionMessage => SelectedLevel ? GameManager.instance.gameState.Value == GameManager.GameState.InLevel ? "Leave Level (buggy) ;)" : "Start Level" : "Select A Level";
+    public string InteractionMessage => SelectedLevel ? GameManager.instance.gameState.Value == GameManager.GameState.InLevel ? "Leave Time Period" : "Enter Selected Time Period" : "Time Period Not Selected";
     public string CantInteractMessage => $"Time Macine Cooling down {CoolDown.Value}s";
     LevelScene selectedLevel;
     LevelScene SelectedLevel

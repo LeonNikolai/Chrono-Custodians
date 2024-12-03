@@ -122,7 +122,14 @@ public class LGManager : NetworkBehaviour
         // Fill each entry point with a wall prefab
         foreach (LGEntryPointController _entryPoint in entryPoints)
         {
-            AddDeadEnd(_entryPoint);
+            if (theme.Deadend == null)
+            {
+                FillEntryPoint(_entryPoint);
+            }
+            else
+            {
+                AddDeadEnd(_entryPoint);
+            }
         }
         isDone = true;
         entryPoints.Clear();
