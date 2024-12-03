@@ -67,7 +67,6 @@ public class GameManager : NetworkBehaviour
     {
 
         base.OnNetworkSpawn();
-        _shipRenderingSettings.Value = shipRenderingSettings;
         if (instance == null)
         {
             instance = this;
@@ -84,6 +83,7 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
+            _shipRenderingSettings.Value = shipRenderingSettings;
             GameId.Value = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
             LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
         }
