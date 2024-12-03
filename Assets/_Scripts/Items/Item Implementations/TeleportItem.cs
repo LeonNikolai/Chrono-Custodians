@@ -141,7 +141,7 @@ public class TeleportItem : Item, ItemUseToolTip
             {
                 GameObject go = Instantiate(playerCardPrefab, contentArea);
                 playerCards.Add(go.GetComponent<Image>());
-                go.GetComponentInChildren<TMP_Text>().text = player.PlayerName;
+                go.GetComponentInChildren<TMP_Text>().text = players[i].PlayerName;
                 playerCards[i].color = i == SelectedPlayer ? selectedColor : unselectedColor;
             }
         }
@@ -165,7 +165,6 @@ public class TeleportItem : Item, ItemUseToolTip
 
         if (player != null && player.IsOwner)
         {
-            if (teleporterDisabled) return;
             if (Mouse.current.scroll.ReadValue().y > 0)
             {
                 if (SelectedPlayer < Player.AllPlayers.Count - 1)
@@ -180,6 +179,8 @@ public class TeleportItem : Item, ItemUseToolTip
                     SelectedPlayer--;
                 }
             }
+
+            if (teleporterDisabled) return;
 
             if (Mouse.current.leftButton.wasPressedThisFrame && remainingUses.Value > 0)
             {
