@@ -4,15 +4,30 @@ using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Vivox;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [DefaultExecutionOrder(-5)]
 public class VivoxManager : MonoBehaviour
 {
+    public static VivoxManager instance;
+
     public string ChannelName => "Game" + GameManager.instance.GameID;
+    public string SpectateChannel = "Spectate" + GameManager.instance.GameID;
     public string channels = "";
     public string activeInput = "";
     public string activeOutput = "";
     public string MainChannel = "Main" + GameManager.instance.GameID;
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        } else if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+    }
 
     async void Start()
     {
@@ -88,6 +103,7 @@ public class VivoxManager : MonoBehaviour
         {
             var test = new Channel3DProperties(32, 1, 1, AudioFadeModel.InverseByDistance);
             await VivoxService.Instance.JoinPositionalChannelAsync(ChannelName, ChatCapability.AudioOnly, test);
+            await VivoxService.Instance.SetChannelTransmissionModeAsync(TransmissionMode.Single, ChannelName);
             inChannel = true;
             UpdatePlayerHead();
         }
@@ -95,6 +111,32 @@ public class VivoxManager : MonoBehaviour
         {
             inChannel = false;
             Debug.LogError("Failed to join 3D channel: " + e.Message);
+        }
+    }
+
+    public async Task JoinSpectateChannelAsync()
+    {
+        try
+        {
+            await VivoxService.Instance.JoinGroupChannelAsync(SpectateChannel, ChatCapability.AudioOnly);
+            await VivoxService.Instance.SetChannelTransmissionModeAsync(TransmissionMode.Single, SpectateChannel);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Failed to join Spectate Channel");
+        }
+    }
+
+    public async Task LeaveSpectateChannelAsync()
+    {
+        try
+        {
+            await VivoxService.Instance.SetChannelTransmissionModeAsync(TransmissionMode.Single, ChannelName);
+            await VivoxService.Instance.LeaveChannelAsync(SpectateChannel);
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Could not leave Spectate Channel");
         }
     }
 
@@ -125,7 +167,7 @@ public class VivoxManager : MonoBehaviour
     Vector3 lastPos = Vector3.zero;
     private void UpdatePlayerHead()
     {
-        Transform head = Player.LocalPlayer?.Camera?.transform ?? null;
+        Transform head = Camera.main.transform ?? null;
         if (head)
         {
             channels = VivoxService.Instance.ActiveChannels.Values.Count.ToString();

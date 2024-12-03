@@ -91,6 +91,7 @@ public class Player : NetworkBehaviour, IScanable
         set
         {
             isSpectating = value;
+            if (value == true) JoinSpectate(); else LeaveSpectate();
             if (LocalPlayer) LocalPlayer.PlayerIsSpectating.Value = value;
             UpdateInteractionState();
         }
@@ -107,6 +108,15 @@ public class Player : NetworkBehaviour, IScanable
             Debug.Log($"Spectating {AllPlayers.Count} players, now spectating {spectateIndex}");
             UpdateCamera();
         }
+    }
+
+    private static async void JoinSpectate()
+    {
+        await VivoxManager.instance.JoinSpectateChannelAsync();
+    }
+    private static async void LeaveSpectate()
+    {
+        await VivoxManager.instance.LeaveSpectateChannelAsync();
     }
 
     private static void UpdateCamera()
