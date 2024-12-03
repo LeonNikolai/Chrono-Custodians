@@ -5,7 +5,7 @@ public class FlashlightItem : Item, ItemUseToolTip
 {
     Player player;
     [SerializeField] private GameObject lightComp;
-    [SerializeField] private Renderer renderer;
+    [SerializeField] private Renderer renderMesh;
     [SerializeField] private Material off, on;
 
 
@@ -28,7 +28,7 @@ public class FlashlightItem : Item, ItemUseToolTip
     public override void OnUnequip(object character)
     {
         base.OnUnequip(character);
-        renderer.material = off;
+        renderMesh.material = off;
         lightComp.SetActive(false);
 
     }
@@ -58,7 +58,7 @@ public class FlashlightItem : Item, ItemUseToolTip
     private void ToggleFlashlightRPC(bool isEnabled)
     {
         lightComp.SetActive(isEnabled);
-        Material[] flashlightMats = renderer.materials;
+        Material[] flashlightMats = renderMesh.materials;
         
         if (isEnabled)
         {
@@ -69,6 +69,6 @@ public class FlashlightItem : Item, ItemUseToolTip
             flashlightMats[1] = off;
         }
         
-        renderer.materials = flashlightMats;
+        renderMesh.materials = flashlightMats;
     }
 }
