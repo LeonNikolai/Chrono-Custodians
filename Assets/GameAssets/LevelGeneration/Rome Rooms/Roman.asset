@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6da3513b37f78744874540669d71939, type: 3}
+  m_Name: Roman
+  m_EditorClassIdentifier: 
+  corridorPrefabs:
+  - {fileID: 6559386639762739222, guid: c726719d3557867428b181ee5502a043, type: 3}
+  - {fileID: 6559386639762739222, guid: bb0dd8f0c19697a4f9a3b823a450510b, type: 3}
+  - {fileID: 6559386639762739222, guid: 24d6c4932fd65534482112dd5c35f679, type: 3}
+  - {fileID: 6559386639762739222, guid: 3249a203447f8774f9afc56cc9e987f0, type: 3}
+  - {fileID: 6559386639762739222, guid: 54290627d08c89049954bf5e325f9d2e, type: 3}
+  - {fileID: 6559386639762739222, guid: 4eb4964724183a44a8087f2bac8e2559, type: 3}
+  - {fileID: 6559386639762739222, guid: b56f66b974680e0428a2d3e1054d19d3, type: 3}
+  - {fileID: 6559386639762739222, guid: df43bb97031454942a422a869d4e1467, type: 3}
+  - {fileID: 6559386639762739222, guid: 701f4b8180d162f4aa531070f62d57da, type: 3}
+  - {fileID: 6559386639762739222, guid: adfca3bea1250ed4f89bd49dec33c050, type: 3}
+  - {fileID: 6559386639762739222, guid: d1784b96c7712ce40a1bf004b75b23dc, type: 3}
+  - {fileID: 6559386639762739222, guid: a43587923fa93f94fbe1447f0bf3628a, type: 3}
+  - {fileID: 6559386639762739222, guid: bb0dd8f0c19697a4f9a3b823a450510b, type: 3}
+  - {fileID: 6559386639762739222, guid: 54290627d08c89049954bf5e325f9d2e, type: 3}
+  roomPrefabs: []
+  entrancePrefab: {fileID: 6559386639762739222, guid: 86b8281a3a76f37468ef1098a03d06fa, type: 3}
+  wallPrefab: {fileID: 6559386639762739222, guid: 86f8482691fa2644d9c48cf41f609cec, type: 3}
+  deadEndPrefab: {fileID: 6559386639762739222, guid: 997241a7056c2db47b942b5604c03a0d, type: 3}

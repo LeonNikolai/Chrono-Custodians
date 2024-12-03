@@ -211,6 +211,10 @@ public class LGManager : NetworkBehaviour
             {
                 default:
                     int randomChoice = UnityEngine.Random.Range(0, 2);
+                    if (theme.Rooms == null || theme.Rooms.Count == 0)
+                    {
+                        randomChoice = 0;
+                    }
                     if (randomChoice == 0)
                     {
                         room = Instantiate(theme.Corridors[UnityEngine.Random.Range(0, theme.Corridors.Count)]);
