@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerInventory : NetworkBehaviour
 {
     [SerializeField] Player _player;
-    [SerializeField] Transform _playerHand;
+    [SerializeField] Transform _playerHand, _cameraPos;
     [SerializeField] LayerMask _dropIgnoreLayers = ~0;
     public Transform Hand => _playerHand ? _playerHand : _player.transform;
     public Transform Head => _player.HeadTransform;
@@ -352,7 +352,7 @@ public class PlayerInventory : NetworkBehaviour
     {
         const float MaxReachForward = 2f;
         const float MaxDownwardsDrop = 100f;
-        var ray = new Ray(_player.HeadTransform.position, _player.HeadTransform.forward);
+        var ray = new Ray(_cameraPos.position, _cameraPos.forward);
 
         // Raycast until we hit something, then raycast downwards from that point to find the ground
 
@@ -380,7 +380,7 @@ public class PlayerInventory : NetworkBehaviour
         }
         else
         {
-            var airPos = transform.position = ray.GetPoint(2f);
+            var airPos = ray.GetPoint(2f);
             if (Physics.Raycast(airPos, Vector3.down, out RaycastHit airHit, MaxDownwardsDrop, _dropIgnoreLayers))
             {
                 dropItem.position = airHit.point;
