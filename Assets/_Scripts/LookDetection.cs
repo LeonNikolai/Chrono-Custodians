@@ -56,8 +56,8 @@ public class LookDetection : NetworkBehaviour
             bool isRegistered = false;
             foreach (var pos in posToCheckFrom)
             {
-                Vector3 vectorToPlayer = (Camera.main.transform.position - pos.position);
-                if (!Physics.Raycast(pos.position, vectorToPlayer.normalized, out RaycastHit hit, vectorToPlayer.magnitude, obstructionLayers))
+                Vector3 vectorFromPlayer = (pos.position - Camera.main.transform.position);
+                if (!Physics.Raycast(Camera.main.transform.position, vectorFromPlayer.normalized, out RaycastHit hit, vectorFromPlayer.magnitude, obstructionLayers))
                 {
                     isRegistered = true;  // Visible and unobstructed
                     break;
