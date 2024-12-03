@@ -145,7 +145,7 @@ public class GameManager : NetworkBehaviour
     public void LevelStart(LevelScene sceneStart = null, int sceneIndex = 0)
     {
         OnLevelStartClientRPC();
-        timer.Value = 20;
+        timer.Value = 480;
         LevelStability levelStability = GetLevelStability(sceneStart);
         if (levelStability == null)
         {
