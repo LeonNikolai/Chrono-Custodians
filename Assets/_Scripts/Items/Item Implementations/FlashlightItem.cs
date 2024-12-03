@@ -9,7 +9,7 @@ public class FlashlightItem : Item, ItemUseToolTip
     [SerializeField] private Material off, on;
 
 
-    public string ItemToolTip => $"Hold {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to teleport the selected (blue) player, Mouse Wheel to scroll between players";
+    public string ItemToolTip => $"Press {Player.Input?.Player.UseItemPrimary?.activeControl?.displayName ?? "Left Mouse"} to turn the flashlight on or off";
 
     public override void OnEquip(object character)
     {
