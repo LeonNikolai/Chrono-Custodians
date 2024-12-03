@@ -91,7 +91,17 @@ public class Player : NetworkBehaviour, IScanable
         set
         {
             isSpectating = value;
-            if (value == true) JoinSpectate(); else LeaveSpectate();
+            if (value == true)
+            {
+                JoinSpectate();
+                Hud.SpectateHud.SetActive(true);
+                Hud.SpectateUsername = LocalPlayer.PlayerName;
+            }
+            else
+            {
+                LeaveSpectate();
+                Hud.SpectateHud.SetActive(false);
+            }
             if (LocalPlayer) LocalPlayer.PlayerIsSpectating.Value = value;
             UpdateInteractionState();
         }
@@ -119,6 +129,15 @@ public class Player : NetworkBehaviour, IScanable
         await VivoxManager.instance.LeaveSpectateChannelAsync();
     }
 
+    private static string currentSpectateTarget = "";
+    private string CurrentSpectateTarget 
+    { 
+        get 
+        {  
+            return currentSpectateTarget; 
+        } 
+    }
+
     private static void UpdateCamera()
     {
         if (!isSpectating)
@@ -135,7 +154,12 @@ public class Player : NetworkBehaviour, IScanable
         foreach (var player in AllPlayers)
         {
             player.Camera.enabled = index == spectateIndex;
-            if (index == spectateIndex) found = true;
+            if (index == spectateIndex)
+            {
+                found = true;
+                currentSpectateTarget = player.PlayerName;
+                Hud.SpectateUsername = currentSpectateTarget;
+            }
             index++;
         }
         if (found == false)
