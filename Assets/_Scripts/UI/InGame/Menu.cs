@@ -136,6 +136,7 @@ public class Menu : MonoBehaviour
     }
     public void GoToMainMenu()
     {
+        Destroy(NetworkManager.Singleton);
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
     }
