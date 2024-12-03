@@ -36,7 +36,7 @@ public static class Stability
         int instabilityToDistribute = day + Mathf.FloorToInt(UnityEngine.Random.Range(rand1, rand2));
 
         uncompletedLevels.DistributeInstabilityRandomly(instabilityToDistribute);
-        uncompletedLevels.DecreaseRandom(10 + day);
+        uncompletedLevels.DecreaseRandom(25 + day);
 
         int dayClamped = Mathf.Max(day - 2, 0);
         float exponentiaDecrese = Mathf.Exp(dayClamped / 5) - Mathf.Exp(dayClamped / 10);
