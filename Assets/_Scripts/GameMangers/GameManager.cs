@@ -99,7 +99,11 @@ public class GameManager : NetworkBehaviour
         _insideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         ItemSender.OnItemSendServer.AddListener(CheckIfSentRight);
 
-        levelStabilities[UnityEngine.Random.Range(0, levelStabilities.Length)].Stability = 60;
+        foreach (var item in levelStabilities)
+        {
+            item.Stability = UnityEngine.Random.Range(50, 80);
+            
+        }
     }
 
     private void UpdateRenderingSettings(LocationRenderingSettingsRefference previousValue, LocationRenderingSettingsRefference newValue)

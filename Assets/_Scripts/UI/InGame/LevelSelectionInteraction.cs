@@ -60,6 +60,7 @@ public class LevelSelectionInteraction : NetworkBehaviour, IInteractable, IInter
         StartLevelButton.OnSelectLevel += OnLevelSelect;
         LevelManager.instance.OnLevelLoaded.AddListener(OnLevelLoaded);
         OnLevelSelect(null, -1);
+        ThisLevelSelected.Invoke(UnSelectedLightIndex);
     }
 
     private void OnLevelLoaded(LevelScene level)
