@@ -34,6 +34,9 @@ public class EnemyMannequin : Enemy
     [SerializeField] private AudioClip crunchClip;
     [SerializeField] private float chaseTime = 2;
 
+
+    [SerializeField] private AudioSource footsteps;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -52,6 +55,7 @@ public class EnemyMannequin : Enemy
         switch (_state)
         {
             case MannequinState.Roaming:
+                footsteps.Play();
                 moveSpeed = 10;
                 StartRoaming();
                 state = _state;
@@ -105,6 +109,7 @@ public class EnemyMannequin : Enemy
                 curChaseTime = 0;
                 if (playersLooking.Count == 0)
                 {
+                    footsteps.UnPause();
                     // Debug.Log("Stopped");
                     agent.SetDestination(enemyFOV.curtarget.transform.position);
                     if (agent.isStopped)
@@ -128,6 +133,7 @@ public class EnemyMannequin : Enemy
                     Debug.Log("Started");
                     if (!agent.isStopped)
                     {
+                        footsteps.Pause();
                         anim.enabled = true;
                         int randomPoseIndex = Random.Range(0, poses.Length);
                         while (randomPoseIndex == currentPoseIndex)
