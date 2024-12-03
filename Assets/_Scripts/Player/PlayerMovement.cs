@@ -16,7 +16,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float staminaUseAmount, staminaRegainAmount, interactRadius;
     [SerializeField] private float slideSpeed, slopeLimit, slideFriction;
     [SerializeField] private TMP_Text staminaText, speedText;
-    [SerializeField] private Transform rotate;
+    [SerializeField] private Transform rotate, cameraPos;
     public Transform CameraTransform => rotate;
     private CharacterController characterController;
     private IHighlightable currentHighlightable;
@@ -296,7 +296,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void InteractionRaycast()
     {
-        Ray ray = new(rotate.transform.position, rotate.transform.forward);
+        Ray ray = new(cameraPos.position, rotate.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactRadius))
         {
