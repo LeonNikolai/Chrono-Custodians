@@ -52,6 +52,7 @@ public class EnemyMannequin : Enemy
         switch (_state)
         {
             case MannequinState.Roaming:
+                moveSpeed = 10;
                 StartRoaming();
                 state = _state;
                 break;
@@ -75,11 +76,6 @@ public class EnemyMannequin : Enemy
         }
     }
 
-    private void Update()
-    {
-        
-    }
-
     public void PlayerSeen()
     {
         if (!IsServer || enemyFOV.curtarget == null) return;
@@ -100,6 +96,7 @@ public class EnemyMannequin : Enemy
         bool isSeen = false;
         bool isKilling = false;
         int currentPoseIndex = 0;
+        moveSpeed = 20;
         while (state == MannequinState.Chasing)
         {
             yield return null;
