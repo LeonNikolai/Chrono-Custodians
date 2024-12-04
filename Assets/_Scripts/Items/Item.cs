@@ -32,23 +32,21 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenTouched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public static int CalculateRemainingUnstableItemInstability(TimePeriod currentTimePeriod, bool despawnItems = false)
+    public static int CalculateRemainingUnstableItemInstability(TimePeriod currentTimePeriod)
     {
         int instability = 0;
         foreach (var item in Item.AllItems)
         {
-            bool itemBellongsInPeriod = item.ItemData.TimePeriods.Contains(currentTimePeriod);
+            if (item == null || item.NetworkObject == null || !item.NetworkObject.IsSpawned) continue;
+            if (item.ItemData == null) continue;
+            if (item.ItemData.TimePeriods == null) continue;
+            bool doesNotBellong = !item.ItemData.TimePeriods.Contains(currentTimePeriod);
             bool sendable = !item.ItemData.UnSendable;
 
-            if (sendable)
+            if (sendable && doesNotBellong)
             {
-                if (itemBellongsInPeriod)
-                {
-                    instability += item.InStabilityWorth;
-                }
-                if (despawnItems) item.NetworkObject.Despawn(true);
+                instability += item.InStabilityWorth;
             }
-            // bool isPickedUpByPlayer = item.isPickedUpByPlayer.Value;
         }
         return instability;
     }
@@ -168,7 +166,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _collider)
         {
-            if(collider == null) continue; 
+            if (collider == null) continue;
             collider.enabled = enable;
         }
     }
@@ -176,8 +174,8 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _meshRenderers)
         {
-            if(collider == null) continue; 
-            if(collider == null) continue; 
+            if (collider == null) continue;
+            if (collider == null) continue;
             collider.enabled = enable;
         }
     }
@@ -185,7 +183,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     {
         foreach (var collider in _handMeshRenderers)
         {
-            if(collider == null) continue; 
+            if (collider == null) continue;
             collider.enabled = enable;
         }
     }

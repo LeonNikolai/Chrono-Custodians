@@ -42,8 +42,8 @@ public class TimeLineStabilityUI : MonoBehaviour
             builder.AppendLine($"<color=#FF0000>Lost {data.PlayersOutsideStabilityLoss} stability from players not leaving with the time-machine</color>");
             builder.AppendLine("");
             builder.AppendLine($"<color=#FF0000>Lost Stability From Time-Tourism : {-data.OtherDecrease}</color>");
-            builder.AppendLine("");
-            builder.AppendLine($"{data.RemainingUnstableItemStability} instability was left in the time period");
+            // builder.AppendLine("");
+            // builder.AppendLine($"{data.RemainingUnstableItemStability} instability was left in the time period");
             builder.AppendLine("");
             builder.AppendLine("From : " + data.Level.Refference?.TimePeriod?.periodName ?? "Unknown Period");
             builder.AppendLine("Items Sent :");
