@@ -39,6 +39,7 @@ public class TimeLineStabilityUI : MonoBehaviour
             builder.AppendLine("");
             builder.AppendLine($"<color=#00FF00>Recovered {data.SendCorrectInstability} stability from sending items to correct time periods</color>");
             builder.AppendLine($"<color=#FF0000>Lost {data.SendWrongInstability} stability from sending items to wrong time periods</color>");
+            builder.AppendLine($"<color=#FF0000>Lost {data.PlayersOutsideStabilityLoss} stability from players not leaving with the time-machine</color>");
             builder.AppendLine("");
             builder.AppendLine($"<color=#FF0000>Lost Stability From Time-Tourism : {-data.OtherDecrease}</color>");
             builder.AppendLine("");

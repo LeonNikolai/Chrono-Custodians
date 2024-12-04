@@ -12,6 +12,8 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
     public float OtherDecrease;
     public ItemSendEvent[] itemSendEvets;
 
+    public int PlayersOutsideStabilityLoss;
+
     public LevelEndData()
     {
         Level = LevelSceneRefference.None;
@@ -21,6 +23,7 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
         Dayprogression = 0;
         itemSendEvets = new ItemSendEvent[0];
         OtherDecrease = 0;
+        PlayersOutsideStabilityLoss = 0;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -32,6 +35,7 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
         serializer.SerializeValue(ref Dayprogression);
         serializer.SerializeValue(ref itemSendEvets);
         serializer.SerializeValue(ref OtherDecrease);
+        serializer.SerializeValue(ref PlayersOutsideStabilityLoss);
     }
 
     public bool Equals(LevelEndData other)
@@ -42,7 +46,8 @@ public class LevelEndData : INetworkSerializable, IEquatable<LevelEndData>
         if (SendCorrectInstability != other.SendCorrectInstability) return false;
         if (Dayprogression != other.Dayprogression) return false;
         if (itemSendEvets.Length != other.itemSendEvets.Length) return false;
-        if(OtherDecrease != other.OtherDecrease) return false;
+        if (OtherDecrease != other.OtherDecrease) return false;
+        if (PlayersOutsideStabilityLoss != other.PlayersOutsideStabilityLoss) return false;
         return true;
     }
 }

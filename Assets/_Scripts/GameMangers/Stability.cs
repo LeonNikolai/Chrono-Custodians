@@ -52,6 +52,16 @@ public static class Stability
         uncompletedLevels.DecreseAllStability(exponentiaDecrese);
         OtherDecrease += exponentiaDecrese;
         completedLevel.Stability = completedLevelStability;
+
+        int playersOutside = 0;
+        foreach (var player in Player.AllPlayers)
+        {
+            if (player._location.Value != LocationType.InsideShip)
+            {
+                playersOutside++;
+            }
+        }
+        completedLevel.Stability -= playersOutside * 5;
         return new LevelEndData
         {
             Level = completedScene,
@@ -59,6 +69,7 @@ public static class Stability
             SendWrongInstability = SendWrongInstability,
             SendCorrectInstability = SendCorrectInstability,
             OtherDecrease = OtherDecrease,
+            PlayersOutsideStabilityLoss = playersOutside * 5,
             Dayprogression = day,
             itemSendEvets = itemevents
         };

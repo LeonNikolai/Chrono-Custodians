@@ -31,6 +31,7 @@ public class Menu : MonoBehaviour
         get => currentMenu;
         set
         {
+
             currentMenu = value;
             instance?.RefreshMenu();
         }

@@ -78,6 +78,7 @@ public class GameManager : NetworkBehaviour
         }
         lastLevelEndData.OnValueChanged += (previousValue, newValue) =>
         {
+            if (Menu.ActiveMenu == Menu.MenuType.LevelEnd) return;
             Menu.ActiveMenu = Menu.MenuType.LevelStability;
         };
         _timeStability.OnValueChanged += TimeLineStabilityChanged;
@@ -122,12 +123,12 @@ public class GameManager : NetworkBehaviour
 
     private void TimeLineStabilityChanged(int previousValue, int newValue)
     {
+        if (newValue <= 1)
+        {
+            GameLost();
+        }
         if (IsServer)
         {
-            if (newValue <= 0)
-            {
-                GameLost();
-            }
         }
     }
     [SerializeField] public LevelStability[] levelStabilities;
@@ -173,6 +174,7 @@ public class GameManager : NetworkBehaviour
     NetworkVariable<int> _itemSendCount = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void LevelEnd(LevelScene sceneEnd)
     {
+
         OnLevelEndClientRPC();
         doorAnim.SetTrigger("CloseDoor");
         int RemainingUnstableItems = Item.CalculateRemainingUnstableItemInstability(sceneEnd.TimePeriod);
@@ -185,6 +187,16 @@ public class GameManager : NetworkBehaviour
         TimeStability = levelStabilities.TotalStability();
         lastLevelEndData.Value = data;
 
+        // End if level reaches 0 stability
+        foreach (var item in levelStabilities)
+        {
+            if (item.Stability <= 0)
+            {
+                GameLost();
+            }
+        }
+
+        // end if toatl stability reaches 0
         if (TimeStability <= 0)
         {
             GameLost();
@@ -240,7 +252,7 @@ public class GameManager : NetworkBehaviour
 
     internal void NoMoreItemsInLevel()
     {
-        GameLost();
+        // GameLost();
     }
 
     [SerializeField] private Animator doorAnim;
