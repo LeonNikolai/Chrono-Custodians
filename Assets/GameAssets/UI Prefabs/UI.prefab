@@ -559,7 +559,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: Roman Empire
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
   m_sharedMaterial: {fileID: -1086939817028454185, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
@@ -1588,7 +1588,6 @@ RectTransform:
   - {fileID: 8853740697479287421}
   - {fileID: 6761246770833173660}
   - {fileID: 7087894078145183729}
-  - {fileID: 6709549259995125680}
   - {fileID: 4341111040365968115}
   m_Father: {fileID: 3768554102174187995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5824,7 +5823,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: Ancient Egypt
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
   m_sharedMaterial: {fileID: -1086939817028454185, guid: 1efc84d68c21e884294773c6a7c2802a, type: 2}
@@ -7372,6 +7371,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2479988782474566819}
+  - {fileID: 6709549259995125680}
   m_Father: {fileID: 4736720375959395656}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -12434,7 +12434,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 5861021936455361621}
+    m_TransformParent: {fileID: 1592173367436068408}
     m_Modifications:
     - target: {fileID: 1632884665615317061, guid: d128c36c1098da14c86d7b24b4697ca7, type: 3}
       propertyPath: m_Pivot.x
@@ -12486,15 +12486,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1632884665615317061, guid: d128c36c1098da14c86d7b24b4697ca7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1632884665615317061, guid: d128c36c1098da14c86d7b24b4697ca7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1632884665615317061, guid: d128c36c1098da14c86d7b24b4697ca7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1632884665615317061, guid: d128c36c1098da14c86d7b24b4697ca7, type: 3}
       propertyPath: m_AnchoredPosition.x
