@@ -67,9 +67,9 @@ public class TimeLineStabilityUI : MonoBehaviour
                 // sending items that belong
                 if (item.ItemData.TimePeriods.Contains(fromPeriod.TimePeriod))
                 {
-                    if (item.TargetPeriod == fromPeriod)
+                    if (item.TargetPeriod == fromPeriod.TimePeriod)
                     {
-                        builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} from {fromPeriodName} back to its origin {fromPeriodName}</color>");
+                        builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} from {fromPeriodName} back to its origin {targetPerioName}</color>");
                         continue;
                     }
                     builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} away from {fromPeriodName} to {targetPerioName} (wrong) (-{stabilityChange})</color>");
