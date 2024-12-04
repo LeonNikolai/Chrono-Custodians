@@ -6151,11 +6151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: spawnTimeMax
-      value: 1
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: spawnTimeMin
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: insideEnemies.Array.size

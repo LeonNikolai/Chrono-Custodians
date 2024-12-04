@@ -916,11 +916,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: spawnTimeMax
-      value: 1
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: spawnTimeMin
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8208702913477237576, guid: 07ba70287157b184598bb48ab842e267, type: 3}
       propertyPath: insideEnemies.Array.size
@@ -5963,7 +5963,7 @@ MonoBehaviour:
   target: {fileID: 4687520335185732642}
   fallBackPositonIfNoTarget: {x: 0, y: 0, z: 0}
   teleportOffset: {x: 0, y: 0, z: 0}
-  locationType: 0
+  locationType: 2
   playerRotation: 0
   _RenderingOverride: {fileID: 0}
   interactionMessage: Hold E to leave Pyramid
@@ -6344,6 +6344,14 @@ PrefabInstance:
     - target: {fileID: 3196563456544053849, guid: 8cba26dabb2fd7b428b985fd5e1676d8, type: 3}
       propertyPath: m_Name
       value: TeleportationBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 3323870496813332627, guid: 8cba26dabb2fd7b428b985fd5e1676d8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3323870496813332627, guid: 8cba26dabb2fd7b428b985fd5e1676d8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11443,6 +11451,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 727316831}
+    - target: {fileID: 904724116028869120, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
+      propertyPath: _RenderingOverride
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 905493700966509496, guid: a81efb3835b8e4040bc86cd6f9df130c, type: 3}
       propertyPath: m_IsActive
       value: 1
