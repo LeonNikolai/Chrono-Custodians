@@ -101,7 +101,7 @@ public class VivoxManager : MonoBehaviour
     {
         try
         {
-            var test = new Channel3DProperties(32, 1, 1, AudioFadeModel.InverseByDistance);
+            var test = new Channel3DProperties(50, 15, 1, AudioFadeModel.InverseByDistance);
             await VivoxService.Instance.JoinPositionalChannelAsync(ChannelName, ChatCapability.AudioOnly, test);
             await VivoxService.Instance.SetChannelTransmissionModeAsync(TransmissionMode.Single, ChannelName);
             inChannel = true;
