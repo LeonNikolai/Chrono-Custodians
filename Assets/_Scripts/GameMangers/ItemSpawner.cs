@@ -76,14 +76,14 @@ public class ItemSpawner : NetworkBehaviour
     {
         if (!IsServer) return;
         Debug.Log("! Spawning items");
-        float stabilityTarget = GameManager.ActiveLevelStability;
+        float stabilityTarget = 100 - GameManager.ActiveLevelStability;
 
         var spawnpoints = ItemSpawnPoint.GetShuffledSpawnPoints();
         var currentTimePeriod = GameManager.instance.GetCurrentLevelStability().scene.TimePeriod;
 
         // remove items that dont fit its designated time period
-        var unstableItems = Shuffle(_forignItems).TakeWhile(item => item.TimePeriods.Contains(currentTimePeriod)).ToArray();
-        var normalItems = Shuffle(_normalItems).TakeWhile(item => !item.TimePeriods.Contains(currentTimePeriod)).ToArray();
+        var unstableItems = Shuffle(_forignItems).TakeWhile(item => !item.TimePeriods.Contains(currentTimePeriod)).ToArray();
+        var normalItems = Shuffle(_normalItems).TakeWhile(item => item.TimePeriods.Contains(currentTimePeriod)).ToArray();
 
         int maxItems = spawnpoints.Count;
         int i = 0;
@@ -116,9 +116,9 @@ public class ItemSpawner : NetworkBehaviour
         int foreignItemSpawnNumber = i;
         Debug.Log($"Spawned {i} unstable items");
         // Fill the rest of the spawnpoints with normal items
-        var NormalSpawnAmount = UnityEngine.Random.Range(2, Math.Min(20,Math.Min(maxItems, i)));
-        Debug.Log($"Spawned {NormalSpawnAmount} unstable items");
-        while (i < NormalSpawnAmount)
+        var NormalSpawnAmount = UnityEngine.Random.Range(2, Math.Min(40,Math.Min(maxItems, i)));
+        Debug.Log($"Spawned {NormalSpawnAmount} normal items");
+        while (i < NormalSpawnAmount + foreignItemSpawnNumber)
         {
             var item = normalItems[i % normalItems.Length];
             var spawnpoint = spawnpoints[i % spawnpoints.Count];
