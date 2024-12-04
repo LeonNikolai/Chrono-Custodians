@@ -78,7 +78,7 @@ public class ItemIdProvider : ScriptableObject
                 return i;
             }
         }
-        Debug.LogError("timePeriod not found in ItemIdProvider");
+        Debug.LogError("timePeriod + " + timePeriod.periodName + "not found in ItemIdProvider");
         return -1;
     }
     public int GetRenderingSettingsId(LocationRenderingSettings locationRenderingSettings)

@@ -77,7 +77,7 @@ public class TimerUpdater : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(currentTime / 60f);
             int seconds = Mathf.FloorToInt(currentTime % 60f);
-            timerString = $"{minutes:0}:{seconds:00}";
+            timerString = $"{minutes:00}:{seconds:00}";
         }
 
         Hud.TimerText.text = timerString;

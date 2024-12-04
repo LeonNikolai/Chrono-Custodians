@@ -149,7 +149,7 @@ public class GameManager : NetworkBehaviour
     public void LevelStart(LevelScene sceneStart = null, int sceneIndex = 0)
     {
         OnLevelStartClientRPC();
-        timer.Value = 480;
+        timer.Value = 600;
         LevelStability levelStability = GetLevelStability(sceneStart);
         if (levelStability == null)
         {
@@ -244,7 +244,7 @@ public class GameManager : NetworkBehaviour
 
     [SerializeField] private Animator doorAnim;
 
-    public NetworkVariable<float> timer = new NetworkVariable<float>(480, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<float> timer = new NetworkVariable<float>(600, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private void TimerChanged(float previousValue, float newValue)
     {

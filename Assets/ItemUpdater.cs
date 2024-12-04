@@ -10,7 +10,7 @@ public class ItemUpdater : MonoBehaviour
     private void Start()
     {
         GameManager.instance.OnLevelEndClient.AddListener(SetText);
-        LevelManager.instance.OnLevelLoaded.AddListener(SetSpawner);
+        GameManager.instance.OnLevelStartClient.AddListener(SetSpawner);
         ItemSender.OnItemSendServer.AddListener(UpdateText);
     }
 
@@ -22,7 +22,7 @@ public class ItemUpdater : MonoBehaviour
         }
     }
 
-    private void SetSpawner(LevelScene level)
+    private void SetSpawner()
     {
         ItemSpawner.OnItemsSpawned.AddListener(CountItems);
     }

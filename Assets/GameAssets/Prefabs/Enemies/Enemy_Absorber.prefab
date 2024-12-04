@@ -315,6 +315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 25
   angle: 90
+  timeBetweenChecks: 0.5
   head: {fileID: 7356758483900432167}
   curtarget: {fileID: 0}
   targetHead: {fileID: 0}
@@ -323,7 +324,7 @@ MonoBehaviour:
     m_Bits: 8
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8193
   OnTargetFound:
     m_PersistentCalls:
       m_Calls:
