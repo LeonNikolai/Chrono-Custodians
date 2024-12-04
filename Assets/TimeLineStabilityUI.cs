@@ -49,20 +49,30 @@ public class TimeLineStabilityUI : MonoBehaviour
                 _itemText.text = builder.ToString();
                 return;
             }
+            var fromPeriodName = fromPeriod.TimePeriod?.periodName ?? "Unknown";
             foreach (ItemSendEvent item in data.itemSendEvets)
             {
                 var targetPerioName = item.TargetPeriod?.periodName ?? "Unknown";
-                if(item.TargetPeriod == fromPeriod) {
-                    builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} back to {targetPerioName}</color>");
+
+                var stabilityChange = item.InstabilityWorth;
+                // sending items that belong
+                if(item.ItemData.TimePeriods.Contains(fromPeriod.TimePeriod)) {
+                    if(item.TargetPeriod == fromPeriod) {
+                        builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} back to its origin {fromPeriodName}</color>");
+                        continue;
+                    }
+                    builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} away from {fromPeriodName} to {targetPerioName} (wrong) (-{stabilityChange})</color>");
                     continue;
                 }
+
+                // sending items that dont belong
                 if (item.ItemData.TimePeriods.Contains(item.TargetPeriod))
                 {
-                    builder.AppendLine($"<color=#00FF00>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (correct)</color>");
+                    builder.AppendLine($"<color=#00FF00>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (correct) (+{stabilityChange})</color>");
                 }
                 else
                 {
-                    builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (wrong)</color>");
+                    builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (wrong) (-{stabilityChange})</color>");
                 }
             }
             _itemText.text = builder.ToString();
