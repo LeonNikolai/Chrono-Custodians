@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -159,6 +160,10 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
                 ItemData itemData = item.ItemData;
                 item.Drop(itemDropSpot.position);
                 currentlyHeldItem = item;
+                if (currentlyHeldItem)
+                {
+                    item.OnPickedUp += OnPickup;
+                }
                 if (sendingItems.Value)
                 {
                     StartCoroutine(SendItem(itemData));
@@ -170,6 +175,15 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         {
 
 
+        }
+    }
+
+    private void OnPickup()
+    {
+        if (currentlyHeldItem)
+        {
+            currentlyHeldItem.OnPickedUp -= OnPickup;
+            currentlyHeldItem = null;
         }
     }
 
@@ -204,6 +218,14 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
     {
         sendingItems.Value = false;
     }
+    public override void OnDestroy()
+    {
+        if (currentlyHeldItem != null)
+        {
+            currentlyHeldItem.OnPickedUp -= OnPickup;
+        }
+        base.OnDestroy();
+    }
 
 
 
@@ -229,9 +251,14 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
             timer += Time.deltaTime * 2;
             currentlyHeldItem.transform.position = Vector3.Lerp(oldPos, newPos, timer);
         }
+        if (currentlyHeldItem == null)
+        {
+            Debug.LogError("No item to send");
+            yield break;
+        }
 
         int Instability = currentlyHeldItem.InStabilityWorth;
-
+        currentlyHeldItem.OnPickedUp -= OnPickup;
         if (currentlyHeldItem.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Despawn();
@@ -243,6 +270,21 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
 
         currentlyHeldItem = null;
 
+        if (LevelManager.LoadedScene == null)
+        {
+            Debug.LogError("No level loaded to send item from");
+            yield break;
+        }
+        if (SelectedPeriodID.Value == 0)
+        {
+            Debug.LogError("No time period selected to send item to");
+            yield break;
+        }
+        if (itemData == null)
+        {
+            Debug.LogError("No item data to send");
+            yield break;
+        }
         ItemSendEvent item = new ItemSendEvent
         {
             ItemData = itemData,

@@ -41,4 +41,5 @@ public struct TimePeriodRefference : IEquatable<TimePeriodRefference>, INetworkS
     public bool Equals(TimePeriodRefference other) => other.id == id;
     public static implicit operator TimePeriodRefference(TimePeriod item) => new TimePeriodRefference(item);
     public static implicit operator TimePeriod(TimePeriodRefference refference) => refference.Refference;
+    public static TimePeriodRefference None => new TimePeriodRefference(-1);
 }

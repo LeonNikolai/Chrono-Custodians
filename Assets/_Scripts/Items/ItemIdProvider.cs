@@ -59,6 +59,10 @@ public class ItemIdProvider : ScriptableObject
 
     public int GetItemId(ItemData itemData)
     {
+        if (itemData == null)
+        {
+            return -1;
+        }
         for (int i = 0; i < _itemData.Length; i++)
         {
             if (_itemData[i] == itemData)
@@ -71,6 +75,10 @@ public class ItemIdProvider : ScriptableObject
     }
     public int GetTimeId(TimePeriod timePeriod)
     {
+        if (timePeriod == null)
+        {
+            return -1;
+        }
         for (int i = 0; i < _timePeriod.Length; i++)
         {
             if (_timePeriod[i] == timePeriod)
@@ -83,6 +91,10 @@ public class ItemIdProvider : ScriptableObject
     }
     public int GetRenderingSettingsId(LocationRenderingSettings locationRenderingSettings)
     {
+        if (locationRenderingSettings == null)
+        {
+            return -1;
+        }
         for (int i = 0; i < this._locationRenderingSettings.Length; i++)
         {
             if (this._locationRenderingSettings[i] == locationRenderingSettings)
@@ -96,6 +108,10 @@ public class ItemIdProvider : ScriptableObject
 
     public int GetLevelSceneId(LevelScene levelScene)
     {
+        if (levelScene == null)
+        {
+            return -1;
+        }
         for (int i = 0; i < levelScenes.Length; i++)
         {
             if (levelScenes[i] == levelScene)
@@ -110,7 +126,8 @@ public class ItemIdProvider : ScriptableObject
     {
         if (id < 0 || id >= _itemData.Length)
         {
-            Debug.LogError("ItemData not found in ItemIdProvider");
+            Debug.LogWarning("ItemData not found in ItemIdProvider");
+            return null;
         }
         return _itemData[id];
     }
@@ -118,7 +135,8 @@ public class ItemIdProvider : ScriptableObject
     {
         if (id < 0 || id >= _timePeriod.Length)
         {
-            Debug.LogError($"TimePeriod with ID: {id} not found in ItemIdProvider");
+            Debug.LogWarning($"TimePeriod with ID: {id} not found in ItemIdProvider");
+            return null;
         }
         return _timePeriod[id];
     }
@@ -126,7 +144,8 @@ public class ItemIdProvider : ScriptableObject
     {
         if (id < 0 || id >= _locationRenderingSettings.Length)
         {
-            Debug.LogError($"LocationRenderingSettings with ID: {id} not found in ItemIdProvider");
+            Debug.LogWarning($"LocationRenderingSettings with ID: {id} not found in ItemIdProvider");
+            return null;
         }
         return _locationRenderingSettings[id];
     }
@@ -135,7 +154,8 @@ public class ItemIdProvider : ScriptableObject
     {
         if (id < 0 || id >= levelScenes.Length)
         {
-            Debug.LogError($"LevelScene at index {id} not found in ItemIdProvider (Length: {levelScenes.Length})");
+            Debug.LogWarning($"LevelScene at index {id} not found in ItemIdProvider (Length: {levelScenes.Length})");
+            return null;
         }
         return levelScenes[id];
     }

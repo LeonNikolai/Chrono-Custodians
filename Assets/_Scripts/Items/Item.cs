@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -25,7 +26,9 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
     public ulong RandomSeed => NetworkObject.NetworkObjectId;
     public int InStabilityWorth { get; set; } = 0;
     NetworkVariable<ItemSlotType> currentSlot = new NetworkVariable<ItemSlotType>(ItemSlotType.None, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    internal NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> isPickedUpByPlayer = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    public event Action OnPickedUp = delegate { };
     public NetworkVariable<bool> HasBeenScanned = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> HasBeenTouched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isInteractable = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -215,7 +218,6 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
         }
         transform.SetParent(null, true);
     }
-
     [Rpc(SendTo.Server)]
     public void PickupItemServerRpc(RpcParams rpcParams = default)
     {
@@ -233,6 +235,7 @@ public class Item : NetworkBehaviour, IInteractable, IEquippable, IInventoryItem
                     currentSlot.Value = ItemSlotType.PlayerInventory;
                     NetworkObject.ChangeOwnership(clientId);
                     isPickedUpByPlayer.Value = true;
+                    OnPickedUp.Invoke();
                 }
             }
         }

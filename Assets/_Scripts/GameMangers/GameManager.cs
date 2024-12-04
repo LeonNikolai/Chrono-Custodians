@@ -76,6 +76,10 @@ public class GameManager : NetworkBehaviour
             Destroy(this);
             return;
         }
+        lastLevelEndData.OnValueChanged += (previousValue, newValue) =>
+        {
+            Menu.ActiveMenu = Menu.MenuType.LevelStability;
+        };
         _timeStability.OnValueChanged += TimeLineStabilityChanged;
         gameState.OnValueChanged += (previousValue, newValue) =>
         {
@@ -91,10 +95,7 @@ public class GameManager : NetworkBehaviour
         Player.AllPlayersDead += GameLost;
         levelState.OnValueChanged += LevelStateChanged;
         timer.OnValueChanged += TimerChanged;
-        DayProgression.OnValueChanged += (previousValue, newValue) =>
-        {
-            Menu.ActiveMenu = Menu.MenuType.LevelStability;
-        };
+
         _outsideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         _insideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         ItemSender.OnItemSendServer.AddListener(CheckIfSentRight);
@@ -102,7 +103,7 @@ public class GameManager : NetworkBehaviour
         foreach (var item in levelStabilities)
         {
             item.Stability = UnityEngine.Random.Range(50, 80);
-            
+
         }
     }
 
