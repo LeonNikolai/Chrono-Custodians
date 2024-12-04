@@ -100,10 +100,14 @@ public class GameManager : NetworkBehaviour
         _outsideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         _insideRenderingSettings.OnValueChanged += UpdateRenderingSettings;
         ItemSender.OnItemSendServer.AddListener(CheckIfSentRight);
-
-        foreach (var item in levelStabilities)
+        if (IsServer)
         {
-            item.Stability = UnityEngine.Random.Range(50, 80);
+            foreach (var item in levelStabilities)
+            {
+                item.Stability = UnityEngine.Random.Range(50, 80);
+
+            }
+            _timeStability.Value = levelStabilities.TotalStability();
 
         }
     }

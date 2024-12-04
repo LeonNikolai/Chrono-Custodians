@@ -32,29 +32,25 @@ public class TimeLineStabilityUI : MonoBehaviour
     private void RefreshText(LevelEndData previousValue, LevelEndData newValue)
     {
         var data = newValue;
-        if (data != null)
+        if (data != null && data.Level != LevelSceneRefference.None)
         {
             var builder = new System.Text.StringBuilder();
-            builder.AppendLine("Mission Result:");
+            var fromPeriod = data.Level.Refference;
+            var fromPeriodName = fromPeriod.TimePeriod?.periodName ?? "Unknown";
+
+            builder.AppendLine($"Previous Mission Result ({fromPeriodName}):");
+            
             builder.AppendLine("");
             builder.AppendLine($"<color=#00FF00>Recovered {data.SendCorrectInstability} stability from sending items to correct time periods</color>");
             builder.AppendLine($"<color=#FF0000>Lost {data.SendWrongInstability} stability from sending items to wrong time periods</color>");
             builder.AppendLine($"<color=#FF0000>Lost {data.PlayersOutsideStabilityLoss} stability from players not leaving with the time-machine</color>");
+            
             builder.AppendLine("");
             builder.AppendLine($"<color=#FF0000>Lost Stability From Time-Tourism : {-data.OtherDecrease}</color>");
-            // builder.AppendLine("");
-            // builder.AppendLine($"{data.RemainingUnstableItemStability} instability was left in the time period");
+
             builder.AppendLine("");
             builder.AppendLine("From : " + data.Level.Refference?.TimePeriod?.periodName ?? "Unknown Period");
             builder.AppendLine("Items Sent :");
-            var fromPeriod = data.Level.Refference;
-            if (fromPeriod == TimePeriodRefference.None)
-            {
-                builder.AppendLine("ERRROR No target period");
-                _itemText.text = builder.ToString();
-                return;
-            }
-            var fromPeriodName = fromPeriod.TimePeriod?.periodName ?? "Unknown";
 
             var wrongItems = 0;
             var correctItems = 0;
@@ -98,7 +94,7 @@ public class TimeLineStabilityUI : MonoBehaviour
         }
         else
         {
-            _itemText.text = "No data";
+            _itemText.text = "Finnish a level to see mission results";
         }
     }
 

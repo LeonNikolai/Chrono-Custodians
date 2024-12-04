@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -295,6 +296,26 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         };
         SentItems.Add(item);
         OnItemSendServer.Invoke(item);
+        SendClientFeedback(itemData);
+    }
+
+    private void SendClientFeedback(ItemData itemData)
+    {
+        var period = idProvider.GetPeriodData(SelectedPeriodID.Value);
+        bool sentCorrectly = itemData.TimePeriods.Contains(period);
+        bool originIsCurrent = itemData.TimePeriods.Contains(LevelManager.LoadedScene.TimePeriod);
+        int FeedBackType = sentCorrectly ? 1 : 2;
+        if (originIsCurrent && !sentCorrectly)
+        {
+            FeedBackType = 0;
+        }
+        ClientItemSendFeedbackRpc(FeedBackType, itemData, period);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ClientItemSendFeedbackRpc(int SuccessType, ItemDataRefference networkedRefference, TimePeriodRefference value)
+    {
+        Hud.ItemSentFeedback(SuccessType, networkedRefference, value);
     }
 
     public void OnScan(Player player)

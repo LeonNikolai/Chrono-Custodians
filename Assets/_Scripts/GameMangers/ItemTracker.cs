@@ -165,7 +165,8 @@ public class ItemTracker : NetworkBehaviour
 
     private void OnItemSent(ItemSendEvent item)
     {
-
+        // Just in case we for some weird reason use this?
+        return;
         itemText.text = $"{ItemCount.Value} foreign items remaining in this time period";
         bool isCorrectTimePeriod = false;
         foreach (TimePeriod period in item.ItemData.TimePeriods)
