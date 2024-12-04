@@ -63,7 +63,7 @@ public struct ItemSendEvent : INetworkSerializable, System.IEquatable<ItemSendEv
 
 public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, IScanable
 {
-    public NetworkVariable<int> SelectedPeriodID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [NonSerialized] public NetworkVariable<int> SelectedPeriodID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public void SetSelectedTimePeriod(TimePeriod period)
     {
         int id = idProvider.GetTimeId(period);
@@ -77,7 +77,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
 
     private void OnPeriodIDChanged(int previous, int current)
     {
-        if (current == 0)
+        if (current == -1)
         {
             sendingItemScreen.SetActive(false);
             return;
@@ -112,10 +112,10 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
     {
         base.OnNetworkSpawn();
         SelectedPeriodID.OnValueChanged += OnPeriodIDChanged;
-        if (IsServer)
-        {
-            SelectedPeriodID.Value = LevelManager.LoadedScene ? idProvider.GetTimeId(LevelManager.LoadedScene.TimePeriod) : 0;
-        }
+        // if (IsServer)
+        // {
+        //     SelectedPeriodID.Value = LevelManager.LoadedScene ? idProvider.GetTimeId(LevelManager.LoadedScene.TimePeriod) : 0;
+        // }
     }
     public bool Interactable
     {
@@ -162,7 +162,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
                 currentlyHeldItem = item;
                 if (currentlyHeldItem)
                 {
-                    item.OnPickedUp += OnPickup;
+                    currentlyHeldItem.OnPickedUp += OnPickup;
                 }
                 if (sendingItems.Value)
                 {
@@ -184,6 +184,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
         {
             currentlyHeldItem.OnPickedUp -= OnPickup;
             currentlyHeldItem = null;
+            StopAllCoroutines();
         }
     }
 
@@ -275,7 +276,7 @@ public class ItemSender : NetworkBehaviour, IInteractable, IInteractionMessage, 
             Debug.LogError("No level loaded to send item from");
             yield break;
         }
-        if (SelectedPeriodID.Value == 0)
+        if (SelectedPeriodID.Value == -1)
         {
             Debug.LogError("No time period selected to send item to");
             yield break;

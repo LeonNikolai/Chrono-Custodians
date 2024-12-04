@@ -50,18 +50,25 @@ public class TimeLineStabilityUI : MonoBehaviour
                 return;
             }
             var fromPeriodName = fromPeriod.TimePeriod?.periodName ?? "Unknown";
+
+            var wrongItems = 0;
+            var correctItems = 0;
+            var awayFromPeriod = 0;
             foreach (ItemSendEvent item in data.itemSendEvets)
             {
                 var targetPerioName = item.TargetPeriod?.periodName ?? "Unknown";
 
                 var stabilityChange = item.InstabilityWorth;
                 // sending items that belong
-                if(item.ItemData.TimePeriods.Contains(fromPeriod.TimePeriod)) {
-                    if(item.TargetPeriod == fromPeriod) {
-                        builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} back to its origin {fromPeriodName}</color>");
+                if (item.ItemData.TimePeriods.Contains(fromPeriod.TimePeriod))
+                {
+                    if (item.TargetPeriod == fromPeriod)
+                    {
+                        builder.AppendLine($"<color=#FFFF00>Sent {item.ItemData?.Name ?? "Item"} from {fromPeriodName} back to its origin {fromPeriodName}</color>");
                         continue;
                     }
                     builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} away from {fromPeriodName} to {targetPerioName} (wrong) (-{stabilityChange})</color>");
+                    awayFromPeriod++;
                     continue;
                 }
 
@@ -69,12 +76,17 @@ public class TimeLineStabilityUI : MonoBehaviour
                 if (item.ItemData.TimePeriods.Contains(item.TargetPeriod))
                 {
                     builder.AppendLine($"<color=#00FF00>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (correct) (+{stabilityChange})</color>");
+                    correctItems++;
                 }
                 else
                 {
                     builder.AppendLine($"<color=#FF0000>Sent {item.ItemData?.Name ?? "Item"} to {targetPerioName} (wrong) (-{stabilityChange})</color>");
+                    wrongItems++;
                 }
             }
+            builder.AppendLine($"Correctly sent Items : {correctItems}");
+            builder.AppendLine($"Wrongly sent Items : {wrongItems}");
+            builder.AppendLine($"Items sent away from origin period : {awayFromPeriod}");
             _itemText.text = builder.ToString();
         }
         else

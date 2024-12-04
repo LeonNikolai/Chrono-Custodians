@@ -10,8 +10,14 @@ public static class Stability
         int SendCorrectInstability = 0;
         foreach (ItemSendEvent item in itemevents)
         {
-
             if (item.ItemData.TimePeriods.Contains(completedScene.TimePeriod))
+            {
+                if (item.TargetPeriod == completedScene.TimePeriod) continue;
+                SendWrongInstability += item.InstabilityWorth;
+                continue;
+            }
+
+            if (item.ItemData.TimePeriods.Contains(item.TargetPeriod))
             {
 
                 SendCorrectInstability += item.InstabilityWorth;
@@ -48,6 +54,7 @@ public static class Stability
             RemainingUnstableItemStability = RemainingUnstableItems,
             SendWrongInstability = SendWrongInstability,
             SendCorrectInstability = SendCorrectInstability,
+            OtherDecrease = exponentiaDecrese + instabilityToDistribute,
             Dayprogression = day,
             itemSendEvets = itemevents
         };
