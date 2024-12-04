@@ -48,7 +48,6 @@ public class TimerUpdater : MonoBehaviour
         {
             newColor = Color.Lerp(flashColor, Color.white, timerColorIntensity);
             timerColorIntensity += Time.deltaTime;
-            Debug.Log(timerColorIntensity);
             if (timerColorIntensity > 1)
             {
                 isAnimating = false;
