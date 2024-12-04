@@ -35,9 +35,13 @@ public class TimeLineStabilityUI : MonoBehaviour
         if (data != null)
         {
             var builder = new System.Text.StringBuilder();
-            builder.AppendLine("Data");
-            builder.AppendLine($"Recovered {data.SendCorrectInstability} stability from sending items to correct time periods");
-            builder.AppendLine($"Lost {data.SendWrongInstability} stability from sending items to wrong time periods");
+            builder.AppendLine("Mission Result:");
+            builder.AppendLine("");
+            builder.AppendLine($"<color=#00FF00>Recovered {data.SendCorrectInstability} stability from sending items to correct time periods</color>");
+            builder.AppendLine($"<color=#FF0000>Lost {data.SendWrongInstability} stability from sending items to wrong time periods</color>");
+            builder.AppendLine("");
+            builder.AppendLine($"<color=#FF0000>Lost Stability From Time-Tourism : {-data.OtherDecrease}</color>");
+            builder.AppendLine("");
             builder.AppendLine($"{data.RemainingUnstableItemStability} instability was left in the time period");
             builder.AppendLine("");
             builder.AppendLine("From : " + data.Level.Refference?.TimePeriod?.periodName ?? "Unknown Period");
@@ -45,7 +49,7 @@ public class TimeLineStabilityUI : MonoBehaviour
             var fromPeriod = data.Level.Refference;
             if (fromPeriod == TimePeriodRefference.None)
             {
-                builder.AppendLine("No target period");
+                builder.AppendLine("ERRROR No target period");
                 _itemText.text = builder.ToString();
                 return;
             }
@@ -84,9 +88,11 @@ public class TimeLineStabilityUI : MonoBehaviour
                     wrongItems++;
                 }
             }
-            builder.AppendLine($"Correctly sent Items : {correctItems}");
-            builder.AppendLine($"Wrongly sent Items : {wrongItems}");
-            builder.AppendLine($"Items sent away from origin period : {awayFromPeriod}");
+            builder.AppendLine("");
+            builder.AppendLine("");
+            builder.AppendLine($"Items sent to correct period : {correctItems}");
+            builder.AppendLine($"Items sent to wrong period : {wrongItems}");
+            builder.AppendLine($"Items sent away from origin period ({fromPeriodName}) : {awayFromPeriod}");
             _itemText.text = builder.ToString();
         }
         else

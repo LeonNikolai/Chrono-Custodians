@@ -6,6 +6,7 @@ public static class Stability
 {
     public static LevelEndData ProgressStability(this LevelStability[] allLevelStabilities, LevelScene completedScene, int day, ItemSendEvent[] itemevents, int RemainingUnstableItems)
     {
+        float OtherDecrease = 0;
         int SendWrongInstability = 0;
         int SendCorrectInstability = 0;
         foreach (ItemSendEvent item in itemevents)
@@ -43,10 +44,13 @@ public static class Stability
 
         uncompletedLevels.DistributeInstabilityRandomly(instabilityToDistribute);
         uncompletedLevels.DecreaseRandom(25 + day);
+        OtherDecrease += 25 + day;
+        OtherDecrease += instabilityToDistribute;
 
         int dayClamped = Mathf.Max(day - 2, 0);
         float exponentiaDecrese = Mathf.Exp(dayClamped / 5) - Mathf.Exp(dayClamped / 10);
         uncompletedLevels.DecreseAllStability(exponentiaDecrese);
+        OtherDecrease += exponentiaDecrese;
         completedLevel.Stability = completedLevelStability;
         return new LevelEndData
         {
@@ -54,7 +58,7 @@ public static class Stability
             RemainingUnstableItemStability = RemainingUnstableItems,
             SendWrongInstability = SendWrongInstability,
             SendCorrectInstability = SendCorrectInstability,
-            OtherDecrease = exponentiaDecrese + instabilityToDistribute,
+            OtherDecrease = OtherDecrease,
             Dayprogression = day,
             itemSendEvets = itemevents
         };

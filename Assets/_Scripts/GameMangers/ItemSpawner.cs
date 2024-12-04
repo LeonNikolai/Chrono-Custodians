@@ -122,7 +122,7 @@ public class ItemSpawner : NetworkBehaviour
         {
             var item = normalItems[i % normalItems.Length];
             var spawnpoint = spawnpoints[i % spawnpoints.Count];
-            SpawnItem(item, spawnpoint);
+            SpawnItem(item, spawnpoint,DefaultStabilityPerItem);
             i++;
         }
         ItemSpawningFinishedRPC(foreignItemSpawnNumber, i);
