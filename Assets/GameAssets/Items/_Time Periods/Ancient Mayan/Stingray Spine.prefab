@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8083261310286950869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.77, y: -0.75, z: 11.22}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -101,6 +101,8 @@ MonoBehaviour:
   - {fileID: 2026136912121253844}
   _collider:
   - {fileID: 8292361624348565585}
+  isPickedUpByPlayer:
+    m_InternalValue: 0
   HasBeenScanned:
     m_InternalValue: 0
   HasBeenTouched:
@@ -186,6 +188,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e83b3282c3aab4ce4bc10e7846b384eb, type: 2}
     - target: {fileID: 919132149155446097, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
       propertyPath: m_Name
       value: Stingray spine
@@ -253,6 +259,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e83b3282c3aab4ce4bc10e7846b384eb, type: 2}
     - target: {fileID: 919132149155446097, guid: 314736329b5a6eb44929aa4c1dacea20, type: 3}
       propertyPath: m_Name
       value: Stingray spine_1
