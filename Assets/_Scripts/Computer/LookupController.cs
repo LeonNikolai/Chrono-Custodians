@@ -75,9 +75,9 @@ public class LookupController : MonoBehaviour, IInteractable
 
         if (input.StartsWith("cmds"))
         {
-            string textToDisplay = $"<color=#909090>info [search]</color> - Get information on something\n";
+            string textToDisplay = $"<color=#909090>info [search]</color> - Get information on enemies\n";
             textToDisplay += $"<color=#909090>help</color> - instructions\n";
-            textToDisplay += $"<color=#909090>list</color> - List all notable features\n";
+            textToDisplay += $"<color=#909090>list</color> - List all enemies\n";
             textToDisplay += $"<color=#909090>clear</color> - Clear the screen\n";
             textToDisplay += $"<color=#909090>exit</color> - Close the computer\n";
             ClearDisplay();
