@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RomanInside
   m_EditorClassIdentifier: 
   sunAngle: {x: 50.000023, y: 330, z: 0}
-  sunIntensity: 1
+  sunIntensity: 0
   sunColor: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   skyboxMaterial: {fileID: 2100000, guid: e11f5b66aad75483b8cd16ee18a0c917, type: 2}
   ambientIntensity: 0.2
@@ -29,7 +29,7 @@ MonoBehaviour:
   reflectionResolution: 256
   reflectionBounces: 1
   fogEnabled: 1
-  fogColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+  fogColor: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 1}
   fogMode: 1
   fogStartDistance: 4
   fogEndDistance: 100
