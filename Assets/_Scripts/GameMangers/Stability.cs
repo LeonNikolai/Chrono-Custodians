@@ -30,7 +30,6 @@ public static class Stability
         var completedLevel = allLevelStabilities.GetLevelStability(completedScene);
         var uncompletedLevels = allLevelStabilities.Where(x => x.scene != completedScene).ToArray();
 
-        float completedLevelStability = completedLevel.Stability;
 
         completedLevel.Stability += SendCorrectInstability;
         int distributeWrong = SendWrongInstability / 2;
@@ -51,7 +50,6 @@ public static class Stability
         float exponentiaDecrese = Mathf.Exp(dayClamped / 5) - Mathf.Exp(dayClamped / 10);
         uncompletedLevels.DecreseAllStability(exponentiaDecrese);
         OtherDecrease += exponentiaDecrese;
-        completedLevel.Stability = completedLevelStability;
 
         int playersOutside = 0;
         foreach (var player in Player.AllPlayers)
