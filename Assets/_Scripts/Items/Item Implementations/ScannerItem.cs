@@ -266,8 +266,25 @@ public class ScannerItem : Item, ItemUseToolTip
         }
         ItemData data = currentItem.ItemData;
         var results = data.ScanMinigameResults;
+
+        if(player?.Location == LocationType.InsideShip)
+        {
+            CurrentlyScanning = null;
+            scanTitleText.text = "Unsuccesfull Scan";
+            scanResultText.text = "No nearby information is inside the ship, go outside";
+            yield break;
+        }
         ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, player.transform.position, player?.Location ?? LocationType.Outside);
+
+        if(targetPoints.Length == 0)
+        {
+            CurrentlyScanning = null;
+            scanTitleText.text = "Unsuccesfull Scan";
+            scanResultText.text = "No nearby information";
+            yield break;
+        }
         int scannedCount = 0;
+
         foreach (var item in targetPoints)
         {
             item.Activate();
