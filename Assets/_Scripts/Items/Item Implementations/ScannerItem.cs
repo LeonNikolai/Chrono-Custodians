@@ -272,6 +272,7 @@ public class ScannerItem : Item, ItemUseToolTip
             CurrentlyScanning = null;
             scanTitleText.text = "Unsuccesfull Scan";
             scanResultText.text = "No nearby information is inside the ship, go outside";
+            Hud.ScannerNotification = "No nearby information is inside the ship, go outside";
             yield break;
         }
         ItemScannerPoint[] targetPoints = ItemScannerPoint.GetRandom(results.Length, player.transform.position, player?.Location ?? LocationType.Outside);
@@ -281,6 +282,7 @@ public class ScannerItem : Item, ItemUseToolTip
             CurrentlyScanning = null;
             scanTitleText.text = "Unsuccesfull Scan";
             scanResultText.text = "No nearby information";
+            Hud.ScannerNotification = "No nearby information";
             yield break;
         }
         int scannedCount = 0;
