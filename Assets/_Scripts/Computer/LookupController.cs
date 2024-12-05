@@ -94,11 +94,15 @@ public class LookupController : MonoBehaviour, IInteractable
         }
         if (input.StartsWith("help"))
         {
-            string textToDisplay = $"With the handheld scanner, (<color=#909090>1</color>) you can find the notable features of items\n";
+            string textToDisplay = $"Select a time period with low stability.\n";
             textToDisplay += $"\n";
-            textToDisplay += $"Use this console to search up notable features of items.\n";
+            textToDisplay += $"Use the button to confirm your choice\n";
             textToDisplay += $"\n";
-            textToDisplay += $"Use the information to deduce where the item is meant to go\n";
+            textToDisplay += $"Go out there and find the foreign items that do not belong\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"With the handheld scanner, (<color=#909090>1</color>) you can find scan points to calibrate the scanner with the item's time signature to learn where it belongs\n";
+            textToDisplay += $"\n";
+            textToDisplay += $"Avoid the time anomalies that feed off of the unstable enemies\n";
             textToDisplay += $"\n";
             textToDisplay += $"Some items are meant to stay in this time period, do not trash those.\n";
             textToDisplay += $"\n";
